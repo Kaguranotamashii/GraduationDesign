@@ -4,19 +4,13 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
-
+import Navbar from './component/Navbar'; // 根据实际路径调整
 const App = () => {
     return (
         <Router>
             <div>
                 {/* 导航栏 */}
-                <nav>
-                    <ul>
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/about">About</a></li>
-                        <li><a href="/contact">Contact</a></li>
-                    </ul>
-                </nav>
+                <Navbar />
 
                 {/* 页面路由 */}
                 <Routes>
