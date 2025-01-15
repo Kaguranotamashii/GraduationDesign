@@ -1,10 +1,100 @@
+<!-- registration_email.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欢迎注册</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid #ddd;
+            padding: 20px;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 8px;
+        }
+        .content {
+            padding: 20px;
+            font-size: 16px;
+            color: #333;
+            line-height: 1.8;
+            font-family: 'Helvetica', sans-serif;
+        }
+        .verification-code {
+            font-size: 32px;
+            font-weight: 700;
+            color: #fff;
+            background-color: #4CAF50;
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 30px 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            margin-top: 20px;
+        }
+        .footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        .button {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 16px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-
+<div class="container">
+    <div class="header">
+        神乐古建筑平台 欢迎您注册！
+    </div>
+    <div class="content">
+        <p>亲爱的用户，</p>
+        <p>感谢您注册神乐古建筑平台！为了确保您的账户安全，请使用以下验证码进行验证：</p>
+        <div class="verification-code">
+            {{ verification_code }}
+        </div>
+        <p>如果您没有进行此操作，请忽略此邮件。</p>
+        <p>祝您体验愉快，探索古建筑之美！</p>
+        <a href="https://www.yuanshen.com" class="button">访问神乐平台</a>
+    </div>
+    <div class="footer">
+        <p>本邮件由神乐古建筑平台系统自动发送，请勿回复。</p>
+        <p>神乐古建筑平台 | <a href="https://www.yuanshen.com">官方网站</a></p>
+    </div>
+</div>
 </body>
 </html>

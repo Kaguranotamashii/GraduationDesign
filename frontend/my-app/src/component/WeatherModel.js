@@ -1,7 +1,9 @@
-
-import React, { Suspense } from "react";
+import React, { Suspense, useRef, useState, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
-import { useGLTF, OrbitControls } from "@react-three/drei";
+import {OrbitControls, useGLTF} from "@react-three/drei";
+import useCameraControl from '../tools/CameraControl';  // 导入自定义的相机控制
+import { calculateModelCenterByBase } from "../tools/calculateModelCenterByBase";
+import * as THREE from "three";
 import "./WeatherModel.css"; // 引入 CSS 文件
 
 /**
@@ -11,13 +13,28 @@ const Model = () => {
     // 加载 GLTF 模型文件
     const { scene } = useGLTF("model/42.glb");
 
+    // 计算模型的中心点和底部四点
+    const { center, bottomPoints } = calculateModelCenterByBase(scene);
+
     return (
         <group>
-            {/* 模型 */}
-            <primitive object={scene} scale={0.8} position={[-4.5, -2.8, 4.5]} />
-             坐标轴助手（可选）
+            {/* 将模型整体移动到中心点位置 */}
+            <group position={[-center.x, -2, -center.z]}>
+                {/* 模型 */}
+                <primitive object={scene} scale={0.8} />
+            </group>
+
+            {/* 可视化底部四点 */}
+            {bottomPoints.map((point, index) => (
+                <mesh key={index} position={[point.x, -0.5, point.z]}>
+                    <sphereGeometry args={[0.1, 16, 16]} />
+                    <meshBasicMaterial color="red" />
+                </mesh>
+            ))}
+
+            {/* 可选的坐标轴助手 */}
             <axesHelper args={[5]} />
-             网格助手（可选）
+            {/* 可选的网格助手 */}
             <gridHelper args={[10, 10]} />
         </group>
     );
@@ -27,13 +44,22 @@ const Model = () => {
  * 主组件
  */
 const WeatherModel = () => {
+    const cameraRef = useRef(); // 相机引用
+    const canvasRef = useRef(null);
+
+    // 初始相机位置
+    const [cameraPosition] = useState(new THREE.Vector3(10, 0, 10));
+
+    // 使用自定义相机控制
+    // useCameraControl(cameraRef.current);
+
     return (
         <div className="container">
             {/* 银河背景 */}
             <div className="galaxyBackground"></div>
 
             {/* Three.js 渲染区域 */}
-            <Canvas camera={{ position: [10, 0, 10], fov: 50 }}>
+            <Canvas ref={canvasRef} camera={{ position: cameraPosition.toArray(), fov: 50 }} onCreated={({ camera }) => cameraRef.current = camera}>
                 {/* 环境光 */}
                 <ambientLight intensity={0.5} />
                 {/* 方向光 */}
@@ -44,7 +70,7 @@ const WeatherModel = () => {
                     <Model />
                 </Suspense>
 
-                {/* 控制器：禁止缩放和平移，仅允许围绕中心点旋转 */}
+                {/* 这里不需要 OrbitControls，已由自定义控制处理 */}
                 <OrbitControls />
             </Canvas>
         </div>
