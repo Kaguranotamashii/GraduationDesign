@@ -1,10 +1,8 @@
-import React, { Suspense, useRef, useState, useEffect } from "react";
+import React, { Suspense, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import {OrbitControls, useGLTF} from "@react-three/drei";
- 
+import { OrbitControls, useGLTF } from "@react-three/drei";
 import { calculateModelCenterByBase } from "../../utils/calculateModelCenterByBase";
 import * as THREE from "three";
-import "./WeatherModel.css"; // 引入 CSS 文件
 
 /**
  * 3D 模型组件
@@ -50,16 +48,18 @@ const WeatherModel = () => {
     // 初始相机位置
     const [cameraPosition] = useState(new THREE.Vector3(10, 0, 10));
 
-    // 使用自定义相机控制
-    // useCameraControl(cameraRef.current);
-
     return (
-        <div className="container">
+        <div className="relative w-screen h-screen overflow-hidden">
             {/* 银河背景 */}
-            <div className="galaxyBackground"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-900 to-black animate-galaxy"></div>
 
             {/* Three.js 渲染区域 */}
-            <Canvas ref={canvasRef} camera={{ position: cameraPosition.toArray(), fov: 50 }} onCreated={({ camera }) => cameraRef.current = camera}>
+            <Canvas
+                ref={canvasRef}
+                className="absolute inset-0"
+                camera={{ position: cameraPosition.toArray(), fov: 50 }}
+                onCreated={({ camera }) => (cameraRef.current = camera)}
+            >
                 {/* 环境光 */}
                 <ambientLight intensity={0.5} />
                 {/* 方向光 */}
