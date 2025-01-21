@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Exploration from './Exploration';
 
-const ThreeDLanding = ({children}) => {
-  const [scrollProgress, setScrollProgress] = useState(0);
+const ThreeDLanding = ({ children, scrollProgress, setScrollProgress }) => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [cubePosition, setCubePosition] = useState({ x: 30, y: 40 }); // 初始位置为 30% 和 40%（手机端更靠上）
@@ -79,7 +78,7 @@ const ThreeDLanding = ({children}) => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging]);
+  }, [isDragging, setScrollProgress]);
 
   // 计算立方体变换
   const getTransform = (index) => {
@@ -295,7 +294,7 @@ const ThreeDLanding = ({children}) => {
         <div className="w-6 h-6 mx-auto border-b-2 border-r-2 border-gray-400 rotate-45 animate-bounce" />
       </div>
 
-      {React.cloneElement(children, { scrollProgress })}
+      {children}
        
     </div>
   );

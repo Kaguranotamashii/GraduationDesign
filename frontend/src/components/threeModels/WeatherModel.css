@@ -1,0 +1,57 @@
+
+/* WeatherModel.css */
+.container {
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+.galaxyBackground {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(10, 15, 50, 1) 0%, rgba(5, 5, 20, 1) 100%);
+    z-index: -1;
+}
+
+/* WeatherModel.css */
+@keyframes starTwinkle {
+    0% {
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.8;
+    }
+}
+
+.container {
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+.galaxyBackground {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+            radial-gradient(circle, rgba(10, 15, 50, 1) 0%, rgba(5, 5, 20, 1) 100%),
+            repeating-radial-gradient(
+                    circle at center,
+                    rgba(255, 255, 255, 0.1),
+                    rgba(255, 255, 255, 0.1) 1px,
+                    transparent 1px,
+                    transparent 100%
+            );
+    z-index: -1;
+    animation: starTwinkle 5s infinite alternate;
+}

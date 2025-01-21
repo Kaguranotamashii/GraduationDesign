@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@react-spring/three": "^9.7.5",
+    "@react-three/drei": "^9.121.3",
     "@react-three/fiber": "^8.17.12",
     "cra-template": "1.2.0",
     "gsap": "^3.12.7",

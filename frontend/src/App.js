@@ -5,7 +5,11 @@ import './index.css';
 
 function App() {
   return (
-    <div>123</div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </Router>
   );
 }
 

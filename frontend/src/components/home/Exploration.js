@@ -1,7 +1,7 @@
-// Exploration.js
 import React from 'react';
+import WeatherModel from '../threeModels/WeatherModel';
 
-const Exploration = ({ visible,scrollProgress  }) => {
+const Exploration = ({ visible }) => {
   return (
     <div 
       className="fixed inset-0 bg-white"
@@ -11,13 +11,12 @@ const Exploration = ({ visible,scrollProgress  }) => {
         pointerEvents: visible ? 'auto' : 'none',
       }}
     >
-      <div className="p-16">
-        <h2 className="text-5xl font-bold mb-6 text-gray-800">
-          探索新世界 ✨
-        </h2>
-        <p className="text-xl leading-relaxed text-gray-600 max-w-2xl">
-          在这里，我们将开启一段奇妙的旅程...
-        </p>
+      <div style= {{
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        height: '100%',
+}} >
+        <WeatherModel />
+         
       </div>
     </div>
   );
