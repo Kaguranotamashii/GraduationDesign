@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Django后端项目",
+            "type": "debugpy",
+            "request": "launch",
+            "args": [
+                "runserver",
+                "8005"
+            ],
+            "django": true,
+            "autoStartBrowser": false,
+            "program": "${workspaceFolder}\\backend\\manage.py"
+        }
+    ]
+}
