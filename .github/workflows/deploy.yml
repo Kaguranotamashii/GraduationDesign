@@ -3,7 +3,7 @@ name: Deploy Frontend to GitHub Pages
 on:
   push:
     branches:
-      - master  # 仅在 main 分支推送时触发部署
+      - master  # 如果你的主分支是 main，请改为 main
 
 jobs:
   build-and-deploy:
@@ -18,6 +18,14 @@ jobs:
         with:
           node-version: 18  # 你的项目使用的 Node.js 版本
 
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: frontend/node_modules
+          key: frontend-node-modules-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: |
+            frontend-node-modules-
+
       - name: Install Dependencies
         run: |
           cd frontend
@@ -26,7 +34,7 @@ jobs:
       - name: Build Project
         run: |
           cd frontend
-          npm run build  # 生成静态文件
+          CI=false npm run build  # 生成静态文件
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
