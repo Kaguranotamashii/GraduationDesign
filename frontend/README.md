@@ -68,3 +68,12 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+
+接下来你需要完成一个react three.js的组件
+导入模型public/models/42.glb，这个模型是个古建筑模型，这是我的毕业设计，我有个功能是要求实现点击古建筑对应的部分显示文字档用来介绍这个古建筑部分是什么东西干什么的这种的
+但是这种的模型他们是必须要先设计下哪部分是对应着怎么样的文字什么的吧
+所以我希望我们的系统分为两大部分
+第一部分是能绘制这一部分是什么东西，可以存放到json文件或者其他文件你自己决定
+第二部分读取对应的json文件，点击模型对应的部分，然后显示对应的文字档，这个文字档是已经写好的，你只需要调用显示出来就行
