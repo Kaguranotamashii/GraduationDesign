@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 from datetime import timedelta
+from distutils.command.config import config
 from pathlib import Path
 import os
 
@@ -194,9 +195,9 @@ EMAIL_HOST = 'smtp.gmail.com'  # Gmail 的 SMTP 服务器
 EMAIL_PORT = 587  # 端口 587 是用于 TLS 加密的
 EMAIL_USE_TLS = True  # 启用 TLS
 EMAIL_HOST_USER = 'abc1092983146@gmail.com'  # 你的 Gmail 地址
-
+EMAIL_HOST_PASSWORD = 'pjwfivhwwzmjgbek'  # 你的应用专用密码
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER  # 默认发件人
-
 AUTH_USER_MODEL = 'user.CustomUser'  # 修正应用标签
 
 
