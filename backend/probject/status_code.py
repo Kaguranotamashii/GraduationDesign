@@ -1,15 +1,15 @@
-# 定义状态码
-SUCCESS = 0
-ERROR = 1
-INVALID_PARAMS = 1001
-NOT_FOUND = 1002
-UNAUTHORIZED = 1003
+# 状态码定义
+SUCCESS = 200
+ERROR = 500
+INVALID_PARAMS = 400
+UNAUTHORIZED = 401
+FORBIDDEN = 403
 
-# 定义状态码对应的错误信息
+# 状态消息映射
 STATUS_MESSAGES = {
-    SUCCESS: "Success",
-    ERROR: "An error occurred",
-    INVALID_PARAMS: "Invalid parameters",
-    NOT_FOUND: "Resource not found",
-    UNAUTHORIZED: "Unauthorized access",
+    SUCCESS: '请求成功',
+    ERROR: '服务器错误',
+    INVALID_PARAMS: '参数错误',
+    FORBIDDEN: "禁止访问",
+    UNAUTHORIZED: "未授权访问",
 }

@@ -1,13 +1,23 @@
+# app/user/models.py
+
+from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.utils.timezone import now
-from django.utils import timezone
-class User(models.Model):
-    username = models.CharField(max_length=50, unique=True)  # 用户名
-    password = models.CharField(max_length=255)  # 密码
-    email = models.EmailField(max_length=255, unique=True)  # 邮箱，唯一且必填
-    register_time = models.DateTimeField(default=timezone.now)
-    signature = models.TextField(blank=True, null=True)  # 个性签名
-    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)  # 头像
+
+
+class CustomUser(AbstractUser):
+    # 强制 email 字段唯一且必填（覆盖默认的 email 字段）
+    email = models.EmailField(unique=True, blank=False, null=False)
+    # 个性签名（Django 自带的 User 没有此字段）
+    signature = models.TextField(blank=True, null=True)
+    # 头像（Django 自带的 User 没有此字段）
+    avatar = models.FileField(
+        upload_to='avatars/%Y/%m/%d/',  # 修正路径格式为 %Y/%m/%d
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return self.username
+    class Meta:
+        verbose_name = '用户'
+        verbose_name_plural = '用户'

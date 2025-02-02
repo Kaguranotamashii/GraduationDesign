@@ -12,8 +12,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 import os
-from app import user
 
+ 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -33,13 +33,18 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app',
+    'app.user.apps.UserConfig',  # 注册用户应用
+    'app.builder.apps.BuilderConfig',
+
+
+
     'corsheaders',
 ]
 
@@ -110,7 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-hans'
 
 TIME_ZONE = 'Asia/Shanghai'
 
@@ -154,10 +159,10 @@ CORS_ALLOW_HEADERS = [
 
 # 设置 access token 的过期时间为一个月
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=30),  # 设置 access_token 过期时间为 30 天
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),  # 设置 refresh_token 过期时间为 30 天
-    'ROTATE_REFRESH_TOKENS': False,  # 如果不需要旋转 refresh token，设置为 False
-    'BLACKLIST_AFTER_ROTATION': False,  # 如果不需要 blacklist 机制，设置为 False
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=30),    # 短时效
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=60),       # 长时效
+    'ROTATE_REFRESH_TOKENS': True,    # 每次刷新生成新 Refresh Token
+    'BLACKLIST_AFTER_ROTATION': True  # 旧 Token 自动进黑名单
 }
 
 CACHES = {
@@ -189,5 +194,14 @@ EMAIL_HOST = 'smtp.gmail.com'  # Gmail 的 SMTP 服务器
 EMAIL_PORT = 587  # 端口 587 是用于 TLS 加密的
 EMAIL_USE_TLS = True  # 启用 TLS
 EMAIL_HOST_USER = 'abc1092983146@gmail.com'  # 你的 Gmail 地址
- 
+
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER  # 默认发件人
+
+AUTH_USER_MODEL = 'user.CustomUser'  # 修正应用标签
+
+
+# settings.py
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10  # 每页显示10条
+}

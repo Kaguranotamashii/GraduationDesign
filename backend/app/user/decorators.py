@@ -1,41 +1,55 @@
-
+# decorators.py
 from functools import wraps
 from django.http import JsonResponse
-from rest_framework_simplejwt.tokens import AccessToken
-from rest_framework.exceptions import AuthenticationFailed
-from probject.status_code import INVALID_PARAMS, ERROR
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.exceptions import InvalidToken, AuthenticationFailed
+from probject.status_code import UNAUTHORIZED, FORBIDDEN, STATUS_MESSAGES
+from django.core.cache import cache
 
-def custom_login_required(view_func):
-    @wraps(view_func)
-    def _wrapped_view(request, *args, **kwargs):
+def jwt_required(func):
+    """JWT认证注解"""
+    @wraps(func)
+    def wrapper(request, *args, **kwargs):
+        # 获取Authorization头
+        auth_header = request.META.get('HTTP_AUTHORIZATION', '')
+        
+        # 检查Bearer令牌格式
+        if not auth_header.startswith('Bearer '):
+            return JsonResponse({
+                'code': UNAUTHORIZED,
+                'message': 'Authorization头格式错误'
+            }, status=UNAUTHORIZED)
+            
         try:
-            # 获取请求头中的 Authorization 头
-            auth_header = request.headers.get('Authorization')
-            if not auth_header:
-                return JsonResponse({'code': INVALID_PARAMS, 'message': 'Authorization header is missing'}, status=401)
-
-            # 提取 Token
-            try:
-                token_type, token = auth_header.split()
-                if token_type.lower() != 'bearer':
-                    return JsonResponse({'code': INVALID_PARAMS, 'message': 'Invalid token type'}, status=401)
-            except ValueError:
-                return JsonResponse({'code': INVALID_PARAMS, 'message': 'Invalid token format'}, status=401)
-
-            # 验证 Token
-            try:
-                access_token = AccessToken(token)
-                user_id = access_token.payload['user_id']
-
-            #     如果token过期了抛出其他的异常 但是也要通过 code success
-            except AuthenticationFailed as e:
-                # token 可能过期了 抛出异常
-                return JsonResponse({'code': ERROR, 'message': str(e)}, status=401)
-
-            # 将用户对象添加到请求中
-            request.user_id = user_id
-
-            return view_func(request, *args, **kwargs)
+            token = auth_header.split(' ')[1]
+            
+            # 检查黑名单
+            if cache.get(f'blacklist:{token}'):
+                return JsonResponse({
+                    'code': UNAUTHORIZED,
+                    'message': '令牌已失效'
+                }, status=UNAUTHORIZED)
+            
+            # JWT验证
+            auth = JWTAuthentication()
+            validated_token = auth.get_validated_token(token)
+            user = auth.get_user(validated_token)
+            
+            # 将用户和令牌附加到请求对象
+            request.auth_user = user
+            request.auth_token = token
+            
+        except (InvalidToken, AuthenticationFailed) as e:
+            return JsonResponse({
+                'code': UNAUTHORIZED,
+                'message': str(e)
+            }, status=UNAUTHORIZED)
+            
         except Exception as e:
-            return JsonResponse({'code': ERROR, 'message': f"Failed to authenticate user: {str(e)}"}, status=401)
-    return _wrapped_view
+            return JsonResponse({
+                'code': FORBIDDEN,
+                'message': '非法访问请求'
+            }, status=FORBIDDEN)
+            
+        return func(request, *args, **kwargs)
+    return wrapper
