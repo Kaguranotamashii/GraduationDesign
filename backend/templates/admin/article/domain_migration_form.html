@@ -1,0 +1,34 @@
+{# templates/admin/article/domain_migration_form.html #}
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+    <div>
+        <form action="{% if queryset %}{% url 'admin:article_article_changelist' %}{% else %}{% url 'admin:execute_domain_migration' %}{% endif %}" method="post">
+            {% csrf_token %}
+            <fieldset class="module aligned">
+                {% for field in form %}
+                    <div class="form-row">
+                        <div>
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {% if field.help_text %}
+                                <div class="help">{{ field.help_text }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </fieldset>
+
+            {% if queryset %}
+                {% for obj in queryset %}
+                    <input type="hidden" name="_selected_action" value="{{ obj.pk }}" />
+                {% endfor %}
+                <input type="hidden" name="action" value="migrate_selected_articles" />
+            {% endif %}
+
+            <div class="submit-row">
+                <input type="submit" name="apply" value="执行迁移" class="default" />
+            </div>
+        </form>
+    </div>
+{% endblock %}

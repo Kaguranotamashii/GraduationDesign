@@ -10,11 +10,16 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 from datetime import timedelta
-from distutils.command.config import config
+
 from pathlib import Path
 import os
 
- 
+import crontab
+from decouple import config
+
+from celery.schedules import crontab
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -43,10 +48,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app.user.apps.UserConfig',  # 注册用户应用
     'app.builder.apps.BuilderConfig',
+    'app.article.apps.ArticleConfig',
+    'app.comment.apps.CommentConfig',
+    'app.analytics.apps.AnalyticsConfig',
+    'app.public.apps.PublicConfig',
+    'django_celery_beat',
+
 
 
 
     'corsheaders',
+    'rest_framework',
 ]
 
 # 确保中间件顺序正确
@@ -59,6 +71,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'app.analytics.middleware.AnalyticsMiddleware',
+    'probject.middleware.DebugMiddleware'
 ]
 
 ROOT_URLCONF = 'probject.urls'
@@ -137,7 +151,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS configuration
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',  # 前端的开发地址
+    'http://localhost:5173',  # 前端的开发地址
 ]
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True  # 允许凭据
@@ -186,6 +200,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 URL_BASE = 'http://localhost:8005'
+OLD_DOMAINS = ['https://old-domain.com', 'https://legacy-domain.com']
 
 
 # settings.py
@@ -195,7 +210,6 @@ EMAIL_HOST = 'smtp.gmail.com'  # Gmail 的 SMTP 服务器
 EMAIL_PORT = 587  # 端口 587 是用于 TLS 加密的
 EMAIL_USE_TLS = True  # 启用 TLS
 EMAIL_HOST_USER = 'abc1092983146@gmail.com'  # 你的 Gmail 地址
-EMAIL_HOST_PASSWORD = 'pjwfivhwwzmjgbek'  # 你的应用专用密码
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER  # 默认发件人
 AUTH_USER_MODEL = 'user.CustomUser'  # 修正应用标签
@@ -205,4 +219,19 @@ AUTH_USER_MODEL = 'user.CustomUser'  # 修正应用标签
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10  # 每页显示10条
+}
+
+GOOGLE_CLIENT_ID = config('GOOGLE_CLIENT_ID', default='')
+
+
+
+CELERY_BEAT_SCHEDULE = {
+    'update_daily_statistics': {
+        'task': 'app.analytics.tasks.update_daily_statistics',
+        'schedule': crontab(hour=0, minute=5),  # 每天凌晨0:05执行
+    },
+    'update_popular_content': {
+        'task': 'app.analytics.tasks.update_popular_content',
+        'schedule': crontab(hour='*/1'),  # 每小时执行一次
+    },
 }

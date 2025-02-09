@@ -1,0 +1,58 @@
+{# templates/admin/article/domain_migration_results.html #}
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+    <div>
+        <h2>域名迁移测试结果</h2>
+        <p>旧域名: {{ old_domain }}</p>
+        <p>新域名: {{ new_domain }}</p>
+
+        {% if results %}
+            <h3>需要修改的文章：</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>文章ID</th>
+                    <th>标题</th>
+                    <th>需要更新的URL</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for result in results %}
+                    <tr>
+                        <td>{{ result.article.id }}</td>
+                        <td>{{ result.article.title }}</td>
+                        <td>
+                            <ul>
+                                {% for url in result.invalid_urls %}
+                                    <li>{{ url }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <form action="" method="post" style="margin-top: 20px;">
+                {% csrf_token %}
+                <input type="hidden" name="old_domain" value="{{ old_domain }}" />
+                <input type="hidden" name="new_domain" value="{{ new_domain }}" />
+                <input type="hidden" name="test_mode" value="false" />
+
+                {% if queryset %}
+                    {% for obj in queryset %}
+                        <input type="hidden" name="_selected_action" value="{{ obj.pk }}" />
+                    {% endfor %}
+                    <input type="hidden" name="action" value="migrate_selected_articles" />
+                {% endif %}
+
+                <div class="submit-row">
+                    <input type="submit" name="apply" value="确认执行迁移" class="default" />
+                </div>
+            </form>
+        {% else %}
+            <p>没有找到需要更新的文章。</p>
+        {% endif %}
+    </div>
+{% endblock %}

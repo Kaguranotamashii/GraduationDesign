@@ -1,0 +1,34 @@
+.site-layout {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+}
+
+/* 确保 Navbar 在最顶层 */
+.navbar-wrapper {
+    position: relative;
+    z-index: 1000;
+    height: 5rem;
+}
+
+/* 地图容器样式 */
+.map-container {
+    position: relative;
+    height: calc(100vh - 5rem);
+    width: 100%;
+}
+
+/* Drawer 样式覆盖 */
+.heritage-drawer {
+    z-index: 999 !important;
+}
+
+.heritage-drawer .ant-drawer-content-wrapper {
+    height: calc(100% - 5rem) !important;
+    top: 5rem !important;
+}
+
+.heritage-drawer .ant-drawer-mask {
+    top: 5rem !important;
+    height: calc(100% - 5rem) !important;
+}

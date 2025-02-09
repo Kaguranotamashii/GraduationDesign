@@ -2,9 +2,13 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('models/', views.add_model, name='add_model'),
+    path('models/add-models/', views.add_model, name='add_model'),
     path('models/my-models/', views.get_my_models, name='get_my_models'),  # 新增路由
     path('models/all-models/', views.get_all_models, name='get_all_models'),
-    path('models/all-page-models', views.get_all_buildings_paginated, name='get_all_models_page'),
+    path('models/all-page-models/', views.get_all_buildings_paginated, name='get_all_models_page'),
+
+    #分类
+    path('models/categories/', views.get_building_categories, name='get_building_categories'),
+    path('models/tags/', views.get_building_tags, name='get_building_tags'),
 
 ]

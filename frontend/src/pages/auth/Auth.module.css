@@ -1,0 +1,28 @@
+.authContainer {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a365d 0%, #2d3748 100%);
+    padding: 20px;
+}
+
+.authWrapper {
+    width: 100%;
+    max-width: 420px;
+}
+
+.authCard {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+    text-align: center;
+    color: #2d3748;
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+}

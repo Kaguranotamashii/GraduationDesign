@@ -1,22 +1,30 @@
+import logging
+import os
 import re
 import json
 import random
 import string
+from datetime import datetime
+
+from django.contrib.messages.storage import default_storage
 from django.core.cache import cache
+from django.core.files.base import ContentFile
 from django.core.mail import EmailMessage
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.hashers import make_password
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
 from app.user.decorators import jwt_required
+from probject import settings
 from .models import CustomUser  # 确保使用继承AbstractUser的自定义用户模型
 from probject.status_code import STATUS_MESSAGES, SUCCESS, ERROR, INVALID_PARAMS, UNAUTHORIZED
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from app.public.services import ImageService
 # 验证码有效期配置
 VERIFICATION_CODE_EXPIRE = 600  # 10分钟（单位：秒）
 
@@ -254,18 +262,17 @@ def login_user(request):
 
         # 构造响应数据
         user_data = {
-            "user":
-                {
-                    "id": user.id,
-                    "username": user.username,
-                    "email": user.email,
-                    "avatar": user.avatar.url if user.avatar else None,
-                    "signature": user.signature,
-                    "register_time": user.date_joined.strftime("%Y-%m-%d %H:%M:%S")
-                },
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "avatar": user.get_full_avatar_url(),  # 修改这里
+                "signature": user.signature,
+                "register_time": user.date_joined.strftime("%Y-%m-%d %H:%M:%S")
+            },
             "access_token": access_token,
             "refresh_token": str(refresh),
-            "expires_in": 3600 * 24 * 30  # 秒
+            "expires_in": 3600 * 24 * 30
         }
 
         return Response(
@@ -362,5 +369,398 @@ def user_list(request):
     )
 
 
+@api_view(['GET'])
+@jwt_required
+def get_user_profile(request):
+    """获取用户个人信息"""
+    #这里需要加一个判断这个应该是本人或者管理员才能操作
+    if not request.auth_user.is_staff:
+        if request.auth_user.id != request.user.id:
+            return Response(
+                {"code": 403, "message": "无权限访问"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        return Response(
+            {"code": 403, "message": "无权限访问"},
+            status=status.HTTP_403_FORBIDDEN
+        )
 
-# 修改用户信息
+    user = request.auth_user
+    profile_data = {
+        "id": user.id,
+        "username": user.username,
+        "email": user.email,
+        "signature": user.signature,
+        "is_staff": user.is_staff,
+
+        "avatar": user.get_full_avatar_url(),  # 修改这里
+        "date_joined": user.date_joined.strftime("%Y-%m-%d %H:%M:%S"),
+        "last_login": user.last_login.strftime("%Y-%m-%d %H:%M:%S") if user.last_login else None
+    }
+    return Response({"code": 200, "message": "获取成功", "data": profile_data})
+
+
+@api_view(['POST'])
+@jwt_required
+def update_user_profile(request):
+    """更新用户个人信息"""
+    user = request.auth_user
+    data = request.data
+    print( data)
+
+    # 可更新字段
+    allowed_fields = data['signature']
+    updated_fields = {}
+
+    for field in allowed_fields:
+        if field in data:
+            setattr(user, field, data[field])
+            updated_fields[field] = data[field]
+
+    try:
+        user.save()
+        return Response({
+            "code": 200,
+            "message": "更新成功",
+            "data": updated_fields
+        })
+    except Exception as e:
+        logging.error(f"更新用户信息失败: {str(e)}")
+        return Response({
+            "code": 500,
+            "message": f"更新失败: {str(e)}"
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+@api_view(['POST'])
+@jwt_required
+def change_password(request):
+    """修改密码"""
+    user = request.auth_user
+    data = request.data
+
+    old_password = data.get('old_password')
+    new_password = data.get('new_password')
+
+    if not user.check_password(old_password):
+        return Response({
+            "code": 400,
+            "message": "原密码错误"
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    # # 密码强度验证
+    # if not PASSWORD_REGEX.match(new_password):
+    #     return Response({
+    #         "code": 400,
+    #         "message": "密码必须包含字母、数字和特殊字符，长度8-20位"
+    #     }, status=status.HTTP_400_BAD_REQUEST)
+
+    user.set_password(new_password)
+    user.save()
+
+    # 清除所有登录会话
+    cache.delete_pattern(f"user:{user.id}:*")
+
+    return Response({
+        "code": 200,
+        "message": "密码修改成功，请重新登录"
+    })
+
+@api_view(['POST'])
+@jwt_required
+def upload_avatar(request):
+    """上传头像"""
+    try:
+        user = request.auth_user
+        if 'avatar' not in request.FILES:
+            return Response({
+                "code": 400,
+                "message": "请选择要上传的头像"
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        image_service = ImageService()
+
+        # 使用图片服务创建头像
+        image = image_service.create_image(
+            file=request.FILES['avatar'],
+            creator_id=user.id,
+            image_type='avatar',
+            name=f"{user.username}的头像"
+        )
+
+        # 更新用户头像
+        if user.avatar:
+            # 删除旧头像
+            default_storage.delete(user.avatar.path)
+
+        user.avatar = image.file
+        user.save()
+
+        return Response({
+            "code": 200,
+            "message": "头像上传成功",
+            "data": {
+                "avatar_url": user.get_full_avatar_url()
+            }
+        })
+    except Exception as e:
+        return Response({
+            "code": 500,
+            "message": f"头像上传失败: {str(e)}"
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
+@jwt_required
+def refresh_auth_token(request):
+    """刷新认证令牌"""
+    refresh_token = request.data.get('refresh_token')
+    if not refresh_token:
+        return Response({
+            "code": 400,
+            "message": "缺少刷新令牌"
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        refresh = RefreshToken(refresh_token)
+        return Response({
+            "code": 200,
+            "message": "令牌刷新成功",
+            "data": {
+                "access_token": str(refresh.access_token)
+            }
+        })
+    except Exception as e:
+        return Response({
+            "code": 401,
+            "message": "无效的刷新令牌"
+        }, status=status.HTTP_401_UNAUTHORIZED)
+
+
+@api_view(['GET'])
+@jwt_required
+def get_active_sessions(request):
+    """获取当前用户的活跃会话"""
+    user = request.auth_user
+    pattern = f"user:{user.id}:*"
+    sessions = []
+
+    for key in cache.keys(pattern):
+        device_id = key.split(':')[-1]
+        sessions.append({
+            "device_id": device_id,
+            "last_active": cache.get(key)
+        })
+
+    return Response({
+        "code": 200,
+        "message": "获取成功",
+        "data": sessions
+    })
+
+
+@api_view(['POST'])
+@jwt_required
+def revoke_session(request):
+    """撤销指定的会话"""
+    user = request.auth_user
+    device_id = request.data.get('device_id')
+
+    if not device_id:
+        return Response({
+            "code": 400,
+            "message": "缺少设备ID"
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    cache_key = f"user:{user.id}:{device_id}"
+    if cache.delete(cache_key):
+        return Response({
+            "code": 200,
+            "message": "会话已撤销"
+        })
+    else:
+        return Response({
+            "code": 404,
+            "message": "未找到指定会话"
+        }, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+@jwt_required
+@permission_classes([IsAdminUser])
+def user_detail(request, user_id):
+    """获取指定用户详细信息（管理员接口）"""
+    try:
+        user = CustomUser.objects.get(id=user_id)
+        user_data = {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "is_active": user.is_active,
+            "is_staff": user.is_staff,
+            "date_joined": user.date_joined.strftime("%Y-%m-%d %H:%M:%S"),
+            "last_login": user.last_login.strftime("%Y-%m-%d %H:%M:%S") if user.last_login else None,
+            "signature": user.signature,
+            "avatar": user.get_full_avatar_url()  # 修改这里
+        }
+        return Response({
+            "code": 200,
+            "message": "获取成功",
+            "data": user_data
+        })
+    except CustomUser.DoesNotExist:
+        return Response({
+            "code": 404,
+            "message": "用户不存在"
+        }, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['PUT'])
+@jwt_required
+@permission_classes([IsAdminUser])
+def update_user_status(request, user_id):
+    """更新用户状态（管理员接口）"""
+    try:
+        user = CustomUser.objects.get(id=user_id)
+        data = request.data
+
+        if 'is_active' in data:
+            user.is_active = data['is_active']
+        if 'is_staff' in data:
+            user.is_staff = data['is_staff']
+
+        user.save()
+        return Response({
+            "code": 200,
+            "message": "状态更新成功"
+        })
+    except CustomUser.DoesNotExist:
+        return Response({
+            "code": 404,
+            "message": "用户不存在"
+        }, status=status.HTTP_404_NOT_FOUND)
+
+
+from google.oauth2 import id_token
+from google.auth.transport import requests
+
+GOOGLE_CLIENT_ID = settings.GOOGLE_CLIENT_ID
+
+
+@api_view(['POST'])
+def google_login(request):
+    """
+    Google登录处理
+    请求参数：{
+        "credential": "Google ID token"
+    }
+    """
+    print(request.data)
+    try:
+        credential = request.data.get('credential')
+        if not credential:
+            return Response({
+                'code': 400,
+                'message': '缺少必要参数'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # 验证Google ID token
+        idinfo = id_token.verify_oauth2_token(
+            credential,
+            requests.Request(),
+            GOOGLE_CLIENT_ID
+        )
+        print(idinfo)
+
+        # 获取用户信息
+        google_user_id = idinfo['sub']
+        email = idinfo.get('email')
+        name = idinfo.get('name')
+        picture = idinfo.get('picture')
+
+        # 检查用户是否已存在
+        user = CustomUser.objects.filter(email=email).first()
+        if not user:
+            # 创建新用户
+            username = f'google_{google_user_id}'
+            # 检查用户名是否已存在
+            while CustomUser.objects.filter(username=username).exists():
+                username = f'google_{google_user_id}_{random.randint(1000, 9999)}'
+
+            user = CustomUser.objects.create_user(
+                username=username,
+                email=email,
+                password=None  # 使用OAuth登录的用户不需要密码
+            )
+            user.name = name
+            # 如果需要，可以下载并保存Google头像
+            # user.avatar = picture
+            user.save()
+
+        # 生成JWT令牌
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
+
+        return Response({
+            'code': 200,
+            'message': '登录成功',
+            'data': {
+                'user': {
+                    'id': user.id,
+                    'username': user.username,
+                    'email': user.email,
+                    'name': name,
+                    'avatar': picture or user.get_full_avatar_url(),  # 修改这里
+                },
+                'access_token': access_token,
+                'refresh_token': str(refresh),
+            }
+        })
+
+    except ValueError:
+        # Invalid token
+        return Response({
+            'code': 400,
+            'message': '无效的Google令牌'
+        }, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(f"Google login error: {str(e)}")
+        return Response({
+            'code': 500,
+            'message': '登录失败，请稍后重试'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+#根据token获取当前token的信息
+@api_view(['GET'])
+@jwt_required
+def get_current_user(request):
+    """获取当前登录用户的信息"""
+    try:
+        print(request.auth_user)
+        user = request.auth_user
+        return Response({
+            "code": 200,
+            "message": "获取成功",
+            "data": {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "name": user.username,
+                "avatar": user.get_full_avatar_url(),  # 修改这里
+                "is_active": user.is_active,
+                "is_staff": user.is_staff,
+                "signature": user.signature,
+                "register_time" : user.date_joined.strftime("%Y-%m-%d %H:%M:%S"),
+
+
+            }
+        })
+    except Exception as e:
+        return Response({
+            "code": 500,
+            "message": "获取失败",
+            "error": str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

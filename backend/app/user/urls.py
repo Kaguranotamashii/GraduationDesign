@@ -15,8 +15,20 @@ urlpatterns = [
     # 用户登出接口
     path('logout/', views.logout_user, name='logout'),
 
-    # 用户列表接口
+    path('profile/', views.get_user_profile, name='get_user_profile'),
+    path('profile/update/', views.update_user_profile, name='update_user_profile'),
+    path('password/change/', views.change_password, name='change_password'),
 
+    path('users/', views.user_list, name='user_list'),
+    path('users/<int:user_id>/', views.user_detail, name='user_detail'),
+    path('users/<int:user_id>/status/', views.update_user_status, name='update_user_status'),
+    path('avatar/upload/', views.upload_avatar, name='upload_avatar'),
+    path('refresh-token/', views.refresh_auth_token, name='refresh_token'),
+    path('active-sessions/', views.get_active_sessions, name='active_sessions'),
+    path('active-sessions/revoke/', views.revoke_session, name='revoke_session'),
 
-    # 其他可能的路由...
+    # urls.py 中添加：
+    path('google-login/', views.google_login, name='google_login'),
+
+    path('current-user/', views.get_current_user, name='get_current_user'),
 ]

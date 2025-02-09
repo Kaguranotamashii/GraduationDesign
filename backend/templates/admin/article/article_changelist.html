@@ -1,0 +1,12 @@
+{# templates/admin/article/article_changelist.html #}
+{% extends "admin/change_list.html" %}
+{% load i18n admin_urls %}
+
+{% block object-tools-items %}
+    <li>
+        <a href="{% url 'admin:article_migrate_domain' %}" class="addlink">
+            域名迁移
+        </a>
+    </li>
+    {{ block.super }}
+{% endblock %}
