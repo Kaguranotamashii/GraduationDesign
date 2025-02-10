@@ -42,4 +42,4 @@ jobs:
         with:
           branch: gh-pages-1  # 部署到 GitHub Pages 的分支
           folder: frontend/dist  # 生成的静态文件路径
-          clean: true  # 清理旧文件
+          clean: true  # 清理旧文件1
