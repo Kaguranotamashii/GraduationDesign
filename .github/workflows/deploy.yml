@@ -40,6 +40,6 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: gh-pages  # 部署到 GitHub Pages 的分支
-          folder: frontend/build  # 生成的静态文件路径
+          branch: gh-pages-1  # 部署到 GitHub Pages 的分支
+          folder: frontend/dist  # 生成的静态文件路径
           clean: true  # 清理旧文件
