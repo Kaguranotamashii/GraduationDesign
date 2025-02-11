@@ -1,6 +1,7 @@
 // ModelMarkerManager.jsx
 import * as THREE from 'three';
-import { Modal, Input } from 'antd';
+import {Modal, Input} from 'antd';
+import React from 'react';
 
 class ModelMarkerManager {
     constructor(sceneManager, model) {
@@ -41,11 +42,104 @@ class ModelMarkerManager {
         this.handleClick = this.handleClick.bind(this);
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.handleKeyUp = this.handleKeyUp.bind(this);
+        this.handleNormalClick = this.handleNormalClick.bind(this);
 
         // 标记缓存
         this.markers = new Map();
         this.markerHistory = [];
         this.historyIndex = -1;
+
+        // 创建提示容器
+        this.tooltipContainer = null;
+        this.createTooltipContainer();
+
+        // 绑定场景的点击事件
+        const canvas = this.sceneManager.renderer.domElement;
+        canvas.addEventListener('click', this.handleNormalClick);
+    }
+
+    createTooltipContainer() {
+        this.tooltipContainer = document.createElement('div');
+        this.tooltipContainer.style.cssText = `
+            position: absolute;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.75);
+            color: white;
+            border-radius: 4px;
+            font-size: 14px;
+            pointer-events: none;
+            display: none;
+            z-index: 1000;
+            max-width: 300px;
+            word-wrap: break-word;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        `;
+        document.body.appendChild(this.tooltipContainer);
+    }
+
+    handleNormalClick(event) {
+        if (this.isMarking) return; // 在标记模式下不处理普通点击
+
+        const intersect = this.getIntersection(event);
+        if (!intersect || intersect.faceIndex === undefined) {
+            this.hidePartInfo();
+            return;
+        }
+
+        // 查找点击的面属于哪个标记
+        const clickedFaceIndex = intersect.faceIndex;
+        let foundMarker = null;
+
+        for (const marker of this.markers.values()) {
+            if (marker.faces.includes(clickedFaceIndex)) {
+                foundMarker = marker;
+                break;
+            }
+        }
+
+        if (foundMarker) {
+            this.showPartInfo(foundMarker, event);
+        } else {
+            this.hidePartInfo();
+        }
+    }
+
+    showPartInfo(marker, event) {
+        // 高亮显示对应的面
+        this.highlightFaces(new Set(marker.faces));
+
+        // 显示提示信息
+        const canvas = this.sceneManager.renderer.domElement;
+        const rect = canvas.getBoundingClientRect();
+
+        this.tooltipContainer.style.display = 'block';
+        this.tooltipContainer.innerHTML = `
+            <div style="margin-bottom: 8px;"><strong>位置信息：</strong></div>
+            <div>${marker.description}</div>
+        `;
+
+        // 计算提示框位置
+        const tooltipRect = this.tooltipContainer.getBoundingClientRect();
+        let left = event.clientX + 10;
+        let top = event.clientY + 10;
+
+        // 边界检查
+        if (left + tooltipRect.width > window.innerWidth) {
+            left = event.clientX - tooltipRect.width - 10;
+        }
+        if (top + tooltipRect.height > window.innerHeight) {
+            top = event.clientY - tooltipRect.height - 10;
+        }
+
+        this.tooltipContainer.style.left = `${left}px`;
+        this.tooltipContainer.style.top = `${top}px`;
+    }
+
+    hidePartInfo() {
+        this.clearSelection();
+        if (this.tooltipContainer) {
+            this.tooltipContainer.style.display = 'none';
+        }
     }
 
     initializeGroups() {
@@ -158,12 +252,14 @@ class ModelMarkerManager {
     startMarking() {
         if (this.isMarking) return;
 
-        console.log('Starting marking mode');
         this.isMarking = true;
         const canvas = this.sceneManager.renderer.domElement;
         canvas.addEventListener('click', this.handleClick);
         document.addEventListener('keydown', this.handleKeyDown);
         document.addEventListener('keyup', this.handleKeyUp);
+
+        // 进入标记模式时隐藏提示
+        this.hidePartInfo();
     }
 
     stopMarking() {
@@ -175,11 +271,23 @@ class ModelMarkerManager {
         document.removeEventListener('keydown', this.handleKeyDown);
         document.removeEventListener('keyup', this.handleKeyUp);
         this.clearSelection();
+
+        // 退出标记模式时隐藏提示
+        this.hidePartInfo();
     }
 
     handleKeyDown(event) {
         if (event.key === 'Control') {
             this.isCtrlPressed = true;
+        }
+    }
+
+    handleKeyUp(event) {
+        if (event.key === 'Control') {
+            this.isCtrlPressed = false;
+            if (this.selectedFaces.size > 0) {
+                this.promptForMarkerInfo(this.selectedFaces);
+            }
         }
     }
 
@@ -194,7 +302,6 @@ class ModelMarkerManager {
             this.selectConnectedFaces(intersect.faceIndex);
             this.highlightFaces(this.selectedFaces);
 
-            // 只有在没按 Ctrl 的情况下才弹出输入框
             if (!this.isCtrlPressed) {
                 this.promptForMarkerInfo(this.selectedFaces);
             }
@@ -203,78 +310,67 @@ class ModelMarkerManager {
         }
     }
 
-    handleKeyUp(event) {
-        if (event.key === 'Control') {
-            this.isCtrlPressed = false;
-            // 在松开 Ctrl 键时，如果有选中的面就弹出输入框
-            if (this.selectedFaces.size > 0) {
-                this.promptForMarkerInfo(this.selectedFaces);
-            }
-        }
+    getIntersection(event) {
+        const canvas = this.sceneManager.renderer.domElement;
+        const rect = canvas.getBoundingClientRect();
+
+        this.mouse.x = ((event.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
+        this.mouse.y = -((event.clientY - rect.top) / canvas.clientHeight) * 2 + 1;
+
+        this.raycaster.setFromCamera(this.mouse, this.sceneManager.camera);
+        const intersects = this.raycaster.intersectObject(this.mesh, false);
+        return intersects[0] || null;
     }
 
-getIntersection(event) {
-    const canvas = this.sceneManager.renderer.domElement;
-    const rect = canvas.getBoundingClientRect();
+    selectConnectedFaces(startFaceIndex) {
+        const newFaces = new Set();
+        const queue = [startFaceIndex];
+        let queueIndex = 0;
 
-    this.mouse.x = ((event.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
-    this.mouse.y = -((event.clientY - rect.top) / canvas.clientHeight) * 2 + 1;
+        while (queueIndex < queue.length) {
+            const currentFaceIndex = queue[queueIndex++];
+            if (newFaces.has(currentFaceIndex)) continue;
 
-    this.raycaster.setFromCamera(this.mouse, this.sceneManager.camera);
-    const intersects = this.raycaster.intersectObject(this.mesh, false);
-    return intersects[0] || null;
-}
+            newFaces.add(currentFaceIndex);
+            const currentFace = this.faces[currentFaceIndex];
 
-selectConnectedFaces(startFaceIndex) {
-    const newFaces = new Set();
-    const queue = [startFaceIndex];
-    let queueIndex = 0;
+            currentFace.connected.forEach(neighborIndex => {
+                if (!newFaces.has(neighborIndex)) {
+                    queue.push(neighborIndex);
+                }
+            });
+        }
 
-    while (queueIndex < queue.length) {
-        const currentFaceIndex = queue[queueIndex++];
-        if (newFaces.has(currentFaceIndex)) continue;
-
-        newFaces.add(currentFaceIndex);
-        const currentFace = this.faces[currentFaceIndex];
-
-        currentFace.connected.forEach(neighborIndex => {
-            if (!newFaces.has(neighborIndex)) {
-                queue.push(neighborIndex);
-            }
+        newFaces.forEach(faceIndex => {
+            this.selectedFaces.add(faceIndex);
         });
     }
 
-    // 合并新选择的面到已选择的面集合中
-    newFaces.forEach(faceIndex => {
-        this.selectedFaces.add(faceIndex);
-    });
-}
+    highlightFaces(faceIndices) {
+        const geometry = this.mesh.geometry;
 
-highlightFaces(faceIndices) {
-    const geometry = this.mesh.geometry;
+        geometry.clearGroups();
+        geometry.addGroup(0, geometry.index.count, 0);
 
-    geometry.clearGroups();
-    geometry.addGroup(0, geometry.index.count, 0);
+        if (faceIndices.size > 0) {
+            const sortedIndices = Array.from(faceIndices).sort((a, b) => a - b);
+            let start = sortedIndices[0] * 3;
+            let count = 3;
 
-    if (faceIndices.size > 0) {
-        const sortedIndices = Array.from(faceIndices).sort((a, b) => a - b);
-        let start = sortedIndices[0] * 3;
-        let count = 3;
-
-        for (let i = 1; i < sortedIndices.length; i++) {
-            if (sortedIndices[i] === sortedIndices[i - 1] + 1) {
-                count += 3;
-            } else {
-                geometry.addGroup(start, count, 1);
-                start = sortedIndices[i] * 3;
-                count = 3;
+            for (let i = 1; i < sortedIndices.length; i++) {
+                if (sortedIndices[i] === sortedIndices[i - 1] + 1) {
+                    count += 3;
+                } else {
+                    geometry.addGroup(start, count, 1);
+                    start = sortedIndices[i] * 3;
+                    count = 3;
+                }
             }
+            geometry.addGroup(start, count, 1);
         }
-        geometry.addGroup(start, count, 1);
-    }
 
-    this.mesh.material = [this.defaultMaterial, this.highlightMaterial];
-}
+        this.mesh.material = [this.defaultMaterial, this.highlightMaterial];
+    }
 
     promptForMarkerInfo(selectedFaces) {
         if (selectedFaces.size === 0) return;
@@ -309,143 +405,252 @@ highlightFaces(faceIndices) {
         });
     }
 
-createMarker(description, selectedFaces) {
+    createMarker(description, selectedFaces) {
+        const markerId = Date.now().toString();
+        const center = this._vec3_2.set(0, 0, 0);
 
-    const markerId = Date.now().toString();
-    const center = this._vec3_2.set(0, 0, 0);
+        selectedFaces.forEach(faceIndex => {
+            center.add(this.faces[faceIndex].center);
+        });
+        center.divideScalar(selectedFaces.size);
 
-    selectedFaces.forEach(faceIndex => {
-        center.add(this.faces[faceIndex].center);
-    });
-    center.divideScalar(selectedFaces.size);
-    const marker = {
-        id: markerId,
-        faces: Array.from(selectedFaces),
-        description: description,
-        position: center.clone()
-    };
+        const marker = {
+            id: markerId,
+            faces: Array.from(selectedFaces),
+            description: description,
+            position: center.clone(),
+            regions: this.getRegionsInfo(selectedFaces)
+        };
 
-    this.markers.set(markerId, marker);
-    this.addToHistory(marker);
+        this.markers.set(markerId, marker);
+        this.addToHistory(marker);
 
-    if (!this.isCtrlPressed) {
-        this.clearSelection();
-    }
+        if (!this.isCtrlPressed) {
+            this.clearSelection();
+        }
 
-    // 触发标记变化回调
-    if (this.onMarkersChanged) {
-        this.onMarkersChanged(this.getMarkersData());
-    }
-
-}
-
-clearSelection() {
-    this.selectedFaces.clear();
-    if (!this.mesh) return;
-
-    const geometry = this.mesh.geometry;
-    geometry.clearGroups();
-    geometry.addGroup(0, geometry.index.count, 0);
-    this.mesh.material = this.defaultMaterial;
-}
-
-// 历史记录相关方法
-addToHistory(marker) {
-    this.historyIndex++;
-    this.markerHistory = this.markerHistory.slice(0, this.historyIndex);
-    this.markerHistory.push(marker);
-}
-
-undoLastMarker() {
-    if (this.historyIndex >= 0) {
-        const marker = this.markerHistory[this.historyIndex];
-        this.markers.delete(marker.id);
-        this.historyIndex--;
         if (this.onMarkersChanged) {
             this.onMarkersChanged(this.getMarkersData());
         }
     }
-}
 
-redoMarker() {
-    if (this.historyIndex < this.markerHistory.length - 1) {
+    getRegionsInfo(selectedFaces) {
+        const regions = [];
+        const processedFaces = new Set();
+
+        selectedFaces.forEach(startFace => {
+            if (processedFaces.has(startFace)) return;
+
+            const region = new Set();
+            const queue = [startFace];
+
+            while (queue.length > 0) {
+                const currentFace = queue.shift();
+                if (region.has(currentFace)) continue;
+
+                region.add(currentFace);
+                processedFaces.add(currentFace);
+
+                this.faces[currentFace].connected.forEach(neighborIndex => {
+                    if (selectedFaces.has(neighborIndex) && !region.has(neighborIndex)) {
+                        queue.push(neighborIndex);
+                    }
+                });
+            }
+
+            const regionCenter = new THREE.Vector3();
+            region.forEach(faceIndex => {
+                regionCenter.add(this.faces[faceIndex].center);
+            });
+            regionCenter.divideScalar(region.size);
+
+            regions.push({
+                faces: Array.from(region),
+                center: regionCenter.clone()
+            });
+        });
+
+        return regions;
+    }
+
+    updateMarkerDescription(markerId, newDescription) {
+        const marker = this.markers.get(markerId);
+        if (marker) {
+            const updatedMarker = {
+                ...marker,
+                description: newDescription
+            };
+
+            this.markers.set(markerId, updatedMarker);
+
+            this.addToHistory({
+                ...updatedMarker,
+                id: Date.now().toString()
+            });
+
+            if (this.onMarkersChanged) {
+                this.onMarkersChanged(this.getMarkersData());
+            }
+        }
+    }
+
+    deleteMarker(markerId) {
+        if (this.markers.has(markerId)) {
+            const marker = this.markers.get(markerId);
+            this.markers.delete(markerId);
+
+            this.addToHistory({
+                ...marker,
+                type: 'delete'
+            });
+
+            this.clearSelection();
+
+            if (this.onMarkersChanged) {
+                this.onMarkersChanged(this.getMarkersData());
+            }
+        }
+    }
+
+    clearSelection() {
+        this.selectedFaces.clear();
+        if (!this.mesh) return;
+
+        const geometry = this.mesh.geometry;
+        geometry.clearGroups();
+        geometry.addGroup(0, geometry.index.count, 0);
+        this.mesh.material = this.defaultMaterial;
+    }
+
+    addToHistory(marker) {
         this.historyIndex++;
-        const marker = this.markerHistory[this.historyIndex];
-        this.markers.set(marker.id, marker);
-        if (this.onMarkersChanged) {
-            this.onMarkersChanged(this.getMarkersData());
-        }
+        this.markerHistory = this.markerHistory.slice(0, this.historyIndex);
+        this.markerHistory.push(marker);
     }
-}
 
-// 标记数据相关方法
-getMarkersData() {
-    return Array.from(this.markers.values()).map(marker => ({
-        id: marker.id,
-        description: marker.description,
-        faces: marker.faces,
-        position: {
-            x: marker.position.x,
-            y: marker.position.y,
-            z: marker.position.z
-        }
-    }));
-}
-
-highlightMarker(markerId) {
-    const marker = this.markers.get(markerId);
-    if (marker) {
-        this.highlightFaces(new Set(marker.faces));
-    }
-}
-
-deleteSelectedMarker() {
-    // 找到当前高亮的标记
-    let markerToDelete = null;
-    for (const [id, marker] of this.markers) {
-        const markerFaces = new Set(marker.faces);
-        if (this.areSetsEqual(markerFaces, this.selectedFaces)) {
-            markerToDelete = id;
-            break;
+    undoLastMarker() {
+        if (this.historyIndex >= 0) {
+            const marker = this.markerHistory[this.historyIndex];
+            if (marker.type === 'delete') {
+                this.markers.set(marker.id, {
+                    ...marker,
+                    type: undefined
+                });
+            } else {
+                this.markers.delete(marker.id);
+            }
+            this.historyIndex--;
+            if (this.onMarkersChanged) {
+                this.onMarkersChanged(this.getMarkersData());
+            }
         }
     }
 
-    if (markerToDelete) {
-        this.markers.delete(markerToDelete);
-        this.clearSelection();
-        if (this.onMarkersChanged) {
-            this.onMarkersChanged(this.getMarkersData());
+    redoMarker() {
+        if (this.historyIndex < this.markerHistory.length - 1) {
+            this.historyIndex++;
+            const marker = this.markerHistory[this.historyIndex];
+            if (marker.type === 'delete') {
+                this.markers.delete(marker.id);
+            } else {
+                this.markers.set(marker.id, {
+                    ...marker,
+                    type: undefined
+                });
+            }
+            if (this.onMarkersChanged) {
+                this.onMarkersChanged(this.getMarkersData());
+            }
         }
     }
-}
 
-areSetsEqual(a, b) {
-    if (a.size !== b.size) return false;
-    for (const item of a) {
-        if (!b.has(item)) return false;
+    getMarkersData() {
+        return Array.from(this.markers.values()).map(marker => ({
+            id: marker.id,
+            description: marker.description,
+            faces: marker.faces,
+            position: {
+                x: marker.position.x,
+                y: marker.position.y,
+                z: marker.position.z
+            },
+            regions: marker.regions ? marker.regions.map(region => ({
+                faces: region.faces,
+                center: {
+                    x: region.center.x,
+                    y: region.center.y,
+                    z: region.center.z
+                }
+            })) : []
+        }));
     }
-    return true;
-}
 
-setOnMarkersChanged(callback) {
-    this.onMarkersChanged = callback;
-}
-
-dispose() {
-    this.stopMarking();
-    if (this.highlightMaterial) {
-        this.highlightMaterial.dispose();
+    highlightMarker(markerId) {
+        const marker = this.markers.get(markerId);
+        if (marker) {
+            this.currentHighlightedMarkerId = markerId;
+            this.highlightFaces(new Set(marker.faces));
+        }
     }
 
-    this._vec3 = null;
-    this._vec3_2 = null;
-    this._vec3_3 = null;
+    deleteSelectedMarker() {
+        if (this.currentHighlightedMarkerId) {
+            this.deleteMarker(this.currentHighlightedMarkerId);
+            this.currentHighlightedMarkerId = null;
+            return;
+        }
 
-    this.faces = null;
-    this.markers.clear();
-    this.markers = null;
-    this.markerHistory = null;
-}
+        let markerToDelete = null;
+        for (const [id, marker] of this.markers) {
+            const markerFaces = new Set(marker.faces);
+            if (this.areSetsEqual(markerFaces, this.selectedFaces)) {
+                markerToDelete = id;
+                break;
+            }
+        }
+
+        if (markerToDelete) {
+            this.deleteMarker(markerToDelete);
+        }
+    }
+
+    areSetsEqual(a, b) {
+        if (a.size !== b.size) return false;
+        for (const item of a) {
+            if (!b.has(item)) return false;
+        }
+        return true;
+    }
+
+    setOnMarkersChanged(callback) {
+        this.onMarkersChanged = callback;
+    }
+
+    dispose() {
+        this.stopMarking();
+
+        const canvas = this.sceneManager.renderer.domElement;
+        canvas.removeEventListener('click', this.handleNormalClick);
+
+        if (this.tooltipContainer) {
+            document.body.removeChild(this.tooltipContainer);
+            this.tooltipContainer = null;
+        }
+
+        if (this.highlightMaterial) {
+            this.highlightMaterial.dispose();
+        }
+
+        this._vec3 = null;
+        this._vec3_2 = null;
+        this._vec3_3 = null;
+
+        this.faces = null;
+        this.markers.clear();
+        this.markers = null;
+        this.markerHistory = null;
+        this.currentHighlightedMarkerId = null;
+    }
 }
 
 export default ModelMarkerManager;
