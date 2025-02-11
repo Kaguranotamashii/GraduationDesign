@@ -20,5 +20,6 @@ export default defineConfig({
             key: fs.readFileSync('./key.pem'),  // 确保路径正确
             cert: fs.readFileSync('./cert.pem') // 确保路径正确
         },
-    }
+    },
+
 });

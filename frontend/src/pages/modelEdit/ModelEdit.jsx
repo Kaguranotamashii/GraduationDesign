@@ -1,13 +1,24 @@
 // ModelEditor.jsx
 import React, { useEffect, useRef, useState } from 'react';
-import { Layout, Tree, Button, Modal, Input } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Button } from "@/components/ui/button";
+import { ChevronRight, ChevronLeft, Edit2, Trash2, Download } from "lucide-react";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import SimpleSceneManager from './SimpleSceneManager';
 import SimpleModelManager from './SimpleModelManager';
 import EditorToolbar from './EditorToolbar';
 import ModelMarkerManager from './ModelMarkerManager';
-
-const { Sider, Content } = Layout;
 
 const ModelEditor = () => {
     const containerRef = useRef(null);
@@ -16,8 +27,12 @@ const ModelEditor = () => {
     const markerManagerRef = useRef(null);
     const [isEditing, setIsEditing] = useState(false);
     const [isMarking, setIsMarking] = useState(false);
-    const [markerTree, setMarkerTree] = useState([]); // 存储标记树形数据
-    const [collapsed, setCollapsed] = useState(false); // 添加收缩状态
+    const [markerTree, setMarkerTree] = useState([]);
+    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [editDialogOpen, setEditDialogOpen] = useState(false);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [currentMarker, setCurrentMarker] = useState(null);
+    const [editValue, setEditValue] = useState('');
 
     useEffect(() => {
         if (!containerRef.current) return;
@@ -25,15 +40,12 @@ const ModelEditor = () => {
         sceneManagerRef.current = new SimpleSceneManager(containerRef.current);
         modelManagerRef.current = new SimpleModelManager(sceneManagerRef.current);
 
-        // 加载模型
         modelManagerRef.current.loadModel('/models/qiniandian.glb')
             .then(() => {
-                // 模型加载完成后初始化标记管理器
                 markerManagerRef.current = new ModelMarkerManager(
                     sceneManagerRef.current,
                     modelManagerRef.current.model
                 );
-                // 设置标记变化的回调
                 markerManagerRef.current.setOnMarkersChanged((markers) => {
                     updateMarkerTree(markers);
                 });
@@ -49,11 +61,10 @@ const ModelEditor = () => {
         };
     }, []);
 
-    // 导出功能
     const handleExport = () => {
         if (markerManagerRef.current) {
             const markersData = markerManagerRef.current.getMarkersData();
-            const blob = new Blob([JSON.stringify(markersData, null, 2)], { type: 'application/json' });
+            const blob = new Blob([JSON.stringify(markersData, null, 2)], {type: 'application/json'});
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -65,44 +76,34 @@ const ModelEditor = () => {
         }
     };
 
-    // 编辑标记
     const handleEditMarker = (markerId, nodeData) => {
-        let inputValue = '';
-        Modal.confirm({
-            title: '编辑标记',
-            content: (
-                <div>
-                    <p>请输入部位层级，使用 / 分隔（例如：一层/楼梯）</p>
-                    <Input.TextArea
-                        defaultValue={nodeData.fullPath}
-                        onChange={(e) => {
-                            inputValue = e.target.value;
-                        }}
-                        placeholder="例如：一层/楼梯"
-                        rows={4}
-                    />
-                </div>
-            ),
-            onOk: () => {
-                if (inputValue && inputValue.trim()) {
-                    markerManagerRef.current?.updateMarkerDescription(markerId, inputValue);
-                }
-            }
-        });
+        setCurrentMarker({id: markerId, data: nodeData});
+        setEditValue(nodeData.fullPath);
+        setEditDialogOpen(true);
     };
 
-    // 删除标记
     const handleDeleteMarker = (markerId) => {
-        Modal.confirm({
-            title: '确认删除',
-            content: '确定要删除这个标记吗？',
-            onOk: () => {
-                markerManagerRef.current?.deleteMarker(markerId);
-            }
-        });
+        setCurrentMarker({id: markerId});
+        setDeleteDialogOpen(true);
     };
 
-    // 更新左侧树形结构
+    const confirmEdit = () => {
+        if (editValue && editValue.trim() && currentMarker) {
+            markerManagerRef.current?.updateMarkerDescription(currentMarker.id, editValue);
+        }
+        setEditDialogOpen(false);
+        setCurrentMarker(null);
+        setEditValue('');
+    };
+
+    const confirmDelete = () => {
+        if (currentMarker) {
+            markerManagerRef.current?.deleteMarker(currentMarker.id);
+        }
+        setDeleteDialogOpen(false);
+        setCurrentMarker(null);
+    };
+
     const updateMarkerTree = (markers) => {
         const treeData = [];
         markers.forEach((marker) => {
@@ -137,58 +138,54 @@ const ModelEditor = () => {
         setMarkerTree(treeData);
     };
 
-    // 渲染树节点
-    const renderTreeNodes = (nodes) => {
-        return nodes.map(node => {
-            if (node.isLeaf) {
-                // 如果是标记节点，添加编辑和删除按钮
-                const title = (
-                    <div style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        width: '100%'
-                    }}>
-                        <span>{node.title}</span>
+    const renderTreeNodes = (nodes) => (
+        <div className="space-y-2">
+            {nodes.map(node => (
+                <div key={node.key} className="tree-node">
+                    <div className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100">
                         <span
-                            style={{
-                                marginLeft: 'auto',
-                                visibility: 'hidden'
-                            }}
-                            className="tree-node-actions"
+                            className="flex-1 cursor-pointer"
+                            onClick={() => node.markerId && markerManagerRef.current?.highlightMarker(node.markerId)}
                         >
-                            <Button
-                                type="text"
-                                size="small"
-                                icon={<EditOutlined />}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleEditMarker(node.markerId, node);
-                                }}
-                            />
-                            <Button
-                                type="text"
-                                size="small"
-                                danger
-                                icon={<DeleteOutlined />}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDeleteMarker(node.markerId);
-                                }}
-                            />
+                            {node.title}
                         </span>
+                        {node.isLeaf && (
+                            <div className="tree-node-actions flex gap-1">
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleEditMarker(node.markerId, node);
+                                    }}
+                                >
+                                    <Edit2 className="h-4 w-4"/>
+                                </Button>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDeleteMarker(node.markerId);
+                                    }}
+                                >
+                                    <Trash2 className="h-4 w-4 text-red-500"/>
+                                </Button>
+                            </div>
+                        )}
                     </div>
-                );
-                return { ...node, title };
-            }
-            if (node.children) {
-                return { ...node, children: renderTreeNodes(node.children) };
-            }
-            return node;
-        });
-    };
+                    {node.children && node.children.length > 0 && (
+                        <div className="ml-4">
+                            {renderTreeNodes(node.children)}
+                        </div>
+                    )}
+                </div>
+            ))}
+        </div>
+    );
 
-    // 工具栏功能处理函数
+    // ... 保持原有的工具栏处理函数 ...
+    // 添加工具栏相关的处理函数
     const handleResetView = () => {
         sceneManagerRef.current?.controls?.reset();
     };
@@ -264,81 +261,135 @@ const ModelEditor = () => {
             markerManagerRef.current?.deleteSelectedMarker();
         }
     };
-
     return (
-        <Layout style={{ height: '100vh' }}>
-            <Sider
-                width={300}
-                collapsible
-                collapsed={collapsed}
-                onCollapse={setCollapsed}
-                style={{
-                    background: '#fff',
-                    overflow: 'auto'
-                }}
-            >
-                <div style={{
-                    padding: collapsed ? '8px' : '16px',
-                    transition: 'all 0.2s'
-                }}>
-                    {!collapsed && (
-                        <div style={{ marginBottom: '16px' }}>
-                            <Button type="primary" onClick={handleExport} style={{ width: '100%' }}>
-                                导出标注数据
-                            </Button>
-                        </div>
-                    )}
-                    <Tree
-                        treeData={renderTreeNodes(markerTree)}
-                        defaultExpandAll
-                        onSelect={(_, { node }) => {
-                            if (node.markerId) {
-                                markerManagerRef.current?.highlightMarker(node.markerId);
-                            }
-                        }}
-                    />
-                </div>
-                <style jsx>{`
-                    .tree-node-actions {
-                        transition: visibility 0.2s;
-                    }
-                    .ant-tree-node-content-wrapper:hover .tree-node-actions {
-                        visibility: visible !important;
-                    }
-                `}</style>
-            </Sider>
-            <Content>
-                <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-                    <EditorToolbar
-                        isEditing={isEditing}
-                        isMarking={isMarking}
-                        onResetView={handleResetView}
-                        onRotateLeft={handleRotateLeft}
-                        onRotateRight={handleRotateRight}
-                        onZoomIn={handleZoomIn}
-                        onZoomOut={handleZoomOut}
-                        onToggleEdit={handleToggleEdit}
-                        onToggleMarking={handleToggleMarking}
-                        onUndo={handleUndo}
-                        onRedo={handleRedo}
-                        onSave={handleSave}
-                        onUpload={handleUpload}
-                        onDelete={handleDelete}
-                    />
 
-                    <div
-                        ref={containerRef}
-                        style={{
-                            width: '100%',
-                            height: '100%',
-                            backgroundColor: '#E6F3FF',
-                            touchAction: 'none'
-                        }}
-                    />
+
+    <div className="fixed inset-0 flex">
+        {/* 悬浮按钮 */}
+        <Button
+            variant="outline"
+            size="icon"
+            className={`
+                fixed z-50 transition-transform duration-300 
+                left-72 top-1/2 -translate-y-1/2
+                ${!sidebarOpen && 'translate-x-[-280px]'}
+                bg-white hover:bg-gray-100
+                shadow-md hover:shadow-lg
+                border border-gray-200
+            `}
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+        >
+            {sidebarOpen ? <ChevronLeft className="h-4 w-4"/> : <ChevronRight className="h-4 w-4"/>}
+        </Button>
+
+        {/* 左侧面板 */}
+        <div
+            className={`
+                fixed left-0 top-0 h-full bg-white
+                transition-transform duration-300 ease-in-out
+                w-72
+                ${!sidebarOpen && '-translate-x-full'}
+                border-r border-gray-200
+                z-40
+            `}
+        >
+            <ScrollArea className="h-full w-full px-4">
+                <div className="py-4">
+                    <Button
+                        variant="outline"
+                        onClick={handleExport}
+                        className="w-full mb-4"
+                    >
+                        <Download className="h-4 w-4 mr-2"/>
+                        导出标注数据
+                    </Button>
+                    {renderTreeNodes(markerTree)}
                 </div>
-            </Content>
-        </Layout>
-    );
+            </ScrollArea>
+        </div>
+
+        {/* 主内容区 */}
+        <div className="flex-1 h-full">
+            <EditorToolbar
+                isEditing={isEditing}
+                isMarking={isMarking}
+                onResetView={handleResetView}
+                onRotateLeft={handleRotateLeft}
+                onRotateRight={handleRotateRight}
+                onZoomIn={handleZoomIn}
+                onZoomOut={handleZoomOut}
+                onToggleEdit={handleToggleEdit}
+                onToggleMarking={handleToggleMarking}
+                onUndo={handleUndo}
+                onRedo={handleRedo}
+                onSave={handleSave}
+                onUpload={handleUpload}
+                onDelete={handleDelete}
+            />
+
+            <div
+                ref={containerRef}
+                className="w-full h-full bg-[#E6F3FF]"
+                style={{touchAction: 'none'}}
+            />
+        </div>
+
+        {/* 编辑对话框 */}
+        <AlertDialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>编辑标记</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        请输入部位层级，使用 / 分隔（例如：一层/楼梯）
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <div className="grid gap-4 py-4">
+                    <div className="grid gap-2">
+                        <Label htmlFor="name">部位层级</Label>
+                        <Input
+                            id="name"
+                            value={editValue}
+                            onChange={(e) => setEditValue(e.target.value)}
+                            placeholder="例如：一层/楼梯"
+                        />
+                    </div>
+                </div>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>取消</AlertDialogCancel>
+                    <AlertDialogAction onClick={confirmEdit}>确认</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+
+        {/* 删除确认对话框 */}
+        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>确认删除</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        确定要删除这个标记吗？此操作无法撤销。
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>取消</AlertDialogCancel>
+                    <AlertDialogAction onClick={confirmDelete}>删除</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+
+        <style jsx>{`
+            .tree-node-actions {
+                transition: opacity 0.2s;
+                opacity: 0;
+            }
+
+            .tree-node:hover .tree-node-actions {
+                opacity: 1;
+            }
+        `}</style>
+    </div>
+)
+    ;
 };
 
 export default ModelEditor;
