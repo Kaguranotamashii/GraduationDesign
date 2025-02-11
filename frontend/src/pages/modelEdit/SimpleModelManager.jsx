@@ -10,46 +10,51 @@ class SimpleModelManager {
     }
 
     loadModel(modelPath) {
-        const loader = new GLTFLoader();
+        return new Promise((resolve, reject) => {
+            const loader = new GLTFLoader();
 
-        loader.load(modelPath,
-            (gltf) => {
-                if (this.model) {
-                    this.sceneManager.scene.remove(this.model);
-                    this.disposeModel();
+            loader.load(modelPath,
+                (gltf) => {
+                    if (this.model) {
+                        this.sceneManager.scene.remove(this.model);
+                        this.disposeModel();
+                    }
+
+                    this.model = gltf.scene;
+                    this.modelGeometry = calculateModelGeometry(this.model);
+
+                    // 调整模型到合适大小
+                    const maxDim = Math.max(
+                        this.modelGeometry.dimensions.x,
+                        this.modelGeometry.dimensions.y,
+                        this.modelGeometry.dimensions.z
+                    );
+                    const scale = 20 / maxDim;  // 将模型缩放到合适大小
+                    this.model.scale.setScalar(scale);
+
+                    // 居中模型
+                    const center = this.modelGeometry.center;
+                    this.model.position.set(-center.x * scale, -center.y * scale, -center.z * scale);
+
+                    this.sceneManager.scene.add(this.model);
+
+                    // 设置相机位置
+                    const distance = maxDim * 2;
+                    this.sceneManager.camera.position.set(distance, distance, distance);
+                    this.sceneManager.controls.target.set(0, 0, 0);
+                    this.sceneManager.controls.update();
+
+                    resolve(this.model);
+                },
+                (progress) => {
+                    console.log(`Model loading: ${Math.round((progress.loaded / progress.total) * 100)}%`);
+                },
+                (error) => {
+                    console.error('Error loading model:', error);
+                    reject(error);
                 }
-
-                this.model = gltf.scene;
-                this.modelGeometry = calculateModelGeometry(this.model);
-
-                // 调整模型到合适大小
-                const maxDim = Math.max(
-                    this.modelGeometry.dimensions.x,
-                    this.modelGeometry.dimensions.y,
-                    this.modelGeometry.dimensions.z
-                );
-                const scale = 20 / maxDim;  // 将模型缩放到合适大小
-                this.model.scale.setScalar(scale);
-
-                // 居中模型
-                const center = this.modelGeometry.center;
-                this.model.position.set(-center.x, -center.y, -center.z);
-
-                this.sceneManager.scene.add(this.model);
-
-                // 设置相机位置
-                const { position, target } = calculateOptimalCameraPosition(this.modelGeometry);
-                this.sceneManager.camera.position.copy(position);
-                this.sceneManager.controls.target.copy(target);
-                this.sceneManager.controls.update();
-            },
-            (progress) => {
-                console.log(`Model loading: ${Math.round((progress.loaded / progress.total) * 100)}%`);
-            },
-            (error) => {
-                console.error('Error loading model:', error);
-            }
-        );
+            );
+        });
     }
 
     disposeModel() {
@@ -73,4 +78,5 @@ class SimpleModelManager {
         this.disposeModel();
     }
 }
+
 export default SimpleModelManager;

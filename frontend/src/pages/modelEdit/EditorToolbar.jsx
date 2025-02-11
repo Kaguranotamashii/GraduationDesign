@@ -11,17 +11,20 @@ import {
     RedoOutlined,
     SaveOutlined,
     UploadOutlined,
-    DeleteOutlined
+    DeleteOutlined,
+    TagOutlined,
 } from '@ant-design/icons';
 
 const EditorToolbar = ({
                            isEditing,
+                           isMarking,
                            onResetView,
                            onRotateLeft,
                            onRotateRight,
                            onZoomIn,
                            onZoomOut,
                            onToggleEdit,
+                           onToggleMarking,
                            onUndo,
                            onRedo,
                            onSave,
@@ -69,17 +72,24 @@ const EditorToolbar = ({
                             onClick={onToggleEdit}
                         />
                     </Tooltip>
+                    <Tooltip title="添加标记">
+                        <Button
+                            icon={<TagOutlined />}
+                            type={isMarking ? 'primary' : 'default'}
+                            onClick={onToggleMarking}
+                        />
+                    </Tooltip>
                     <Tooltip title="撤销">
                         <Button
                             icon={<UndoOutlined />}
-                            disabled={!isEditing}
+                            disabled={!isEditing && !isMarking}
                             onClick={onUndo}
                         />
                     </Tooltip>
                     <Tooltip title="重做">
                         <Button
                             icon={<RedoOutlined />}
-                            disabled={!isEditing}
+                            disabled={!isEditing && !isMarking}
                             onClick={onRedo}
                         />
                     </Tooltip>

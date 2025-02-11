@@ -10,7 +10,6 @@ export default defineConfig({
         tailwindcss(),
 
     ],
-    base: '/GraduationDesign/', // GitHub 仓库名，确保路径正确！
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "./src"),

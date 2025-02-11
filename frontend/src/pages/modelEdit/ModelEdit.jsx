@@ -3,12 +3,15 @@ import { Button } from 'antd';
 import SimpleSceneManager from './SimpleSceneManager';
 import SimpleModelManager from './SimpleModelManager';
 import EditorToolbar from './EditorToolbar';
+import ModelMarkerManager from './ModelMarkerManager';
 
 const ModelEditor = () => {
     const containerRef = useRef(null);
     const sceneManagerRef = useRef(null);
     const modelManagerRef = useRef(null);
+    const markerManagerRef = useRef(null);
     const [isEditing, setIsEditing] = useState(false);
+    const [isMarking, setIsMarking] = useState(false);
 
     useEffect(() => {
         if (!containerRef.current) return;
@@ -17,11 +20,22 @@ const ModelEditor = () => {
         modelManagerRef.current = new SimpleModelManager(sceneManagerRef.current);
 
         // 加载模型
-        modelManagerRef.current.loadModel('/models/qiniandian.glb');
+        modelManagerRef.current.loadModel('/models/qiniandian.glb')
+            .then(() => {
+                // 模型加载完成后初始化标记管理器
+                markerManagerRef.current = new ModelMarkerManager(
+                    sceneManagerRef.current,
+                    modelManagerRef.current.model
+                );
+            })
+            .catch(error => {
+                console.error('Failed to load model:', error);
+            });
 
         return () => {
-            sceneManagerRef.current?.dispose();
+            markerManagerRef.current?.dispose();
             modelManagerRef.current?.dispose();
+            sceneManagerRef.current?.dispose();
         };
     }, []);
 
@@ -56,22 +70,49 @@ const ModelEditor = () => {
 
     const handleToggleEdit = () => {
         setIsEditing(!isEditing);
-        // TODO: 实现编辑模式的具体逻辑
+        // 当进入编辑模式时，退出标记模式
+        if (!isEditing && isMarking) {
+            handleToggleMarking();
+        }
+    };
+
+    // 标记模式切换
+    const handleToggleMarking = () => {
+        setIsMarking(!isMarking);
+        if (!isMarking) {
+            // 进入标记模式时退出编辑模式
+            if (isEditing) {
+                setIsEditing(false);
+            }
+            markerManagerRef.current?.startMarking();
+        } else {
+            markerManagerRef.current?.stopMarking();
+        }
     };
 
     const handleUndo = () => {
-        // TODO: 实现撤销功能
-        console.log('Undo clicked');
+        if (isMarking) {
+            markerManagerRef.current?.undoLastMarker();
+        } else if (isEditing) {
+            // TODO: 实现编辑模式的撤销功能
+            console.log('Undo clicked in edit mode');
+        }
     };
 
     const handleRedo = () => {
-        // TODO: 实现重做功能
-        console.log('Redo clicked');
+        if (isMarking) {
+            markerManagerRef.current?.redoMarker();
+        } else if (isEditing) {
+            // TODO: 实现编辑模式的重做功能
+            console.log('Redo clicked in edit mode');
+        }
     };
 
     const handleSave = () => {
+        // 保存所有标记和编辑内容
+        const markersData = markerManagerRef.current?.getMarkersData();
         // TODO: 实现保存功能
-        console.log('Save clicked');
+        console.log('Saving markers:', markersData);
     };
 
     const handleUpload = () => {
@@ -80,8 +121,12 @@ const ModelEditor = () => {
     };
 
     const handleDelete = () => {
-        // TODO: 实现删除功能
-        console.log('Delete clicked');
+        if (isMarking) {
+            markerManagerRef.current?.deleteSelectedMarker();
+        } else {
+            // TODO: 实现删除功能
+            console.log('Delete clicked');
+        }
     };
 
     return (
@@ -89,12 +134,14 @@ const ModelEditor = () => {
             {/* 工具栏 */}
             <EditorToolbar
                 isEditing={isEditing}
+                isMarking={isMarking}
                 onResetView={handleResetView}
                 onRotateLeft={handleRotateLeft}
                 onRotateRight={handleRotateRight}
                 onZoomIn={handleZoomIn}
                 onZoomOut={handleZoomOut}
                 onToggleEdit={handleToggleEdit}
+                onToggleMarking={handleToggleMarking}
                 onUndo={handleUndo}
                 onRedo={handleRedo}
                 onSave={handleSave}
