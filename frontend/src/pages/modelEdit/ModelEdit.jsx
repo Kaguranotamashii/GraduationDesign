@@ -1,9 +1,12 @@
+// ModelEditor.jsx
 import React, { useEffect, useRef, useState } from 'react';
-import { Button } from 'antd';
+import { Layout, Tree, Button } from 'antd';
 import SimpleSceneManager from './SimpleSceneManager';
 import SimpleModelManager from './SimpleModelManager';
 import EditorToolbar from './EditorToolbar';
 import ModelMarkerManager from './ModelMarkerManager';
+
+const { Sider, Content } = Layout;
 
 const ModelEditor = () => {
     const containerRef = useRef(null);
@@ -12,6 +15,7 @@ const ModelEditor = () => {
     const markerManagerRef = useRef(null);
     const [isEditing, setIsEditing] = useState(false);
     const [isMarking, setIsMarking] = useState(false);
+    const [markerTree, setMarkerTree] = useState([]); // 存储标记树形数据
 
     useEffect(() => {
         if (!containerRef.current) return;
@@ -27,6 +31,10 @@ const ModelEditor = () => {
                     sceneManagerRef.current,
                     modelManagerRef.current.model
                 );
+                // 设置标记变化的回调
+                markerManagerRef.current.setOnMarkersChanged((markers) => {
+                    updateMarkerTree(markers);
+                });
             })
             .catch(error => {
                 console.error('Failed to load model:', error);
@@ -38,6 +46,49 @@ const ModelEditor = () => {
             sceneManagerRef.current?.dispose();
         };
     }, []);
+
+    // 导出功能
+    const handleExport = () => {
+        if (markerManagerRef.current) {
+            const markersData = markerManagerRef.current.getMarkersData();
+            const blob = new Blob([JSON.stringify(markersData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'building-markers.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    };
+
+    // 更新左侧树形结构
+    const updateMarkerTree = (markers) => {
+        const treeData = [];
+        markers.forEach((marker) => {
+            const parts = marker.description.split('/');
+            let current = treeData;
+            parts.forEach((part, index) => {
+                const existing = current.find(node => node.title === part);
+                if (existing) {
+                    current = existing.children;
+                } else {
+                    const newNode = {
+                        key: `${marker.id}-${index}`,
+                        title: part,
+                        children: [],
+                    };
+                    if (index === parts.length - 1) {
+                        newNode.markerId = marker.id;
+                    }
+                    current.push(newNode);
+                    current = newNode.children;
+                }
+            });
+        });
+        setMarkerTree(treeData);
+    };
 
     // 工具栏功能处理函数
     const handleResetView = () => {
@@ -70,17 +121,14 @@ const ModelEditor = () => {
 
     const handleToggleEdit = () => {
         setIsEditing(!isEditing);
-        // 当进入编辑模式时，退出标记模式
         if (!isEditing && isMarking) {
             handleToggleMarking();
         }
     };
 
-    // 标记模式切换
     const handleToggleMarking = () => {
         setIsMarking(!isMarking);
         if (!isMarking) {
-            // 进入标记模式时退出编辑模式
             if (isEditing) {
                 setIsEditing(false);
             }
@@ -93,80 +141,83 @@ const ModelEditor = () => {
     const handleUndo = () => {
         if (isMarking) {
             markerManagerRef.current?.undoLastMarker();
-        } else if (isEditing) {
-            // TODO: 实现编辑模式的撤销功能
-            console.log('Undo clicked in edit mode');
         }
     };
 
     const handleRedo = () => {
         if (isMarking) {
             markerManagerRef.current?.redoMarker();
-        } else if (isEditing) {
-            // TODO: 实现编辑模式的重做功能
-            console.log('Redo clicked in edit mode');
         }
     };
 
     const handleSave = () => {
-        // 保存所有标记和编辑内容
-        const markersData = markerManagerRef.current?.getMarkersData();
-        // TODO: 实现保存功能
-        console.log('Saving markers:', markersData);
+        if (markerManagerRef.current) {
+            handleExport();
+        }
     };
 
     const handleUpload = () => {
-        // TODO: 实现上传新模型功能
+        // 实现文件上传功能
         console.log('Upload clicked');
     };
 
     const handleDelete = () => {
         if (isMarking) {
             markerManagerRef.current?.deleteSelectedMarker();
-        } else {
-            // TODO: 实现删除功能
-            console.log('Delete clicked');
         }
     };
 
     return (
-        <div style={{ position: 'relative', width: '100%', height: '100vh' }}>
-            {/* 工具栏 */}
-            <EditorToolbar
-                isEditing={isEditing}
-                isMarking={isMarking}
-                onResetView={handleResetView}
-                onRotateLeft={handleRotateLeft}
-                onRotateRight={handleRotateRight}
-                onZoomIn={handleZoomIn}
-                onZoomOut={handleZoomOut}
-                onToggleEdit={handleToggleEdit}
-                onToggleMarking={handleToggleMarking}
-                onUndo={handleUndo}
-                onRedo={handleRedo}
-                onSave={handleSave}
-                onUpload={handleUpload}
-                onDelete={handleDelete}
-            />
+        <Layout style={{ height: '100vh' }}>
+            <Sider width={300} style={{ background: '#fff', padding: '16px' }}>
+                <div style={{ marginBottom: '16px' }}>
+                    <Button type="primary" onClick={handleExport} style={{ width: '100%' }}>
+                        导出标注数据
+                    </Button>
+                </div>
+                <Tree
+                    treeData={markerTree}
+                    defaultExpandAll
+                    onSelect={(_, { node }) => {
+                        if (node.markerId) {
+                            markerManagerRef.current?.highlightMarker(node.markerId);
+                        }
+                    }}
+                />
+            </Sider>
+            <Content>
+                <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                    {/* 工具栏 */}
+                    <EditorToolbar
+                        isEditing={isEditing}
+                        isMarking={isMarking}
+                        onResetView={handleResetView}
+                        onRotateLeft={handleRotateLeft}
+                        onRotateRight={handleRotateRight}
+                        onZoomIn={handleZoomIn}
+                        onZoomOut={handleZoomOut}
+                        onToggleEdit={handleToggleEdit}
+                        onToggleMarking={handleToggleMarking}
+                        onUndo={handleUndo}
+                        onRedo={handleRedo}
+                        onSave={handleSave}
+                        onUpload={handleUpload}
+                        onDelete={handleDelete}
+                    />
 
-            {/* 返回按钮 */}
-            <div style={{ position: 'absolute', top: 16, left: 16, zIndex: 1 }}>
-                <Button type="primary" onClick={() => window.location.href = '/'}>
-                    返回主页
-                </Button>
-            </div>
-
-            {/* 3D 场景容器 */}
-            <div
-                ref={containerRef}
-                style={{
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: '#E6F3FF',
-                    touchAction: 'none'
-                }}
-            />
-        </div>
+                    {/* 3D 场景容器 */}
+                    <div
+                        ref={containerRef}
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            backgroundColor: '#E6F3FF',
+                            touchAction: 'none'
+                        }}
+                    />
+                </div>
+            </Content>
+        </Layout>
     );
 };
 
