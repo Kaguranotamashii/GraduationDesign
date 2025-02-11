@@ -6,34 +6,35 @@ class ModelMarkerManager {
         this.sceneManager = sceneManager;
         this.model = model;
         this.isMarking = false;
+        // 重用 Raycaster 和 Vector2 实例
         this.raycaster = new THREE.Raycaster();
         this.mouse = new THREE.Vector2();
 
+        // 缓存计算用的向量对象
+        this._vec3 = new THREE.Vector3();
+        this._vec3_2 = new THREE.Vector3();
+        this._vec3_3 = new THREE.Vector3();
+
         // 找到模型中的 mesh
-        this.mesh = null;
-        model.traverse((node) => {
-            if (node.isMesh) {
-                this.mesh = node;
-            }
-        });
+        this.mesh = model.children.find(node => node.isMesh) || null;
 
         if (!this.mesh) {
             console.error('No mesh found in model');
             return;
         }
 
-        // 创建材质
+        // 创建材质 - 延迟创建 highlightMaterial
         this.defaultMaterial = this.mesh.material;
-        this.highlightMaterial = this.defaultMaterial.clone();
-        this.highlightMaterial.color.setHex(0x00ff00);
-        this.highlightMaterial.transparent = true;
-        this.highlightMaterial.opacity = 0.8;
+        this.highlightMaterial = null;
 
         // 初始化分组
         this.initializeGroups();
 
         // 绑定方法
         this.handleClick = this.handleClick.bind(this);
+
+        // 标记缓存
+        this.markers = new Map();
     }
 
     initializeGroups() {
@@ -42,52 +43,54 @@ class ModelMarkerManager {
         const normal = geometry.attributes.normal;
         const index = geometry.index;
 
+        // 缓存顶点位置和法线数据
+        const positionArray = position.array;
+        const normalArray = normal.array;
+        const indexArray = index.array;
+
+        // 预分配面数组
+        const faceCount = index.count / 3;
+        this.faces = new Array(faceCount);
+
         // 创建面的数据结构
-        this.faces = [];
         for (let i = 0; i < index.count; i += 3) {
+            const faceIndex = i / 3;
             const face = {
-                indices: [
-                    index.getX(i),
-                    index.getX(i + 1),
-                    index.getX(i + 2)
-                ],
+                indices: new Uint32Array([
+                    indexArray[i],
+                    indexArray[i + 1],
+                    indexArray[i + 2]
+                ]),
                 normal: new THREE.Vector3(),
                 center: new THREE.Vector3(),
-                connected: new Set()  // 连接的面
+                connected: new Set()  // 保留 Set 用于快速查找
             };
 
-            // 计算面的法向量
-            const v1 = new THREE.Vector3(
-                position.getX(face.indices[0]),
-                position.getY(face.indices[0]),
-                position.getZ(face.indices[0])
-            );
-            const v2 = new THREE.Vector3(
-                position.getX(face.indices[1]),
-                position.getY(face.indices[1]),
-                position.getZ(face.indices[1])
-            );
-            const v3 = new THREE.Vector3(
-                position.getX(face.indices[2]),
-                position.getY(face.indices[2]),
-                position.getZ(face.indices[2])
-            );
+            // 计算面的法向量和中心点
+            let vx = 0, vy = 0, vz = 0;
+            let nx = 0, ny = 0, nz = 0;
 
-            // 计算面的法向量（使用顶点的平均法向量）
-            face.normal.set(0, 0, 0);
             for (let j = 0; j < 3; j++) {
-                face.normal.add(new THREE.Vector3(
-                    normal.getX(face.indices[j]),
-                    normal.getY(face.indices[j]),
-                    normal.getZ(face.indices[j])
-                ));
+                const idx = face.indices[j] * 3;
+
+                // 累加顶点位置
+                vx += positionArray[idx];
+                vy += positionArray[idx + 1];
+                vz += positionArray[idx + 2];
+
+                // 累加法线
+                nx += normalArray[idx];
+                ny += normalArray[idx + 1];
+                nz += normalArray[idx + 2];
             }
-            face.normal.normalize();
 
-            // 计算面的中心点
-            face.center.addVectors(v1, v2).add(v3).divideScalar(3);
+            // 设置法线
+            face.normal.set(nx / 3, ny / 3, nz / 3).normalize();
 
-            this.faces.push(face);
+            // 设置中心点
+            face.center.set(vx / 3, vy / 3, vz / 3);
+
+            this.faces[faceIndex] = face;
         }
 
         // 找到相邻面
@@ -97,22 +100,26 @@ class ModelMarkerManager {
     }
 
     findConnectedFaces() {
-        // 创建顶点到面的映射
-        const vertexToFaces = new Map();
+        // 使用数组代替 Map 来存储顶点到面的映射
+        const vertexToFaces = new Array(this.mesh.geometry.attributes.position.count);
+        for (let i = 0; i < vertexToFaces.length; i++) {
+            vertexToFaces[i] = [];
+        }
+
+        // 构建顶点到面的映射
         this.faces.forEach((face, faceIndex) => {
             face.indices.forEach(vertexIndex => {
-                if (!vertexToFaces.has(vertexIndex)) {
-                    vertexToFaces.set(vertexIndex, new Set());
-                }
-                vertexToFaces.get(vertexIndex).add(faceIndex);
+                vertexToFaces[vertexIndex].push(faceIndex);
             });
         });
 
         // 找到共享顶点的面
         this.faces.forEach((face, faceIndex) => {
             const potentialNeighbors = new Set();
+
+            // 收集所有相邻面
             face.indices.forEach(vertexIndex => {
-                vertexToFaces.get(vertexIndex).forEach(neighborIndex => {
+                vertexToFaces[vertexIndex].forEach(neighborIndex => {
                     if (neighborIndex !== faceIndex) {
                         potentialNeighbors.add(neighborIndex);
                     }
@@ -121,9 +128,7 @@ class ModelMarkerManager {
 
             // 检查每个潜在的邻居
             potentialNeighbors.forEach(neighborIndex => {
-                const neighbor = this.faces[neighborIndex];
-                // 检查法向量夹角和距离
-                if (this.areFacesSimilar(face, neighbor)) {
+                if (this.areFacesSimilar(face, this.faces[neighborIndex])) {
                     face.connected.add(neighborIndex);
                 }
             });
@@ -131,23 +136,19 @@ class ModelMarkerManager {
     }
 
     areFacesSimilar(face1, face2) {
-        // 检查法向量夹角
+        // 使用点积快速比较法向量
         const normalDot = face1.normal.dot(face2.normal);
-        if (Math.abs(normalDot) < 0.9) { // 约26度
-            return false;
-        }
+        if (Math.abs(normalDot) < 0.9) return false;
 
-        // 检查距离
-        const distance = face1.center.distanceTo(face2.center);
-        const threshold = 0.1; // 根据模型大小调整
-        if (distance > threshold) {
-            return false;
-        }
-
-        return true;
+        // 使用缓存的向量计算距离
+        return this._vec3.copy(face1.center)
+            .sub(face2.center)
+            .lengthSq() <= 0.01; // 平方距离阈值，避免开平方
     }
 
     startMarking() {
+        if (this.isMarking) return;
+
         console.log('Starting marking mode');
         this.isMarking = true;
         const canvas = this.sceneManager.renderer.domElement;
@@ -155,6 +156,8 @@ class ModelMarkerManager {
     }
 
     stopMarking() {
+        if (!this.isMarking) return;
+
         this.isMarking = false;
         const canvas = this.sceneManager.renderer.domElement;
         canvas.removeEventListener('click', this.handleClick);
@@ -173,22 +176,25 @@ class ModelMarkerManager {
         const canvas = this.sceneManager.renderer.domElement;
         const rect = canvas.getBoundingClientRect();
 
+        // 重用已存在的 Vector2 实例
         this.mouse.x = ((event.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
         this.mouse.y = -((event.clientY - rect.top) / canvas.clientHeight) * 2 + 1;
 
         this.raycaster.setFromCamera(this.mouse, this.sceneManager.camera);
-        const intersects = this.raycaster.intersectObject(this.mesh);
 
-        return intersects.length > 0 ? intersects[0] : null;
+        // 优化: 直接返回第一个交点
+        const intersects = this.raycaster.intersectObject(this.mesh, false);
+        return intersects[0] || null;
     }
 
     selectConnectedFaces(startFaceIndex) {
-        // 使用广度优先搜索找到所有相连的相似面
+        // 使用数组替代 Set 来提高性能
         const selectedFaces = new Set();
         const queue = [startFaceIndex];
+        let queueIndex = 0;  // 使用索引代替 shift() 操作
 
-        while (queue.length > 0) {
-            const currentFaceIndex = queue.shift();
+        while (queueIndex < queue.length) {
+            const currentFaceIndex = queue[queueIndex++];
             if (selectedFaces.has(currentFaceIndex)) continue;
 
             selectedFaces.add(currentFaceIndex);
@@ -203,33 +209,45 @@ class ModelMarkerManager {
         }
 
         // 高亮选中的面
-        this.highlightFaces(selectedFaces);
-
-        // 如果选中了面，显示标记对话框
         if (selectedFaces.size > 0) {
+            this.highlightFaces(selectedFaces);
             this.promptForMarkerInfo(selectedFaces);
         }
     }
 
     highlightFaces(faceIndices) {
-        // 复制原始几何体
-        const geometry = this.mesh.geometry.clone();
+        // 延迟创建 highlightMaterial
+        if (!this.highlightMaterial) {
+            this.highlightMaterial = this.defaultMaterial.clone();
+            this.highlightMaterial.color.setHex(0x00ff00);
+            this.highlightMaterial.transparent = true;
+            this.highlightMaterial.opacity = 0.8;
+        }
 
-        // 创建新的材质组
-        const materialIndex = 1;  // 使用新的材质索引
+        const geometry = this.mesh.geometry;
+
+        // 优化材质组设置
         geometry.clearGroups();
-
-        // 为所有面设置默认材质
         geometry.addGroup(0, geometry.index.count, 0);
 
-        // 为选中的面设置高亮材质
-        faceIndices.forEach(faceIndex => {
-            geometry.addGroup(faceIndex * 3, 3, materialIndex);
-        });
+        // 批量设置高亮面
+        if (faceIndices.size > 0) {
+            const sortedIndices = Array.from(faceIndices).sort((a, b) => a - b);
+            let start = sortedIndices[0] * 3;
+            let count = 3;
 
-        // 更新网格
-        this.mesh.geometry.dispose();
-        this.mesh.geometry = geometry;
+            for (let i = 1; i < sortedIndices.length; i++) {
+                if (sortedIndices[i] === sortedIndices[i - 1] + 1) {
+                    count += 3;
+                } else {
+                    geometry.addGroup(start, count, 1);
+                    start = sortedIndices[i] * 3;
+                    count = 3;
+                }
+            }
+            geometry.addGroup(start, count, 1);
+        }
+
         this.mesh.material = [this.defaultMaterial, this.highlightMaterial];
     }
 
@@ -254,8 +272,8 @@ class ModelMarkerManager {
     createMarker(description, selectedFaces) {
         const markerId = Date.now().toString();
 
-        // 计算选中面的中心点
-        const center = new THREE.Vector3();
+        // 使用缓存的向量计算中心点
+        const center = this._vec3_2.set(0, 0, 0);
         selectedFaces.forEach(faceIndex => {
             center.add(this.faces[faceIndex].center);
         });
@@ -266,7 +284,7 @@ class ModelMarkerManager {
             id: markerId,
             faces: Array.from(selectedFaces),
             description: description,
-            position: center
+            position: center.clone() // 需要克隆以保存独立的向量
         });
 
         this.clearSelection();
@@ -276,8 +294,9 @@ class ModelMarkerManager {
         if (!this.mesh) return;
 
         // 恢复默认材质
-        this.mesh.geometry.clearGroups();
-        this.mesh.geometry.addGroup(0, this.mesh.geometry.index.count, 0);
+        const geometry = this.mesh.geometry;
+        geometry.clearGroups();
+        geometry.addGroup(0, geometry.index.count, 0);
         this.mesh.material = this.defaultMaterial;
     }
 
@@ -286,6 +305,16 @@ class ModelMarkerManager {
         if (this.highlightMaterial) {
             this.highlightMaterial.dispose();
         }
+
+        // 清理缓存的向量对象
+        this._vec3 = null;
+        this._vec3_2 = null;
+        this._vec3_3 = null;
+
+        // 清理其他引用
+        this.faces = null;
+        this.markers.clear();
+        this.markers = null;
     }
 }
 
