@@ -2,8 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from app.builder.models import Builder
-from app.public.models import Image
-import re
+import os
 
 
 class Article(models.Model):
@@ -36,20 +35,11 @@ class Article(models.Model):
         verbose_name=_('作者')
     )
 
-    cover_image = models.ForeignKey(
-        Image,
-        on_delete=models.SET_NULL,
+    cover_image = models.CharField(
+        max_length=255,
         null=True,
         blank=True,
-        related_name='article_covers',
-        verbose_name=_('封面图片')
-    )
-
-    content_images = models.ManyToManyField(
-        Image,
-        blank=True,
-        related_name='article_contents',
-        verbose_name=_('内容图片')
+        verbose_name=_('封面图片路径')
     )
 
     created_at = models.DateTimeField(
@@ -110,32 +100,6 @@ class Article(models.Model):
     @property
     def cover_image_url(self):
         """获取封面图片URL"""
-        if self.cover_image and self.cover_image.file:
-            return self.cover_image.file.url
+        if self.cover_image:
+            return os.path.join(settings.MEDIA_URL, self.cover_image)
         return None
-
-    def process_content_urls(self, new_domain=None):
-        """处理内容中的图片URL"""
-        if not self.content:
-            return self.content
-
-        new_domain = new_domain or settings.URL_BASE
-        img_pattern = r'!\[.*?\]\((.*?)\)'
-
-        def replace_url(match):
-            url = match.group(1)
-            if url.startswith('/'):
-                return f"![](${new_domain}{url})"
-            old_domains = getattr(settings, 'OLD_DOMAINS', [])
-            for old_domain in old_domains:
-                if url.startswith(old_domain):
-                    return f"![]{url.replace(old_domain, new_domain)}"
-            return match.group(0)
-
-        return re.sub(img_pattern, replace_url, self.content)
-
-    def save(self, *args, **kwargs):
-        """重写保存方法"""
-        if not self.pk or 'content' in kwargs.get('update_fields', []):
-            self.content = self.process_content_urls()
-        super().save(*args, **kwargs)

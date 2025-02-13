@@ -11,7 +11,7 @@ export const registerUser = async (registerData) => {
         const response = await apiClient.post('/user/register/', registerData);
         return response.data;
     } catch (error) {
-        message.error('注册失败');
+        // message.error('注册失败');
         throw error;
     }
 }
@@ -27,7 +27,7 @@ export const sendVerificationEmail = async (emailData) => {
         const response = await apiClient.post('/user/send-verification-email/', emailData);
         return response;
     } catch (error) {
-        message.error('发送验证码失败');
+        // message.error('发送验证码失败');
         throw error;
     }
 }
@@ -43,7 +43,7 @@ export const loginUser = async (loginData) => {
         const response = await apiClient.post('/user/login/', loginData);
         return response.data;
     } catch (error) {
-        message.error('登录失败');
+        // message.error('登录失败');
         throw error;
     }
 }
@@ -59,7 +59,7 @@ export const logoutUser = async (logoutData) => {
         const response = await apiClient.post('/user/logout', logoutData);
         return response.data;
     } catch (error) {
-        message.error('登出失败');
+        // message.error('登出失败');
         throw error;
     }
 
@@ -74,7 +74,7 @@ export const googleLogin = async (credential) => {
         const response = await apiClient.post('/user/google-login/', {credential});
         return response.data;
     } catch (error) {
-        message.error('Google登录失败');
+        // message.error('Google登录失败');
         throw error;
     }
 }
@@ -84,7 +84,7 @@ export const getUserInfo = async () => {
         const response = await apiClient.get('/user/current-user/');
         return response.data;
     } catch (error) {
-        message.error('获取用户信息失败');
+        // message.error('获取用户信息失败');
         throw error;
     }
 }
@@ -97,7 +97,7 @@ export const uploadAvatar = async (avatar) => {
         const response = await apiClient.post('/user/avatar/upload/', formData);
         return response.data;
     } catch (error) {
-        message.error('上传头像失败');
+        // message.error('上传头像失败');
         throw error;
     }
 }
@@ -106,7 +106,7 @@ export const updateUserProfile = async (profileData) => {
         const response = await apiClient.post('/user/profile/update/', profileData);
         return response.data;
     } catch (error) {
-        message.error('更新用户资料失败');
+        // message.error('更新用户资料失败');
         throw error;
     }
 }

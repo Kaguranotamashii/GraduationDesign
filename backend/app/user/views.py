@@ -4,6 +4,7 @@ import re
 import json
 import random
 import string
+import uuid
 from datetime import datetime
 
 from django.contrib.messages.storage import default_storage
@@ -25,6 +26,8 @@ from .models import CustomUser  # 确保使用继承AbstractUser的自定义用�
 from probject.status_code import STATUS_MESSAGES, SUCCESS, ERROR, INVALID_PARAMS, UNAUTHORIZED
 from rest_framework_simplejwt.tokens import RefreshToken
 from app.public.services import ImageService
+from .utils import validate_image, delete_file, save_image
+
 # 验证码有效期配置
 VERIFICATION_CODE_EXPIRE = 600  # 10分钟（单位：秒）
 
@@ -356,7 +359,8 @@ def user_list(request):
             "email": user.email,
             "is_staff": user.is_staff,
             "is_active": user.is_active,
-            "date_joined": user.date_joined.strftime("%Y-%m-%d %H:%M:%S")
+            "date_joined": user.date_joined.strftime("%Y-%m-%d %H:%M:%S"),
+            "avatar": user.get_full_avatar_url(),  # 修改这里
         })
 
     return Response(
@@ -406,12 +410,12 @@ def update_user_profile(request):
     """更新用户个人信息"""
     user = request.auth_user
     data = request.data
-    print( data)
 
-    # 可更新字段
-    allowed_fields = data['signature']
+    # 定义允许更新的字段列表
+    allowed_fields = ['signature']
     updated_fields = {}
 
+    # 更新允许的字段
     for field in allowed_fields:
         if field in data:
             setattr(user, field, data[field])
@@ -419,10 +423,21 @@ def update_user_profile(request):
 
     try:
         user.save()
+        # 返回完整的用户信息
         return Response({
             "code": 200,
             "message": "更新成功",
-            "data": updated_fields
+            "data": {
+                "user": {
+                    "id": user.id,
+                    "username": user.username,
+                    "email": user.email,
+                    "avatar": user.get_full_avatar_url(),
+                    "signature": user.signature,
+                    "is_staff": user.is_staff,
+                    "register_time": user.date_joined.strftime("%Y-%m-%d %H:%M:%S")
+                }
+            }
         })
     except Exception as e:
         logging.error(f"更新用户信息失败: {str(e)}")
@@ -430,9 +445,6 @@ def update_user_profile(request):
             "code": 500,
             "message": f"更新失败: {str(e)}"
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-
 
 @api_view(['POST'])
 @jwt_required
@@ -480,22 +492,29 @@ def upload_avatar(request):
                 "message": "请选择要上传的头像"
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        image_service = ImageService()
+        avatar_file = request.FILES['avatar']
 
-        # 使用图片服务创建头像
-        image = image_service.create_image(
-            file=request.FILES['avatar'],
-            creator_id=user.id,
-            image_type='avatar',
-            name=f"{user.username}的头像"
-        )
+        # 验证图片
+        is_valid, error_msg = validate_image(avatar_file)
+        if not is_valid:
+            return Response({
+                "code": 400,
+                "message": error_msg
+            }, status=status.HTTP_400_BAD_REQUEST)
 
-        # 更新用户头像
-        if user.avatar:
-            # 删除旧头像
-            default_storage.delete(user.avatar.path)
+        # 删除旧头像
+        delete_file(user.avatar)
 
-        user.avatar = image.file
+        # 保存新头像
+        success, result, error = save_image(avatar_file, 'avatars')
+        if not success:
+            return Response({
+                "code": 500,
+                "message": f"头像保存失败: {result}"
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        # 更新用户头像路径
+        user.avatar = result
         user.save()
 
         return Response({
@@ -505,12 +524,44 @@ def upload_avatar(request):
                 "avatar_url": user.get_full_avatar_url()
             }
         })
+
     except Exception as e:
         return Response({
             "code": 500,
             "message": f"头像上传失败: {str(e)}"
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@api_view(['DELETE'])
+@jwt_required
+def delete_avatar(request):
+    """删除头像"""
+    try:
+        user = request.auth_user
+        if not user.avatar:
+            return Response({
+                "code": 400,
+                "message": "当前没有头像"
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # 删除头像文件
+        if delete_file(user.avatar):
+            user.avatar = None
+            user.save()
+            return Response({
+                "code": 200,
+                "message": "头像删除成功"
+            })
+        else:
+            return Response({
+                "code": 500,
+                "message": "头像删除失败"
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    except Exception as e:
+        return Response({
+            "code": 500,
+            "message": f"操作失败: {str(e)}"
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['POST'])
 @jwt_required

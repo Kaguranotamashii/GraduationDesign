@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useSpring, animated, config } from '@react-spring/web';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
@@ -46,6 +47,7 @@ const Navbar = () => {
 
     const menuItemAnimation = useSpring({
         transform: hovered ? 'scale(1.05)' : 'scale(1)',
+        transformOrigin: 'center', // 确保放大时不会改变布局
         config: config.wobbly,
     });
 
@@ -63,6 +65,7 @@ const Navbar = () => {
 
     const logoSpring = useSpring({
         transform: hovered === 'logo' ? 'scale(1.05)' : 'scale(1)',
+        transformOrigin: 'center', // 确保 logo 放大时不会偏移
         config: config.gentle,
     });
 
@@ -102,7 +105,10 @@ const Navbar = () => {
                 ${isAdminPage ? 'bg-white/95 backdrop-blur-md border-b border-gray-100' :
                 scrolled ? 'bg-white/95 backdrop-blur-md' : 'bg-transparent'}`}
         >
-            <div className="container mx-auto px-6">
+
+
+
+            <div className="container mx-auto px-6 ">
                 <div className="flex items-center justify-between h-20">
                     {/* Logo */}
                     <animated.div
@@ -126,7 +132,7 @@ const Navbar = () => {
                     </animated.div>
 
                     {/* Navigation Items */}
-                    <div className="hidden md:flex items-center space-x-6">
+                    <div className="hidden md:flex items-center space-x-6 relative">
                         {/* Building Types Dropdown */}
                         <div className="relative">
                             <button
@@ -233,7 +239,10 @@ const Navbar = () => {
                                         </button>
 
                                         {showUserMenu && (
-                                            <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl ring-1 ring-black/5 overflow-hidden">
+                                            <animated.div
+                                                style={userDropdownAnimation}
+                                                className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl ring-1 ring-black/5 overflow-hidden"
+                                            >
                                                 <div className="p-4">
                                                     <div className="flex items-center space-x-3">
                                                         {renderAvatar()}
@@ -275,7 +284,7 @@ const Navbar = () => {
                                                         退出登录
                                                     </button>
                                                 </div>
-                                            </div>
+                                            </animated.div>
                                         )}
                                     </div>
                                 ) : (

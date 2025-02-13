@@ -11,6 +11,8 @@ import {
     CloseOutlined
 } from '@ant-design/icons';
 import { getUserInfo, uploadAvatar, updateUserProfile } from '../../../api/userApi';
+import {setToken, setUser} from "@/store/authSlice.jsx";
+import {useDispatch} from "react-redux";
 
 const { Title, Text } = Typography;
 const { TextArea } = Input;
@@ -21,6 +23,7 @@ const UserProfile = () => {
     const [userInfo, setUserInfo] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [avatarLoading, setAvatarLoading] = useState(false);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         fetchUserInfo();
@@ -44,6 +47,8 @@ const UserProfile = () => {
         } finally {
             setLoading(false);
         }
+        // 刷新下这个页面
+
     };
 
     const handleUpload = async (file) => {
@@ -68,7 +73,15 @@ const UserProfile = () => {
             if (response.code === 200) {
                 message.success('个人信息更新成功');
                 setIsEditing(false);
-                fetchUserInfo(); // 刷新用户信息
+
+                // 只更新用户信息，不需要更新 token
+                if (response.data && response.data.user) {
+                    dispatch(setUser(response.data.user));
+                }
+
+                // 刷新用户信息
+                fetchUserInfo();
+                window.location.reload();
             }
         } catch (error) {
             message.error('更新失败');

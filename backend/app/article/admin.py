@@ -1,3 +1,5 @@
+
+# admin.py
 from django.contrib import admin
 from django.utils.html import format_html
 from .models import Article
@@ -12,11 +14,14 @@ class ArticleAdmin(admin.ModelAdmin):
     list_display_links = ['title']
     search_fields = ['title', 'content', 'tags']
     list_filter = ['status', 'is_featured', 'created_at']
-    filter_horizontal = ['content_images']
+    # 移除了 filter_horizontal，因为 content_images 字段不存在
+    # filter_horizontal = ['content_images']
 
     readonly_fields = [
         'created_at', 'updated_at', 'views', 'likes',
-        'cover_preview', 'content_images_preview'
+        'cover_preview'
+        # 移除了 content_images_preview，因为 content_images 字段不存在
+        # 'content_images_preview'
     ]
 
     fieldsets = [
@@ -24,7 +29,9 @@ class ArticleAdmin(admin.ModelAdmin):
             'fields': ('title', 'content', 'status', 'builder', 'author', 'tags')
         }),
         ('图片', {
-            'fields': ('cover_image', 'cover_preview', 'content_images', 'content_images_preview')
+            'fields': ('cover_image', 'cover_preview')
+            # 移除了 content_images 和 content_images_preview，因为 content_images 字段不存在
+            # 'fields': ('cover_image', 'cover_preview', 'content_images', 'content_images_preview')
         }),
         ('统计信息', {
             'fields': ('views', 'likes', 'created_at', 'updated_at')
@@ -41,20 +48,21 @@ class ArticleAdmin(admin.ModelAdmin):
         return "暂无图片"
     cover_preview.short_description = '封面预览'
 
-    def content_images_preview(self, obj):
-        """内容图片预览"""
-        images = obj.content_images.all()
-        if images:
-            html = '<div style="display: flex; gap: 10px; flex-wrap: wrap;">'
-            for image in images:
-                html += format_html(
-                    '<img src="{}" width="100" height="100" style="object-fit: cover;" />',
-                    image.file.url
-                )
-            html += '</div>'
-            return format_html(html)
-        return "暂无内容图片"
-    content_images_preview.short_description = '内容图片预览'
+    # 移除了 content_images_preview 方法，因为 content_images 字段不存在
+    # def content_images_preview(self, obj):
+    #     """内容图片预览"""
+    #     images = obj.content_images.all()
+    #     if images:
+    #         html = '<div style="display: flex; gap: 10px; flex-wrap: wrap;">'
+    #         for image in images:
+    #             html += format_html(
+    #                 '<img src="{}" width="100" height="100" style="object-fit: cover;" />',
+    #                 image.file.url
+    #             )
+    #         html += '</div>'
+    #         return format_html(html)
+    #     return "暂无内容图片"
+    # content_images_preview.short_description = '内容图片预览'
 
     def save_model(self, request, obj, form, change):
         """保存时自动设置作者"""
@@ -66,4 +74,6 @@ class ArticleAdmin(admin.ModelAdmin):
         """优化查询性能"""
         return super().get_queryset(request).select_related(
             'author', 'builder', 'cover_image'
-        ).prefetch_related('content_images')
+        )
+        # 移除了 prefetch_related('content_images')，因为 content_images 字段不存在
+        # .prefetch_related('content_images')

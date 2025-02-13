@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.conf import settings
 from app.user.models import CustomUser
-from app.public.models import Image
 
 class Builder(models.Model):
     name = models.CharField(max_length=200, verbose_name=_('建筑物名称'))
@@ -16,12 +16,11 @@ class Builder(models.Model):
         verbose_name=_('创建者'),
         related_name='buildings'
     )
-    image = models.ForeignKey(
-        Image,
-        on_delete=models.SET_NULL,
-        null=True,
+    image = models.CharField(
+        max_length=255,
         blank=True,
-        verbose_name=_('建筑物图片')
+        null=True,
+        verbose_name=_('建筑物图片路径')
     )
     model = models.FileField(
         upload_to='builders/models/',
@@ -41,11 +40,19 @@ class Builder(models.Model):
         verbose_name=_('建筑物标签')
     )
 
-    @property
-    def image_url(self):
-        return self.image.file.url if self.image else None
+    def get_image_url(self):
+        """获取图片完整URL"""
+        if self.image:
+            return f"{settings.URL_BASE}/media/{self.image}"
+        return None
 
     def get_tags_list(self):
+        """获取标签列表"""
         if not self.tags:
             return []
         return [tag.strip() for tag in self.tags.split(',')]
+
+    class Meta:
+        verbose_name = _('建筑物')
+        verbose_name_plural = _('建筑物')
+        ordering = ['-created_at']

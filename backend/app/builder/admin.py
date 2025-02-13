@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.utils.html import format_html
 from .models import Builder
 
-
 @admin.register(Builder)
 class BuilderAdmin(admin.ModelAdmin):
     list_display = ['name', 'image_preview', 'category', 'created_at', 'updated_at', 'creator']
@@ -12,10 +11,10 @@ class BuilderAdmin(admin.ModelAdmin):
 
     def image_preview(self, obj):
         """图片预览"""
-        if obj.image_url:
+        if obj.image:
             return format_html(
                 '<img src="{}" width="100" height="100" style="object-fit: cover;" />',
-                obj.image_url
+                obj.get_image_url()
             )
         return "暂无图片"
 

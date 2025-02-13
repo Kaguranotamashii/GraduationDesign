@@ -32,7 +32,7 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
     (response) => {
         if (response.data.code === 200) {
-            message.success(response.data.message);
+            // message.success(response.data.message);
         }
         console.log('响应数据:', response)
         return response;

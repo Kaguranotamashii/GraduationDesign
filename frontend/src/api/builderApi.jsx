@@ -17,7 +17,7 @@ import apiClient from '../utils/apiClient';
 import { message} from 'antd';
 export const getAllModels = async () => {
     try {
-        const response = await apiClient.get('/builder/models/all-models/');
+        const response = await apiClient.get('/builder/all/');
         return response.data;
     } catch (error) {
         console.error('Error fetching models:', error);
@@ -27,7 +27,7 @@ export const getAllModels = async () => {
 };
 export const getAllBuildingsPaginated = async (page, pageSize) => {
     try {
-        const response = await apiClient.get(`/builder/models/all-page-models/?page=${page}&page_size=${pageSize}`);
+        const response = await apiClient.get(`/builder/all-page-models/?page=${page}&page_size=${pageSize}`);
         return response.data;
     } catch (error) {
         console.error('Error fetching models:', error);
@@ -38,7 +38,7 @@ export const getAllBuildingsPaginated = async (page, pageSize) => {
 
 export const getAllPagesModels = async () => {
     try {
-        const response = await apiClient.get('/builder/models/all-page-models/');
+        const response = await apiClient.get('/builder/all-page-models/');
         return response.data;
     } catch (error) {
         message.error('获取模型列表失败');
@@ -48,7 +48,7 @@ export const getAllPagesModels = async () => {
 
 export const getMyModels = async () => {
     try {
-        const response = await apiClient.get('/builder/models/my-models/');
+        const response = await apiClient.get('/builder/my-models/');
         return response.data;
     } catch (error) {
         message.error('获取模型列表失败');
@@ -58,7 +58,7 @@ export const getMyModels = async () => {
 
 export const addModels = async (modelData) => {
     try {
-        const response = await apiClient.post('/builder/models/add-models/', modelData);
+        const response = await apiClient.post('/builder/add-models/', modelData);
         return response.data;
     } catch (error) {
         message.error('添加模型失败');
@@ -68,7 +68,7 @@ export const addModels = async (modelData) => {
 
 export const getBuildingCategories = async () => {
     try {
-        const response = await apiClient.get('/builder/models/categories/');
+        const response = await apiClient.get('/builder/categories/');
         return response.data;
     } catch (error) {
         message.error('获取建筑类别失败');
@@ -78,7 +78,7 @@ export const getBuildingCategories = async () => {
 
 export const getBuildingTags = async () => {
     try {
-        const response = await apiClient.get('/builder/models/tags/');
+        const response = await apiClient.get('/builder/tags/');
         return response.data;
     } catch (error) {
         message.error('获取建筑标签失败');
