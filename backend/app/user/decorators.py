@@ -53,3 +53,31 @@ def jwt_required(func):
             
         return func(request, *args, **kwargs)
     return wrapper
+
+
+
+
+from functools import wraps
+from django.http import JsonResponse
+from probject.status_code import FORBIDDEN, STATUS_MESSAGES
+
+def admin_required(func):
+    """管理员权限检查装饰器"""
+    @wraps(func)
+    def wrapper(request, *args, **kwargs):
+        # 确保在jwt_required之后使用
+        if not hasattr(request, 'auth_user'):
+            return JsonResponse({
+                'code': FORBIDDEN,
+                'message': '无效的认证信息'
+            }, status=FORBIDDEN)
+
+        # 检查是否是管理员
+        if not request.auth_user.is_staff:
+            return JsonResponse({
+                'code': FORBIDDEN,
+                'message': '需要管理员权限'
+            }, status=FORBIDDEN)
+
+        return func(request, *args, **kwargs)
+    return wrapper

@@ -11,6 +11,7 @@ from django.contrib.messages.storage import default_storage
 from django.core.cache import cache
 from django.core.files.base import ContentFile
 from django.core.mail import EmailMessage
+from django.db.models import Q
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_http_methods
@@ -20,7 +21,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
-from app.user.decorators import jwt_required
+from app.user.decorators import jwt_required, admin_required
 from probject import settings
 from .models import CustomUser  # 确保使用继承AbstractUser的自定义用户模型
 from probject.status_code import STATUS_MESSAGES, SUCCESS, ERROR, INVALID_PARAMS, UNAUTHORIZED
@@ -814,4 +815,210 @@ def get_current_user(request):
             "code": 500,
             "message": "获取失败",
             "error": str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+@api_view(['GET'])
+@jwt_required
+@admin_required
+def admin_user_list(request):
+    """
+    管理员获取用户列表（支持分页和搜索）
+    GET /api/user/admin/users/?page=1&page_size=10&search=xxx
+    """
+    print("Current user:", request.auth_user)
+    print("Is staff:", request.auth_user.is_staff)
+    print("Is superuser:", request.auth_user.is_superuser)
+    try:
+        # 获取查询参数
+        page = int(request.GET.get('page', 1))
+        page_size = int(request.GET.get('page_size', 10))
+        search = request.GET.get('search', '')
+
+        # 构建查询条件
+        query = CustomUser.objects.all()
+        if search:
+            query = query.filter(
+                Q(username__icontains=search) |
+                Q(email__icontains=search)
+            )
+
+        # 计算总数
+        total = query.count()
+
+        # 分页
+        start = (page - 1) * page_size
+        end = page * page_size
+        users = query[start:end]
+
+        # 构造响应数据
+        user_list = []
+        for user in users:
+            user_list.append({
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "is_active": user.is_active,
+                "is_staff": user.is_staff,
+                "last_login": user.last_login.strftime("%Y-%m-%d %H:%M:%S") if user.last_login else None,
+                "date_joined": user.date_joined.strftime("%Y-%m-%d %H:%M:%S"),
+                "avatar": user.get_full_avatar_url(),
+                "signature": user.signature
+            })
+
+        return Response({
+            "code": 200,
+            "message": "获取成功",
+            "data": {
+                "total": total,
+                "page": page,
+                "page_size": page_size,
+                "users": user_list
+            }
+        })
+    except Exception as e:
+        return Response({
+            "code": 500,
+            "message": f"获取用户列表失败: {str(e)}"
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['DELETE'])
+@jwt_required
+@admin_required
+def admin_delete_user(request, user_id):
+    try:
+        user = CustomUser.objects.get(id=user_id)
+        is_superuser = request.auth_user.is_superuser
+
+        # 非超级管理员不能删除管理员
+        if not is_superuser and user.is_staff:
+            return Response({
+                "code": 403,
+                "message": "只有超级管理员可以删除管理员账号"
+            }, status=status.HTTP_403_FORBIDDEN)
+
+        # 不能删除超级管理员
+        if user.is_superuser:
+            return Response({
+                "code": 403,
+                "message": "不能删除超级管理员账号"
+            }, status=status.HTTP_403_FORBIDDEN)
+
+        if user.avatar:
+            delete_file(user.avatar)
+        user.delete()
+
+        return Response({
+            "code": 200,
+            "message": "用户删除成功"
+        })
+    except CustomUser.DoesNotExist:
+        return Response({
+            "code": 404,
+            "message": "用户不存在"
+        }, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['PUT'])
+@jwt_required
+@admin_required
+def admin_update_user(request, user_id):
+    """管理员更新用户信息"""
+    try:
+        user = CustomUser.objects.get(id=user_id)
+        data = request.data
+        is_superuser = request.auth_user.is_superuser
+
+        # 非超级管理员不能修改管理员信息
+        if not is_superuser and user.is_staff:
+            return Response({
+                "code": 403,
+                "message": "只有超级管理员可以修改管理员信息"
+            }, status=status.HTTP_403_FORBIDDEN)
+
+        # 可更新的字段
+        allowed_fields = ['is_active', 'signature']
+
+        # 只有超级管理员可以修改 is_staff 字段
+        if is_superuser:
+            allowed_fields.append('is_staff')
+
+        # 更新字段
+        for field in allowed_fields:
+            if field in data:
+                setattr(user, field, data[field])
+
+        user.save()
+        return Response({
+            "code": 200,
+            "message": "用户信息更新成功",
+            "data": {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "is_active": user.is_active,
+                "is_staff": user.is_staff,
+                "is_superuser": user.is_superuser,
+                "signature": user.signature,
+                "last_login": user.last_login.strftime("%Y-%m-%d %H:%M:%S") if user.last_login else None,
+                "date_joined": user.date_joined.strftime("%Y-%m-%d %H:%M:%S")
+            }
+        })
+    except CustomUser.DoesNotExist:
+        return Response({
+            "code": 404,
+            "message": "用户不存在"
+        }, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({
+            "code": 500,
+            "message": f"更新用户信息失败: {str(e)}"
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['POST'])
+@jwt_required
+@permission_classes([IsAdminUser])
+def admin_reset_user_password(request, user_id):
+    """
+    管理员重置用户密码
+    POST /api/user/admin/users/{user_id}/reset-password/
+    """
+    try:
+        user = CustomUser.objects.get(id=user_id)
+        new_password = request.data.get('new_password')
+
+        if not new_password:
+            return Response({
+                "code": 400,
+                "message": "新密码不能为空"
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # 不允许修改超级管理员密码
+        if user.is_superuser and request.auth_user.id != user.id:
+            return Response({
+                "code": 403,
+                "message": "不能修改超级管理员密码"
+            }, status=status.HTTP_403_FORBIDDEN)
+
+        # 设置新密码
+        user.set_password(new_password)
+        user.save()
+
+        # 清除用户所有登录会话
+        cache.delete_pattern(f"user:{user.id}:*")
+
+        return Response({
+            "code": 200,
+            "message": "密码重置成功"
+        })
+    except CustomUser.DoesNotExist:
+        return Response({
+            "code": 404,
+            "message": "用户不存在"
+        }, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({
+            "code": 500,
+            "message": f"密码重置失败: {str(e)}"
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

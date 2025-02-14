@@ -26,10 +26,8 @@ import {
     getAdminUserList,
     updateUserByAdmin,
     deleteUserByAdmin,
-    resetUserPasswordByAdmin,
-    getUserInfo
+    resetUserPasswordByAdmin
 } from '@/api/userApi.jsx';
-import { useSelector } from 'react-redux';
 
 const UserManagement = () => {
     const [users, setUsers] = useState([]);
@@ -45,22 +43,6 @@ const UserManagement = () => {
         userId: null
     });
     const [resetPasswordForm] = Form.useForm();
-    const [currentUser, setCurrentUser] = useState(null);
-
-    // 获取当前登录用户信息
-    useEffect(() => {
-        const fetchCurrentUser = async () => {
-            try {
-                const response = await getUserInfo();
-                if (response.code === 200) {
-                    setCurrentUser(response.data);
-                }
-            } catch (error) {
-                message.error('获取当前用户信息失败');
-            }
-        };
-        fetchCurrentUser();
-    }, []);
 
     useEffect(() => {
         fetchUsers();
@@ -97,12 +79,6 @@ const UserManagement = () => {
     };
 
     const handleStatusChange = async (checked, record) => {
-        // 检查权限
-        if (!currentUser?.is_superuser && record.is_staff) {
-            message.error('只有超级管理员可以修改管理员状态');
-            return;
-        }
-
         try {
             const response = await updateUserByAdmin(record.id, {
                 is_active: checked
@@ -122,13 +98,6 @@ const UserManagement = () => {
     };
 
     const handleDelete = async (userId) => {
-        // 检查权限
-        const userToDelete = users.find(u => u.id === userId);
-        if (!currentUser?.is_superuser && userToDelete?.is_staff) {
-            message.error('只有超级管理员可以删除管理员账号');
-            return;
-        }
-
         try {
             const response = await deleteUserByAdmin(userId);
             if (response.code === 200) {
@@ -141,13 +110,6 @@ const UserManagement = () => {
     };
 
     const handleResetPassword = async (values) => {
-        // 检查权限
-        const userToReset = users.find(u => u.id === resetPasswordModal.userId);
-        if (!currentUser?.is_superuser && userToReset?.is_staff) {
-            message.error('只有超级管理员可以重置管理员密码');
-            return;
-        }
-
         try {
             const response = await resetUserPasswordByAdmin(
                 resetPasswordModal.userId,
@@ -161,10 +123,6 @@ const UserManagement = () => {
         } catch (error) {
             message.error('密码重置失败');
         }
-    };
-
-    const canModifyUser = (record) => {
-        return currentUser?.is_superuser || !record.is_staff;
     };
 
     const columns = [
@@ -182,8 +140,7 @@ const UserManagement = () => {
                 <Space>
                     <UserOutlined />
                     {text}
-                    {record.is_superuser && <Tag color="red">超级管理员</Tag>}
-                    {record.is_staff && !record.is_superuser && <Tag color="blue">管理员</Tag>}
+                    {record.is_staff && <Tag color="blue">管理员</Tag>}
                 </Space>
             ),
         },
@@ -209,11 +166,11 @@ const UserManagement = () => {
             key: 'status',
             render: (_, record) => (
                 <Space>
-                    <Tooltip title={!canModifyUser(record) ? '无权限修改' : (record.is_active ? '点击禁用用户' : '点击启用用户')}>
+                    <Tooltip title={record.is_active ? '点击禁用用户' : '点击启用用户'}>
                         <Switch
                             checked={record.is_active}
                             onChange={(checked) => handleStatusChange(checked, record)}
-                            disabled={!canModifyUser(record) || record.is_superuser}
+                            disabled={record.is_staff} // 禁止修改管理员状态
                         />
                     </Tooltip>
                     <Tag color={record.is_active ? 'green' : 'red'}>
@@ -225,40 +182,37 @@ const UserManagement = () => {
         {
             title: '操作',
             key: 'action',
-            render: (_, record) => {
-                const canModify = canModifyUser(record) && !record.is_superuser;
-                return (
-                    <Space>
+            render: (_, record) => (
+                <Space>
+                    <Button
+                        type="text"
+                        icon={<KeyOutlined />}
+                        onClick={() => setResetPasswordModal({
+                            visible: true,
+                            userId: record.id
+                        })}
+                        disabled={record.is_staff}
+                    >
+                        重置密码
+                    </Button>
+                    <Popconfirm
+                        title="确定要删除此用户吗？"
+                        onConfirm={() => handleDelete(record.id)}
+                        okText="确定"
+                        cancelText="取消"
+                        disabled={record.is_staff}
+                    >
                         <Button
                             type="text"
-                            icon={<KeyOutlined />}
-                            onClick={() => setResetPasswordModal({
-                                visible: true,
-                                userId: record.id
-                            })}
-                            disabled={!canModify}
+                            danger
+                            icon={<UserDeleteOutlined />}
+                            disabled={record.is_staff}
                         >
-                            重置密码
+                            删除
                         </Button>
-                        <Popconfirm
-                            title="确定要删除此用户吗？"
-                            onConfirm={() => handleDelete(record.id)}
-                            okText="确定"
-                            cancelText="取消"
-                            disabled={!canModify}
-                        >
-                            <Button
-                                type="text"
-                                danger
-                                icon={<UserDeleteOutlined />}
-                                disabled={!canModify}
-                            >
-                                删除
-                            </Button>
-                        </Popconfirm>
-                    </Space>
-                );
-            },
+                    </Popconfirm>
+                </Space>
+            ),
         },
     ];
 

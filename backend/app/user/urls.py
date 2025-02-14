@@ -31,4 +31,12 @@ urlpatterns = [
     path('google-login/', views.google_login, name='google_login'),
 
     path('current-user/', views.get_current_user, name='get_current_user'),
+
+
+    # 管理员接口
+    path('admin/users/', views.admin_user_list, name='admin_user_list'),
+    path('admin/users/<int:user_id>/', views.admin_update_user, name='admin_update_user'),
+    path('admin/users/<int:user_id>/delete/', views.admin_delete_user, name='admin_delete_user'),
+    path('admin/users/<int:user_id>/reset-password/', views.admin_reset_user_password, name='admin_reset_password'),
+
 ]

@@ -110,3 +110,65 @@ export const updateUserProfile = async (profileData) => {
         throw error;
     }
 }
+
+
+export const changePassword = async (passwordData) => {
+    try {
+        const response = await apiClient.post('/user/password/change/', passwordData);
+        return response.data;
+    } catch (error) {
+        // message.error('修改密码失败');
+        throw error;
+    }
+}
+
+
+
+// 管理员获取用户列表（支持分页和搜索）
+export const getAdminUserList = async (params) => {
+    try {
+        const { page = 1, pageSize = 10, search = '' } = params;
+        const response = await apiClient.get('/user/admin/users/', {
+            params: {
+                page,
+                page_size: pageSize,
+                search
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+// 管理员更新用户信息
+export const updateUserByAdmin = async (userId, userData) => {
+    try {
+        const response = await apiClient.put(`/user/admin/users/${userId}/`, userData);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+// 管理员删除用户
+export const deleteUserByAdmin = async (userId) => {
+    try {
+        const response = await apiClient.delete(`/user/admin/users/${userId}/delete/`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+// 管理员重置用户密码
+export const resetUserPasswordByAdmin = async (userId, newPassword) => {
+    try {
+        const response = await apiClient.post(`/user/admin/users/${userId}/reset-password/`, {
+            new_password: newPassword
+        });
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};

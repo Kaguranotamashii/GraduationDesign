@@ -6,14 +6,15 @@ import NotFound from '../components/ErrorBoundary/NotFound';
 import ErrorPage from '../components/ErrorBoundary/ErrorPage';
 import Home from "../pages/home/home";
 import Map from "../pages/map/map.jsx";
-
 import CreateArticle from "../components/admin/CreateArticle.jsx";
 import UserProfile from '../components/admin/user/UserProfile.jsx';
 import ModelViewer from "../pages/modelViewer/ModelViewer.jsx";
 import ModelEditor from "@/pages/modelEdit/ModelEdit.jsx";
 import InteractiveModelViewer from "@/pages/modeldEMO/demo1.jsx";
-import ArticleList from "@/pages/articles/ArticleList.jsx";
-import AboutPage from "@/pages/about/AboutPage.jsx";  // 新增
+import ArticleList from "@/pages/articles/list/ArticleList.jsx"
+import ArticleDetail from "@/pages/articles/detail/ArticleDetail.jsx";
+import AboutPage from "@/pages/about/AboutPage.jsx";
+import MarkdownViewer from "@/components/articles/Markdown/MarkdownViewer.jsx";
 
 const router = createBrowserRouter([
     {
@@ -29,7 +30,7 @@ const router = createBrowserRouter([
                 element: <Auth />,
             },
             {
-                path:'map',
+                path: 'map',
                 element: <Map/>
             },
             {
@@ -45,8 +46,21 @@ const router = createBrowserRouter([
                 element: <InteractiveModelViewer />,
             },
             {
-              path: 'articles',
-                element:<ArticleList />
+                path: 'articles',
+                children: [
+                    {
+                        index: true,
+                        element: <ArticleList />
+                    },
+                    {
+                        path: ':id',
+                        element: <ArticleDetail />
+                    }
+                ]
+            },
+            {
+                path: "/doc/:id",
+                element: <MarkdownViewer  />
             },
             {
                 path: 'about',
@@ -57,7 +71,7 @@ const router = createBrowserRouter([
                 element: <PrivateRoute><AdminLayout /></PrivateRoute>,
                 children: [
                     {
-                        index: true,  // 默认显示个人信息页面
+                        index: true,
                         element: <UserProfile />
                     },
                     {
@@ -77,4 +91,5 @@ const router = createBrowserRouter([
         ],
     },
 ]);
+
 export default router;
