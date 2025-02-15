@@ -55,67 +55,103 @@ const AdminLayout = () => {
     // 基础菜单项
     const baseMenuItems = [
         {
-            key: '/admin',
-            icon: <HomeOutlined />,
+            key: '/admin/profile',
+            icon: <UserOutlined />,
             label: '个人中心',
+            children: [
+                {
+                    key: '/admin/profile',
+                    label: '个人信息',
+                },
+
+            ]
         },
         {
-            key: '/admin/add-article',
-            icon: <FileTextOutlined />,
-            label: '发布文章',
-        },
-        {
-            key: '/my-models',
-            icon: <DatabaseOutlined />,
-            label: '我的模型',
-        },
-        {
-            key: '/my-articles',
-            icon: <FileTextOutlined />,
-            label: '我的文章',
-        },
-        {
-            key: '/my-comments',
-            icon: <CommentOutlined />,
-            label: '我的评论',
-        },
+            key: 'content',
+            type: 'group',
+            label: '内容管理',
+            children: [
+                {
+                    key: 'articles',
+                    icon: <FileTextOutlined />,
+                    label: '文章管理',
+                    children: [
+                        {
+                            key: '/admin/articles',
+                            label: '我的文章',
+                        },
+                        {
+                            key: '/admin/articles/create',
+                            label: '发布文章',
+                        }
+                    ]
+                },
+                {
+                    key: 'models',
+                    icon: <DatabaseOutlined />,
+                    label: '模型管理',
+                    children: [
+                        {
+                            key: '/admin/models',
+                            label: '我的模型',
+                        },
+                        {
+                            key: '/admin/models/create',
+                            label: '上传模型',
+                        }
+                    ]
+                },
+                {
+                    key: '/admin/comments',
+                    icon: <CommentOutlined />,
+                    label: '我的评论',
+                }
+            ]
+        }
     ];
 
     // 管理员菜单项
     const adminMenuItems = userInfo?.is_staff ? [
         {
-            type: 'divider',
-        },
-        {
-            key: 'admin',
+            key: 'system',
             type: 'group',
-            label: '管理功能',
+            label: '系统管理',
             children: [
                 {
-                    key: '/admin/users',
+                    key: '/admin/system/users',
                     icon: <TeamOutlined />,
                     label: '用户管理',
                 },
                 {
-                    key: '/admin/all-models',
-                    icon: <DatabaseOutlined />,
-                    label: '模型管理',
-                },
-                {
-                    key: '/admin/all-articles',
+                    key: '/admin/system/articles',
                     icon: <FileTextOutlined />,
                     label: '文章管理',
                 },
                 {
-                    key: '/admin/all-comments',
+                    key: '/admin/system/models',
+                    icon: <DatabaseOutlined />,
+                    label: '模型管理',
+                },
+                {
+                    key: '/admin/system/comments',
                     icon: <CommentOutlined />,
                     label: '评论管理',
                 },
-            ],
-        },
+
+            ]
+        }
     ] : [];
 
     const menuItems = [...baseMenuItems, ...adminMenuItems];
+
+    // 菜单点击处理
+    const handleMenuClick = ({ key }) => {
+        if (key.startsWith('/admin/system') && !userInfo?.is_staff) {
+            message.error('该页面仅管理员可访问');
+            return;
+        }
+        navigate(key);
+    };
 
     if (loading) {
         return (
@@ -162,9 +198,9 @@ const AdminLayout = () => {
                         <Menu
                             mode="inline"
                             selectedKeys={[location.pathname]}
-                            defaultOpenKeys={['admin']}
+                            defaultOpenKeys={['content', 'system', 'articles', 'models']}
                             items={menuItems}
-                            onClick={({ key }) => navigate(key)}
+                            onClick={handleMenuClick}
                             className="border-none"
                             inlineCollapsed={collapsed}
                         />

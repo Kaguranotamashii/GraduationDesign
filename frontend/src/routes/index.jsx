@@ -1,21 +1,29 @@
-import { createBrowserRouter } from 'react-router-dom';
+import {createBrowserRouter, Outlet} from 'react-router-dom';
 import PrivateRoute from '../components/Guard/PrivateRoute';
 import AdminLayout from '../layout/AdminLayout';
 import Auth from '../pages/auth/Auth';
 import NotFound from '../components/ErrorBoundary/NotFound';
 import ErrorPage from '../components/ErrorBoundary/ErrorPage';
-import Home from "../pages/home/home";
-import Map from "../pages/map/map.jsx";
-import CreateArticle from "../components/admin/CreateArticle.jsx";
-import UserProfile from '../components/admin/user/UserProfile.jsx';
-import ModelViewer from "../pages/modelViewer/ModelViewer.jsx";
-import ModelEditor from "@/pages/modelEdit/ModelEdit.jsx";
-import InteractiveModelViewer from "@/pages/modeldEMO/demo1.jsx";
-import ArticleList from "@/pages/articles/list/ArticleList.jsx"
+import HomePage from "@/pages/home/index.jsx";
+import MapPage from "@/pages/map/index.jsx";
+import ArticleList from "@/pages/articles/list/ArticleList.jsx";
 import ArticleDetail from "@/pages/articles/detail/ArticleDetail.jsx";
 import AboutPage from "@/pages/about/AboutPage.jsx";
-import MarkdownViewer from "@/components/articles/Markdown/MarkdownViewer.jsx";
+import UserProfile from "@/components/admin/user/UserProfile.jsx";
+import MyArticles from "@/components/admin/article/MyArticles.jsx";
+import CreateArticle from "@/components/admin/article/CreateArticle.jsx";
+import AdminRoute from "@/components/Guard/AdminRoute.jsx";
+import React from "react";
+import UserManagement from "@/components/admin/user/UserManagement.jsx";
+import ArticleManagement from "@/components/admin/article/ArticleManagement.jsx"
+import ModelManagement from "@/components/admin/model/ModelManagement.jsx";
+import CommentManagement from "@/components/admin/comment/CommentManagement.jsx";
 
+
+// 页面组件导入...
+// 其他组件保持不变...
+
+// @ts-ignore
 const router = createBrowserRouter([
     {
         path: '/',
@@ -23,7 +31,7 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Home/>
+                element: <HomePage/>
             },
             {
                 path: 'auth',
@@ -31,20 +39,9 @@ const router = createBrowserRouter([
             },
             {
                 path: 'map',
-                element: <Map/>
+                element: <MapPage/>
             },
-            {
-                path: 'builderModel',
-                element: <ModelViewer />
-            },
-            {
-                path: 'modelEditor',
-                element: <ModelEditor />,
-            },
-            {
-                path: 'text',
-                element: <InteractiveModelViewer />,
-            },
+            // 公开文章路由
             {
                 path: 'articles',
                 children: [
@@ -59,37 +56,79 @@ const router = createBrowserRouter([
                 ]
             },
             {
-                path: "/doc/:id",
-                element: <MarkdownViewer  />
-            },
-            {
                 path: 'about',
                 element: <AboutPage />,
             },
+            // 后台管理路由
             {
                 path: 'admin',
                 element: <PrivateRoute><AdminLayout /></PrivateRoute>,
                 children: [
+                    // 个人中心模块
                     {
-                        index: true,
-                        element: <UserProfile />
+                        path: 'profile',
+                        children: [
+                            {
+                                index: true,
+                                element: <UserProfile />
+                            },
+                        ]
                     },
+                    // 文章管理模块
                     {
-                        path: 'add-article',
-                        element: <CreateArticle />,
+                        path: 'articles',
+                        children: [
+                            {
+                                index: true,
+                                element: <MyArticles />
+                            },
+                            {
+                                path: 'create',
+                                element: <CreateArticle />
+                            },
+
+                        ]
                     },
+                    // 模型管理模块
+
+                    // 评论管理模块
+
+                    // 管理员功能模块
                     {
-                        path: '*',
-                        element: <NotFound />,
-                    },
-                ],
+                        path: 'system',
+                        element: <AdminRoute>
+                            <Outlet />
+                        </AdminRoute>,
+                        children: [
+                            {
+                                path: 'users',
+                                element: <UserManagement />
+                            },
+                            {
+                                path: 'articles',
+                                element: <ArticleManagement />
+                            },
+                            {
+                                path: 'models',
+                                element: <ModelManagement/>
+                            },
+                            {
+                                path: 'comments',
+                                element: <CommentManagement/>
+                            },
+
+                        ]
+
+
+                        }
+                ]
             },
             {
                 path: '*',
                 element: <NotFound />,
-            },
-        ],
-    },
+            }
+        ]
+    }
 ]);
 
 export default router;

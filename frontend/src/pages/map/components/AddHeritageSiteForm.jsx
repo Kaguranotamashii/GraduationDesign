@@ -21,7 +21,7 @@ import {
     addModels,
     getBuildingCategories,
     getBuildingTags
-} from '../../api/builderApi';
+} from '@/api/builderApi';
 
 const { TextArea } = Input;
 

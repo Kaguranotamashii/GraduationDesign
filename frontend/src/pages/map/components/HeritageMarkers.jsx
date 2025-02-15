@@ -3,7 +3,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { Marker, Popup } from 'react-leaflet';
 import { Button, Card, Tag, Spin } from 'antd';
 import L from 'leaflet';
-import { getAllModels } from '../../api/builderApi';
+import { getAllModels } from '@/api/builderApi';
 
 const HeritageMarkers = ({ mapZoom }) => {
     const [sites, setSites] = useState([]);

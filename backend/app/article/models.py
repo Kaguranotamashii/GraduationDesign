@@ -26,7 +26,9 @@ class Article(models.Model):
         Builder,
         on_delete=models.CASCADE,
         related_name='articles',
-        verbose_name=_('关联建筑')
+        verbose_name=_('关联建筑'),
+        null=True,
+        blank=True
     )
 
     author = models.ForeignKey(
@@ -50,6 +52,18 @@ class Article(models.Model):
     updated_at = models.DateTimeField(
         auto_now=True,
         verbose_name=_('更新时间')
+    )
+
+    draft_saved_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name=_('草稿保存时间')
+    )
+
+    published_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name=_('发布时间')
     )
 
     status = models.CharField(
@@ -92,6 +106,26 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        # 处理状态变更
+        if self.pk:  # 如果是更新已存在的对象
+            old_obj = Article.objects.get(pk=self.pk)
+            # 如果状态从草稿变为已发布
+            if old_obj.status == 'draft' and self.status == 'published':
+                from django.utils import timezone
+                self.published_at = timezone.now()
+        # 如果是新对象且状态为已发布
+        elif self.status == 'published':
+            from django.utils import timezone
+            self.published_at = timezone.now()
+
+        # 如果状态为草稿，更新草稿保存时间
+        if self.status == 'draft':
+            from django.utils import timezone
+            self.draft_saved_at = timezone.now()
+
+        super().save(*args, **kwargs)
 
     def get_tags_list(self):
         """获取标签列表"""

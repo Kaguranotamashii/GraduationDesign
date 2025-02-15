@@ -1,360 +1,264 @@
 import React, { useState, useEffect } from 'react';
+import { Card, Avatar, Button, Form, Input, Upload, message, Spin, Tabs, Typography, Divider } from 'antd';
 import {
-    Table,
-    Card,
-    Input,
-    Button,
-    Space,
-    Tag,
-    Switch,
-    message,
-    Tooltip,
-    Modal,
-    Form,
-    Popconfirm
-} from 'antd';
-import {
-    SearchOutlined,
     UserOutlined,
-    UserDeleteOutlined,
-    UserSwitchOutlined,
+    EditOutlined,
+    UploadOutlined,
     MailOutlined,
-    KeyOutlined,
-    EditOutlined
+    IdcardOutlined,
+    ClockCircleOutlined,
+    SaveOutlined,
+    CloseOutlined
 } from '@ant-design/icons';
-import {
-    getAdminUserList,
-    updateUserByAdmin,
-    deleteUserByAdmin,
-    resetUserPasswordByAdmin,
-    getUserInfo
-} from '@/api/userApi.jsx';
-import { useSelector } from 'react-redux';
+import { getUserInfo, uploadAvatar, updateUserProfile } from '@/api/userApi';
+import {useDispatch} from "react-redux";
+import {setUser} from "@/store/authSlice.jsx";
 
-const UserManagement = () => {
-    const [users, setUsers] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [searchText, setSearchText] = useState('');
-    const [pagination, setPagination] = useState({
-        current: 1,
-        pageSize: 10,
-        total: 0
-    });
-    const [resetPasswordModal, setResetPasswordModal] = useState({
-        visible: false,
-        userId: null
-    });
-    const [resetPasswordForm] = Form.useForm();
-    const [currentUser, setCurrentUser] = useState(null);
+const { Title, Text } = Typography;
+const { TextArea } = Input;
 
-    // 获取当前登录用户信息
+const UserProfile = () => {
+    const [form] = Form.useForm();
+    const [loading, setLoading] = useState(true);
+    const [userInfo, setUserInfo] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
+    const [avatarLoading, setAvatarLoading] = useState(false);
+    const dispatch = useDispatch();
+
+    // 重置所有状态和表单
+    const resetStates = () => {
+        setIsEditing(false);
+        form.resetFields();
+    };
+
+    // 刷新用户信息并同步到 Redux
+    const refreshUserInfo = async () => {
+        try {
+            const response = await getUserInfo();
+            if (response.code === 200) {
+                const userData = response.data;
+                setUserInfo(userData);
+                dispatch(setUser(userData)); // 更新 Redux 中的用户信息
+                form.setFieldsValue({
+                    username: userData.username,
+                    email: userData.email,
+                    signature: userData.signature
+                });
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error('获取用户信息失败:', error);
+            message.error('获取用户信息失败');
+            return false;
+        }
+    };
+
     useEffect(() => {
-        const fetchCurrentUser = async () => {
+        const initData = async () => {
             try {
-                const response = await getUserInfo();
-                if (response.code === 200) {
-                    setCurrentUser(response.data);
-                }
-            } catch (error) {
-                message.error('获取当前用户信息失败');
+                await refreshUserInfo();
+            } finally {
+                setLoading(false);
             }
         };
-        fetchCurrentUser();
+        initData();
     }, []);
 
-    useEffect(() => {
-        fetchUsers();
-    }, [pagination.current, pagination.pageSize, searchText]);
-
-    const fetchUsers = async () => {
+    const handleUpload = async (file) => {
         try {
-            setLoading(true);
-            const response = await getAdminUserList({
-                page: pagination.current,
-                pageSize: pagination.pageSize,
-                search: searchText
-            });
+            setAvatarLoading(true);
+            const response = await uploadAvatar(file);
             if (response.code === 200) {
-                setUsers(response.data.users);
-                setPagination({
-                    ...pagination,
-                    total: response.data.total
-                });
+                message.success('头像上传成功');
+                await refreshUserInfo(); // 更新用户信息
             }
         } catch (error) {
-            message.error('获取用户列表失败');
+            message.error('头像上传失败');
         } finally {
-            setLoading(false);
+            setAvatarLoading(false);
         }
+        return false; // 阻止自动上传
     };
 
-    const handleTableChange = (newPagination) => {
-        setPagination({
-            ...pagination,
-            current: newPagination.current,
-            pageSize: newPagination.pageSize
-        });
-    };
-
-    const handleStatusChange = async (checked, record) => {
-        // 检查权限
-        if (!currentUser?.is_superuser && record.is_staff) {
-            message.error('只有超级管理员可以修改管理员状态');
-            return;
-        }
-
+    const handleSave = async (values) => {
         try {
-            const response = await updateUserByAdmin(record.id, {
-                is_active: checked
-            });
+            const response = await updateUserProfile(values);
             if (response.code === 200) {
-                message.success('用户状态更新成功');
-                fetchUsers();
+                message.success('个人信息更新成功');
+                const refreshSuccess = await refreshUserInfo(); // 更新用户信息
+                if (refreshSuccess) {
+                    resetStates(); // 重置状态
+                }
             }
         } catch (error) {
-            message.error('状态更新失败');
+            message.error('更新失败');
         }
     };
 
-    const handleSearch = (value) => {
-        setSearchText(value);
-        setPagination({ ...pagination, current: 1 }); // 重置到第一页
+    const handleCancel = () => {
+        resetStates();
+        refreshUserInfo(); // 取消时也刷新数据，确保显示最新状态
     };
 
-    const handleDelete = async (userId) => {
-        // 检查权限
-        const userToDelete = users.find(u => u.id === userId);
-        if (!currentUser?.is_superuser && userToDelete?.is_staff) {
-            message.error('只有超级管理员可以删除管理员账号');
-            return;
-        }
-
-        try {
-            const response = await deleteUserByAdmin(userId);
-            if (response.code === 200) {
-                message.success('用户删除成功');
-                fetchUsers();
-            }
-        } catch (error) {
-            message.error('删除用户失败');
-        }
-    };
-
-    const handleResetPassword = async (values) => {
-        // 检查权限
-        const userToReset = users.find(u => u.id === resetPasswordModal.userId);
-        if (!currentUser?.is_superuser && userToReset?.is_staff) {
-            message.error('只有超级管理员可以重置管理员密码');
-            return;
-        }
-
-        try {
-            const response = await resetUserPasswordByAdmin(
-                resetPasswordModal.userId,
-                values.newPassword
-            );
-            if (response.code === 200) {
-                message.success('密码重置成功');
-                setResetPasswordModal({ visible: false, userId: null });
-                resetPasswordForm.resetFields();
-            }
-        } catch (error) {
-            message.error('密码重置失败');
-        }
-    };
-
-    const canModifyUser = (record) => {
-        return currentUser?.is_superuser || !record.is_staff;
-    };
-
-    const columns = [
-        {
-            title: 'ID',
-            dataIndex: 'id',
-            key: 'id',
-            width: 80,
-        },
-        {
-            title: '用户名',
-            dataIndex: 'username',
-            key: 'username',
-            render: (text, record) => (
-                <Space>
-                    <UserOutlined />
-                    {text}
-                    {record.is_superuser && <Tag color="red">超级管理员</Tag>}
-                    {record.is_staff && !record.is_superuser && <Tag color="blue">管理员</Tag>}
-                </Space>
-            ),
-        },
-        {
-            title: '邮箱',
-            dataIndex: 'email',
-            key: 'email',
-            render: (text) => (
-                <Space>
-                    <MailOutlined />
-                    {text}
-                </Space>
-            ),
-        },
-        {
-            title: '注册时间',
-            dataIndex: 'date_joined',
-            key: 'date_joined',
-            render: (text) => new Date(text).toLocaleString(),
-        },
-        {
-            title: '状态',
-            key: 'status',
-            render: (_, record) => (
-                <Space>
-                    <Tooltip title={!canModifyUser(record) ? '无权限修改' : (record.is_active ? '点击禁用用户' : '点击启用用户')}>
-                        <Switch
-                            checked={record.is_active}
-                            onChange={(checked) => handleStatusChange(checked, record)}
-                            disabled={!canModifyUser(record) || record.is_superuser}
-                        />
-                    </Tooltip>
-                    <Tag color={record.is_active ? 'green' : 'red'}>
-                        {record.is_active ? '正常' : '禁用'}
-                    </Tag>
-                </Space>
-            ),
-        },
-        {
-            title: '操作',
-            key: 'action',
-            render: (_, record) => {
-                const canModify = canModifyUser(record) && !record.is_superuser;
-                return (
-                    <Space>
-                        <Button
-                            type="text"
-                            icon={<KeyOutlined />}
-                            onClick={() => setResetPasswordModal({
-                                visible: true,
-                                userId: record.id
-                            })}
-                            disabled={!canModify}
-                        >
-                            重置密码
-                        </Button>
-                        <Popconfirm
-                            title="确定要删除此用户吗？"
-                            onConfirm={() => handleDelete(record.id)}
-                            okText="确定"
-                            cancelText="取消"
-                            disabled={!canModify}
-                        >
-                            <Button
-                                type="text"
-                                danger
-                                icon={<UserDeleteOutlined />}
-                                disabled={!canModify}
-                            >
-                                删除
-                            </Button>
-                        </Popconfirm>
-                    </Space>
-                );
-            },
-        },
-    ];
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-[calc(100vh-200px)]">
+                <Spin size="large" />
+            </div>
+        );
+    }
 
     return (
-        <Card title="用户管理" className="shadow-md">
-            <div className="mb-4 flex justify-between items-center">
-                <Input
-                    placeholder="搜索用户名或邮箱"
-                    prefix={<SearchOutlined />}
-                    onChange={(e) => handleSearch(e.target.value)}
-                    style={{ width: 300 }}
-                    allowClear
-                />
-                <Space>
-                    <Button
-                        type="primary"
-                        icon={<UserSwitchOutlined />}
-                        onClick={fetchUsers}
-                    >
-                        刷新列表
-                    </Button>
-                </Space>
-            </div>
-            <Table
-                columns={columns}
-                dataSource={users}
-                rowKey="id"
-                loading={loading}
-                pagination={{
-                    ...pagination,
-                    showSizeChanger: true,
-                    showTotal: (total) => `共 ${total} 条记录`,
-                    pageSizeOptions: ['10', '20', '50'],
-                }}
-                onChange={handleTableChange}
-            />
-
-            <Modal
-                title="重置用户密码"
-                open={resetPasswordModal.visible}
-                onCancel={() => {
-                    setResetPasswordModal({ visible: false, userId: null });
-                    resetPasswordForm.resetFields();
-                }}
-                footer={null}
+        <div className="max-w-5xl mx-auto">
+            <Card
+                bordered={false}
+                className="shadow-md"
+                title={
+                    <div className="flex items-center justify-between">
+                        <Title level={4} className="mb-0">个人信息</Title>
+                        {!isEditing && (
+                            <Button
+                                type="primary"
+                                icon={<EditOutlined />}
+                                onClick={() => setIsEditing(true)}
+                            >
+                                编辑资料
+                            </Button>
+                        )}
+                    </div>
+                }
             >
-                <Form
-                    form={resetPasswordForm}
-                    onFinish={handleResetPassword}
-                    layout="vertical"
-                >
-                    <Form.Item
-                        name="newPassword"
-                        label="新密码"
-                        rules={[
-                            { required: true, message: '请输入新密码' },
-                            { min: 8, message: '密码长度至少8位' }
-                        ]}
-                    >
-                        <Input.Password />
-                    </Form.Item>
-                    <Form.Item
-                        name="confirmPassword"
-                        label="确认密码"
-                        dependencies={['newPassword']}
-                        rules={[
-                            { required: true, message: '请确认新密码' },
-                            ({ getFieldValue }) => ({
-                                validator(_, value) {
-                                    if (!value || getFieldValue('newPassword') === value) {
-                                        return Promise.resolve();
+                <div className="flex flex-col md:flex-row md:space-x-8">
+                    {/* 左侧头像区域 */}
+                    <div className="flex flex-col items-center space-y-4 mb-8 md:mb-0">
+                        <div className="relative group">
+                            <Avatar
+                                size={160}
+                                src={userInfo?.avatar}
+                                icon={<UserOutlined />}
+                                className="border-4 border-white shadow-lg"
+                            />
+                            {isEditing && (
+                                <Upload
+                                    accept="image/*"
+                                    showUploadList={false}
+                                    beforeUpload={handleUpload}
+                                >
+                                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
+                                        <Button
+                                            type="text"
+                                            icon={<UploadOutlined />}
+                                            className="text-white"
+                                            loading={avatarLoading}
+                                        >
+                                            更换头像
+                                        </Button>
+                                    </div>
+                                </Upload>
+                            )}
+                        </div>
+                        <Title level={4} className="mb-0 text-center">
+                            {userInfo?.username}
+                        </Title>
+                        <Text type="secondary" className="text-center">
+                            {userInfo?.is_staff ? '管理员' : '普通用户'}
+                        </Text>
+                    </div>
+
+                    {/* 右侧信息区域 */}
+                    <div className="flex-1">
+                        <Form
+                            form={form}
+                            layout="vertical"
+                            onFinish={handleSave}
+                            initialValues={userInfo}
+                            className="space-y-4"
+                        >
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <Form.Item
+                                    label={
+                                        <span className="flex items-center">
+                                            <UserOutlined className="mr-2" />
+                                            用户名
+                                        </span>
                                     }
-                                    return Promise.reject(new Error('两次输入的密码不一致'));
-                                },
-                            }),
-                        ]}
-                    >
-                        <Input.Password />
-                    </Form.Item>
-                    <Form.Item className="mb-0 text-right">
-                        <Space>
-                            <Button onClick={() => {
-                                setResetPasswordModal({ visible: false, userId: null });
-                                resetPasswordForm.resetFields();
-                            }}>
-                                取消
-                            </Button>
-                            <Button type="primary" htmlType="submit">
-                                确认重置
-                            </Button>
-                        </Space>
-                    </Form.Item>
-                </Form>
-            </Modal>
-        </Card>
+                                    name="username"
+                                >
+                                    <Input disabled className="bg-gray-50" />
+                                </Form.Item>
+
+                                <Form.Item
+                                    label={
+                                        <span className="flex items-center">
+                                            <MailOutlined className="mr-2" />
+                                            邮箱
+                                        </span>
+                                    }
+                                    name="email"
+                                >
+                                    <Input disabled className="bg-gray-50" />
+                                </Form.Item>
+                            </div>
+
+                            <Form.Item
+                                label={
+                                    <span className="flex items-center">
+                                        <IdcardOutlined className="mr-2" />
+                                        个性签名
+                                    </span>
+                                }
+                                name="signature"
+                            >
+                                <TextArea
+                                    disabled={!isEditing}
+                                    rows={4}
+                                    placeholder="写点什么介绍一下自己吧..."
+                                    className={!isEditing ? 'bg-gray-50' : ''}
+                                />
+                            </Form.Item>
+
+                            {isEditing && (
+                                <Form.Item className="mb-0">
+                                    <div className="flex justify-end space-x-4">
+                                        <Button
+                                            onClick={() => setIsEditing(false)}
+                                            icon={<CloseOutlined />}
+                                        >
+                                            取消
+                                        </Button>
+                                        <Button
+                                            type="primary"
+                                            htmlType="submit"
+                                            icon={<SaveOutlined />}
+                                        >
+                                            保存更改
+                                        </Button>
+                                    </div>
+                                </Form.Item>
+                            )}
+                        </Form>
+
+                        {!isEditing && (
+                            <>
+                                <Divider />
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="flex items-center space-x-2 text-gray-500">
+                                        <ClockCircleOutlined />
+                                        <Text type="secondary">注册时间：{userInfo?.register_time}</Text>
+                                    </div>
+                                    <div className="flex items-center space-x-2 text-gray-500">
+                                        <ClockCircleOutlined />
+                                        <Text type="secondary">最后登录：{userInfo?.last_login || '暂无记录'}</Text>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </div>
+            </Card>
+        </div>
     );
 };
 
-export default UserManagement;
+export default UserProfile;

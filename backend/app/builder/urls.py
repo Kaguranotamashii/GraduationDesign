@@ -17,4 +17,7 @@ urlpatterns = [
     path('delete-model/<int:pk>/', views.delete_model_file, name='delete_model_file'),
     path('update-json/<int:pk>/', views.update_model_json, name='update_model_json'),
     path('details/<int:pk>/', views.get_model_details, name='get_model_details'),
+
+
+
 ]

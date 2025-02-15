@@ -1,7 +1,7 @@
-// src/components/Guard/PrivateRoute.jsx
+import React, { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Spin } from 'antd';
+import {message, Spin} from 'antd';
 
 const PrivateRoute = ({ children }) => {
     const { token, isAuthenticated, user } = useSelector((state) => state.auth);
@@ -23,9 +23,7 @@ const PrivateRoute = ({ children }) => {
             </div>
         );
     }
-    console.log('PrivateRoute' ,isAuthenticated )
-    console.log('PrivateRoute' ,token)
-    console.log('PrivateRoute' ,user)
+
     // 未登录或 token 失效时重定向到登录页
     if (!isAuthenticated || !token) {
         return (
