@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {useNavigate, useParams} from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import MarkdownNavbar from 'markdown-navbar';
 import { useSpring, animated } from '@react-spring/web';
@@ -8,19 +8,25 @@ import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import {
     Clock, Calendar, Book, Eye, Bookmark, Share2,
-    ThumbsUp, ArrowUpCircle, Home, ChevronLeft, ListFilter
+    ThumbsUp, ArrowUpCircle, Home, ChevronLeft, ListFilter,
+    Tag, Heart
 } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
-import CommentSection from "@/components/articles/Comments/CommentSection.jsx";
+import { message } from 'antd';
+import CommentSection from "@/components/articles/Comments/CommentSection";
+import { getArticleDetail, likeArticle, unlikeArticle } from '@/api/articleApi';
+import { format, parseISO } from 'date-fns';
+import { toast } from "sonner";
 
-const MarkdownViewer = () => {
+const ArticleDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [content, setContent] = useState('');
+    const [article, setArticle] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showBackToTop, setShowBackToTop] = useState(false);
     const [readingProgress, setReadingProgress] = useState(0);
     const [estimatedReadTime, setEstimatedReadTime] = useState(0);
+    const [isLiked, setIsLiked] = useState(false);
 
     const fadeIn = useSpring({
         from: { opacity: 0, transform: 'translateY(20px)' },
@@ -45,27 +51,92 @@ const MarkdownViewer = () => {
     }, []);
 
     useEffect(() => {
-        const fetchContent = async () => {
+        const fetchArticle = async () => {
             try {
-                const response = await fetch(`/markdown/${id}.md`);
-                const text = await response.text();
-                setContent(text);
+                setLoading(true);
+                const response = await getArticleDetail(id);
 
-                const wordsPerMinute = 200;
-                const words = text.trim().split(/\s+/).length;
-                setEstimatedReadTime(Math.ceil(words / wordsPerMinute));
-
-                setLoading(false);
+                if (response.code === 200 || response.code === 201) {
+                    setArticle(response.data);
+                    setIsLiked(response.data.is_liked || false);
+                    const wordsPerMinute = 200;
+                    const words = response.data.content.trim().split(/\s+/).length;
+                    setEstimatedReadTime(Math.ceil(words / wordsPerMinute));
+                } else {
+                    message.error(response.message || "加载文章失败");
+                }
             } catch (error) {
-                console.error('Failed to load markdown:', error);
+                message.error("加载文章失败: " + error.message);
+            } finally {
                 setLoading(false);
             }
         };
-        fetchContent();
+
+        if (id) {
+            fetchArticle();
+        }
     }, [id]);
 
-    const scrollToTop = () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+     // 修改前端的 handleLike 函数
+    const handleLike = async () => {
+        try {
+            const response = await (isLiked ? unlikeArticle : likeArticle)(id);
+
+            if (response.code === 200) {
+                setArticle(prev => ({
+                    ...prev,
+                    likes: response.data.likes,
+                    is_liked: response.data.is_liked  // 使用后端返回的点赞状态
+                }));
+                setIsLiked(response.data.is_liked);  // 更新本地状态
+                message.success(response.message);
+            }
+        } catch (error) {
+            toast({
+                title: "操作失败",
+                description: "操作失败: " + error.message,
+                variant: "destructive"
+            });
+        }
+    };
+
+    const handleShare = async () => {
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: article.title,
+                    text: article.title,
+                    url: window.location.href,
+                });
+                message.success('分享成功');
+            } catch (error) {
+                if (error.name !== 'AbortError') {
+                    message.error('分享失败');
+                }
+            }
+        } else {
+            try {
+                await navigator.clipboard.writeText(window.location.href);
+                message.success('链接已复制到剪贴板');
+            } catch (error) {
+                message.error('复制链接失败');
+            }
+        }
+    };
+
+    const handleBookmark = () => {
+        // 预留收藏功能
+        message.info('收藏功能开发中');
+    };
+
+    const formatTags = (tags) => {
+        if (!tags) return [];
+        return tags.split(',').map(tag => tag.trim());
+    };
+
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        return format(parseISO(dateString), 'yyyy年MM月dd日 HH:mm');
     };
 
     if (loading) {
@@ -73,10 +144,14 @@ const MarkdownViewer = () => {
             <div className="fixed inset-0 bg-white/80 backdrop-blur-sm flex justify-center items-center z-50">
                 <div className="relative">
                     <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
-                    <div className="mt-4 text-gray-600">Loading document...</div>
+                    <div className="mt-4 text-gray-600">Loading article...</div>
                 </div>
             </div>
         );
+    }
+
+    if (!article) {
+        return null;
     }
 
     return (
@@ -98,48 +173,61 @@ const MarkdownViewer = () => {
                                     className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors flex items-center gap-1"
                                 >
                                     <Home className="w-4 h-4" />
-                                    <span className="text-sm">Home</span>
+                                    <span className="text-sm">首页</span>
                                 </button>
                                 <button
                                     onClick={() => navigate(-1)}
                                     className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors flex items-center gap-1"
                                 >
                                     <ChevronLeft className="w-4 h-4" />
-                                    <span className="text-sm">Back</span>
+                                    <span className="text-sm">返回</span>
                                 </button>
                                 <button
                                     onClick={() => navigate('/articles')}
                                     className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors flex items-center gap-1"
                                 >
                                     <ListFilter className="w-4 h-4" />
-                                    <span className="text-sm">Articles</span>
+                                    <span className="text-sm">文章列表</span>
                                 </button>
                             </div>
                             <Badge variant="secondary" className="flex items-center gap-2">
                                 <Book className="w-4 h-4" />
-                                <span>Documentation</span>
+                                <span>{article.category || '文章'}</span>
                             </Badge>
                             <div className="flex items-center text-gray-600 text-sm">
                                 <Clock className="w-4 h-4 mr-2" />
-                                {estimatedReadTime} min read
+                                {estimatedReadTime} 分钟阅读
                             </div>
                             <div className="flex items-center text-gray-600 text-sm">
                                 <Calendar className="w-4 h-4 mr-2" />
-                                {new Date().toLocaleDateString()}
+                                {formatDate(article.published_at)}
                             </div>
                             <div className="flex items-center text-gray-600 text-sm">
                                 <Eye className="w-4 h-4 mr-2" />
-                                1.2k views
+                                {article.views} 次浏览
                             </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                            <button className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                                <ThumbsUp className="w-5 h-5" />
+                            <button
+                                onClick={handleLike}
+                                className={`p-2 rounded-lg transition-colors flex items-center gap-1
+                                    ${isLiked
+                                    ? 'text-red-500 bg-red-50 hover:bg-red-100'
+                                    : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'}`}
+                            >
+                                <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
+                                <span className="text-sm">{article.likes}</span>
                             </button>
-                            <button className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                            <button
+                                onClick={handleBookmark}
+                                className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            >
                                 <Bookmark className="w-5 h-5" />
                             </button>
-                            <button className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                            <button
+                                onClick={handleShare}
+                                className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            >
                                 <Share2 className="w-5 h-5" />
                             </button>
                         </div>
@@ -147,17 +235,61 @@ const MarkdownViewer = () => {
                 </div>
             </div>
 
-            {/* Title Section */}
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 py-16">
-                <div className="container mx-auto px-4">
-                    <animated.div style={fadeIn} className="max-w-4xl mx-auto text-center text-white">
-                        <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                            Document Title
-                        </h1>
-                        <p className="text-xl text-blue-100">
-                            A comprehensive guide to understanding the topic
-                        </p>
-                    </animated.div>
+            {/* Title Section with Cover Image */}
+            <div className="relative">
+                <div className={`bg-gradient-to-r from-blue-600 to-indigo-600 py-16 relative overflow-hidden`}>
+                    {/* Background Image */}
+                    {article?.cover_image_url && (
+                        <div className="absolute inset-0">
+                            <img
+                                src={article.cover_image_url}
+                                alt={article.title}
+                                className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/80 to-indigo-600/80" />
+                        </div>
+                    )}
+
+                    {/* Content */}
+                    <div className="container mx-auto px-4 relative z-10">
+                        <animated.div style={fadeIn} className="max-w-4xl mx-auto text-center text-white">
+                            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                                {article.title}
+                            </h1>
+
+                            {/* Tags */}
+                            {article.tags && (
+                                <div className="flex flex-wrap justify-center gap-2 mt-4">
+                                    {formatTags(article.tags).map((tag, index) => (
+                                        <Badge
+                                            key={index}
+                                            variant="secondary"
+                                            className="bg-white/20 hover:bg-white/30 transition-colors"
+                                        >
+                                            <Tag className="w-3 h-3 mr-1" />
+                                            {tag}
+                                        </Badge>
+                                    ))}
+                                </div>
+                            )}
+
+                            {/* Meta Info */}
+                            <div className="flex flex-wrap justify-center gap-4 mt-6 text-white/80">
+                                <div className="flex items-center">
+                                    <Calendar className="w-4 h-4 mr-2" />
+                                    {formatDate(article.published_at)}
+                                </div>
+                                <div className="flex items-center">
+                                    <Eye className="w-4 h-4 mr-2" />
+                                    {article.views} 次浏览
+                                </div>
+                                <div className="flex items-center">
+                                    <Heart className={`w-4 h-4 mr-2 ${isLiked ? 'fill-current text-red-500' : ''}`} />
+                                    {article.likes} 次点赞
+                                </div>
+                            </div>
+                        </animated.div>
+                    </div>
                 </div>
             </div>
 
@@ -175,28 +307,28 @@ const MarkdownViewer = () => {
                                         [rehypeAutolinkHeadings, { behavior: 'wrap' }]
                                     ]}
                                 >
-                                    {content}
+                                    {article.content}
                                 </ReactMarkdown>
                             </div>
                         </div>
 
-                        {/* Comments Section */}
+                        {/* Comments */}
                         <div className="mt-8">
-                            <CommentSection />
+                            <CommentSection articleId={id} />
                         </div>
                     </animated.div>
 
-                    {/* Navigation Sidebar */}
+                    {/* Table of Contents */}
                     <animated.div style={fadeIn} className="lg:w-72">
                         <div className="sticky top-20">
                             <div className="bg-white rounded-lg shadow-sm">
                                 <div className="p-4 border-b">
-                                    <h3 className="font-medium">Table of Contents</h3>
+                                    <h3 className="font-medium">目录</h3>
                                 </div>
                                 <div className="p-4 max-h-[calc(100vh-12rem)] overflow-y-auto">
                                     <MarkdownNavbar
                                         className="markdown-nav"
-                                        source={content}
+                                        source={article.content}
                                         ordered={false}
                                         updateHashAuto={true}
                                         headingTopOffset={-80}
@@ -211,139 +343,14 @@ const MarkdownViewer = () => {
             {/* Back to Top Button */}
             {showBackToTop && (
                 <button
-                    onClick={scrollToTop}
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                     className="fixed bottom-8 right-8 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors z-50"
                 >
                     <ArrowUpCircle className="w-6 h-6" />
                 </button>
             )}
-
-            <style>{`
-                /* Typography Styles */
-                .prose {
-                    font-family: system-ui, -apple-system, sans-serif;
-                    font-size: 1.125rem;
-                }
-                
-                .prose h1 {
-                    font-size: 2.5rem;
-                    line-height: 1.2;
-                    margin-bottom: 1.5rem;
-                    color: #1a202c;
-                    font-weight: 700;
-                }
-                
-                .prose h2 {
-                    font-size: 2rem;
-                    color: #2d3748;
-                    margin-top: 2.5rem;
-                    margin-bottom: 1.25rem;
-                    padding-bottom: 0.5rem;
-                    border-bottom: 2px solid #e2e8f0;
-                    font-weight: 600;
-                }
-                
-                .prose h3 {
-                    font-size: 1.75rem;
-                    color: #4a5568;
-                    margin-top: 2rem;
-                    margin-bottom: 1rem;
-                    font-weight: 600;
-                }
-                
-                .prose p {
-                    margin-bottom: 1.25rem;
-                    line-height: 1.8;
-                    font-size: 1.125rem;
-                }
-                
-                /* List Styles */
-                .prose ul, .prose ol {
-                    margin-top: 0.5rem;
-                    margin-bottom: 0.5rem;
-                }
-                
-                .prose li {
-                    margin-top: 0.25rem;
-                    margin-bottom: 0.25rem;
-                }
-                
-                .prose li > p {
-                    margin-top: 0.5rem;
-                    margin-bottom: 0.5rem;
-                }
-                
-                /* Code Styles */
-                .prose code {
-                    background-color: #f7fafc;
-                    padding: 0.2em 0.4em;
-                    border-radius: 0.25rem;
-                    font-size: 0.875em;
-                }
-                
-                .prose pre {
-                    background-color: #2d3748;
-                    padding: 1rem;
-                    border-radius: 0.5rem;
-                    overflow-x: auto;
-                    margin: 1rem 0;
-                }
-                
-                .prose pre code {
-                    background-color: transparent;
-                    color: #e2e8f0;
-                    padding: 0;
-                }
-                
-                /* Table of Contents Styles */
-                .markdown-nav .title-anchor {
-                    display: block;
-                    padding: 0.5rem;
-                    color: #4a5568;
-                    text-decoration: none;
-                    border-radius: 0.375rem;
-                    transition: all 0.2s;
-                    font-size: 0.875rem;
-                }
-                
-                .markdown-nav .title-anchor:hover,
-                .markdown-nav .title-anchor.active {
-                    background-color: #f7fafc;
-                    color: #3182ce;
-                }
-                
-                /* Blockquote Styles */
-                .prose blockquote {
-                    border-left: 4px solid #4299e1;
-                    background-color: #f7fafc;
-                    padding: 1rem;
-                    margin: 1rem 0;
-                    font-style: italic;
-                }
-                
-                /* Table Styles */
-                .prose table {
-                    width: 100%;
-                    border-collapse: separate;
-                    border-spacing: 0;
-                    margin: 1rem 0;
-                }
-                
-                .prose th {
-                    background-color: #f7fafc;
-                    font-weight: 600;
-                    text-align: left;
-                    padding: 0.75rem;
-                    border-bottom: 2px solid #e2e8f0;
-                }
-                
-                .prose td {
-                    padding: 0.75rem;
-                    border-bottom: 1px solid #e2e8f0;
-                }
-            `}</style>
         </div>
     );
 };
 
-export default MarkdownViewer ;
+export default ArticleDetail;

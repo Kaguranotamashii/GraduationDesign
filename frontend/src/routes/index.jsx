@@ -18,6 +18,7 @@ import UserManagement from "@/components/admin/user/UserManagement.jsx";
 import ArticleManagement from "@/components/admin/article/ArticleManagement.jsx"
 import ModelManagement from "@/components/admin/model/ModelManagement.jsx";
 import CommentManagement from "@/components/admin/comment/CommentManagement.jsx";
+import MyComment from "@/components/admin/comment/MyComment.jsx";
 
 
 // 页面组件导入...
@@ -92,6 +93,10 @@ const router = createBrowserRouter([
                     // 模型管理模块
 
                     // 评论管理模块
+                    {
+                        path: 'comments',
+                        element: <MyComment  />
+                    },
 
                     // 管理员功能模块
                     {

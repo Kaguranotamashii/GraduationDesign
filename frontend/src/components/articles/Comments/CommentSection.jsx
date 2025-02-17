@@ -1,138 +1,194 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     MessageSquare,
-    ThumbsUp,
     Reply,
-    MoreHorizontal,
     Heart,
     Clock,
     ChevronDown,
     ChevronUp,
-    Send
+    Send,
+    Smile,
+    Trash2,
+    Pin
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { message } from 'antd';
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
+import {
+    getComments,
+    addComment,
+    likeComment,
+    unlikeComment,
+    replyToComment,
+    deleteComment
+} from '@/api/commentApi';
+import { getUserInfo } from '@/api/userApi';
+import { format } from 'date-fns';
+import { useDispatch } from "react-redux";
+import { getToken } from "@/store/authSlice";
 
-// 模拟评论数据
-const MOCK_COMMENTS = [
-    {
-        id: 1,
-        author: {
-            name: "张三",
-            avatar: "/avatars/avatar-1.jpg",
-            badge: "作者"
-        },
-        content: "这篇文章写得非常详细，对我理解系统架构很有帮助。特别是关于微服务部分的讲解，让我对分布式系统有了更深的认识。",
-        timestamp: "2024-02-14 10:30",
-        likes: 45,
-        isLiked: false,
-        replies: [
-            {
-                id: 2,
-                author: {
-                    name: "李四",
-                    avatar: "/avatars/avatar-2.jpg",
-                    badge: "高级开发"
-                },
-                content: "赞同楼主的观点！想请教一下微服务架构中服务发现的具体实现方案，你们是用的什么技术栈？",
-                timestamp: "2024-02-14 11:15",
-                likes: 12,
-                isLiked: false,
-                replies: [
-                    {
-                        id: 3,
-                        author: {
-                            name: "张三",
-                            avatar: "/avatars/avatar-1.jpg",
-                            badge: "作者"
-                        },
-                        content: "我们主要使用的是 Spring Cloud Netflix 套件，服务发现用的是 Eureka。不过最近在考虑迁移到 Consul，主要是看中了它的服务网格特性。",
-                        timestamp: "2024-02-14 11:30",
-                        likes: 8,
-                        isLiked: false,
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        id: 4,
-        author: {
-            name: "王五",
-            avatar: "/avatars/avatar-3.jpg",
-            badge: "架构师"
-        },
-        content: "文章中提到的性能优化方案非常实用。我在实际项目中也遇到类似的问题，通过实现读写分离和引入缓存层确实能显著提升系统性能。建议可以再补充一下分布式缓存的选型考虑因素。",
-        timestamp: "2024-02-14 14:20",
-        likes: 32,
-        isLiked: false,
-        replies: []
-    },
-    {
-        id: 5,
-        author: {
-            name: "赵六",
-            avatar: "/avatars/avatar-4.jpg",
-        },
-        content: "文章的整体框架很清晰，但是在谈到分布式事务时，感觉对 SAGA 模式的讲解可以再深入一些，尤其是补偿事务的具体实现。",
-        timestamp: "2024-02-14 15:45",
-        likes: 18,
-        isLiked: false,
-        replies: [
-            {
-                id: 6,
-                author: {
-                    name: "张三",
-                    avatar: "/avatars/avatar-1.jpg",
-                    badge: "作者"
-                },
-                content: "感谢建议！确实这部分内容可以展开，我会在下一篇文章中专门讨论 SAGA 模式，包括补偿事务的最佳实践和实际案例分析。",
-                timestamp: "2024-02-14 16:00",
-                likes: 15,
-                isLiked: false,
-            }
-        ]
-    }
-];
-
-const Comment = ({ comment, depth = 0, onReply }) => {
+const Comment = ({
+                     comment,
+                     depth = 0,
+                     onReply,
+                     articleId,
+                     articleAuthorId,
+                     onCommentUpdate,
+                     replies = []
+                 }) => {
     const [showReplyInput, setShowReplyInput] = useState(false);
-    const [isLiked, setIsLiked] = useState(comment.isLiked);
-    const [likesCount, setLikesCount] = useState(comment.likes);
+    const [isLiked, setIsLiked] = useState(false);
+    const [likesCount, setLikesCount] = useState(0);
     const [showReplies, setShowReplies] = useState(depth < 1);
     const [replyContent, setReplyContent] = useState('');
+    const [currentUser, setCurrentUser] = useState(null);
+    const dispatch = useDispatch();
 
-    const handleLike = () => {
-        setIsLiked(!isLiked);
-        setLikesCount(prev => isLiked ? prev - 1 : prev + 1);
-    };
+    useEffect(() => {
+        const checkAuthAndGetUser = async () => {
+            const token = getToken();
+            if (!token) {
+                setCurrentUser(null);
+                return;
+            }
 
-    const handleReplySubmit = () => {
-        if (replyContent.trim()) {
-            onReply(comment.id, replyContent);
-            setReplyContent('');
-            setShowReplyInput(false);
+            try {
+                const response = await getUserInfo();
+                if (response.code === 200) {
+                    setCurrentUser(response.data);
+                } else {
+                    setCurrentUser(null);
+                }
+            } catch (error) {
+                console.error('获取用户信息失败:', error);
+                setCurrentUser(null);
+            }
+        };
+
+        checkAuthAndGetUser();
+    }, []);
+
+    const canDelete = currentUser && (
+        currentUser.id === comment.author ||
+        currentUser.id === articleAuthorId ||
+        currentUser.is_staff
+    );
+
+    useEffect(() => {
+        if (comment) {
+            setIsLiked(comment.is_liked);
+            setLikesCount(comment.likes);
+        }
+    }, [comment]);
+
+    const handleLike = async () => {
+        if (!comment?.id) return;
+
+        try {
+            const response = await (isLiked ? unlikeComment : likeComment)(comment.id);
+            if (response.code === 200 || response.code === 201) {
+                const { is_liked, likes } = response.data;
+                setIsLiked(is_liked);
+                setLikesCount(likes);
+                message.success(isLiked ? '取消点赞成功' : '点赞成功');
+                if (onCommentUpdate) {
+                    onCommentUpdate();
+                }
+            } else {
+                throw new Error(response.message || '操作失败');
+            }
+        } catch (error) {
+            console.error('点赞操作失败:', error);
+            message.error(isLiked ? '取消点赞失败' : '点赞失败');
         }
     };
 
+    const handleDelete = async () => {
+        try {
+            const response = await deleteComment(comment.id);
+            if (response.code === 200) {
+                message.success('评论删除成功');
+                if (onCommentUpdate) {
+                    onCommentUpdate();
+                }
+            } else {
+                throw new Error(response.message || '删除失败');
+            }
+        } catch (error) {
+            console.error('删除评论失败:', error);
+            message.error('删除评论失败: ' + (error.message || '未知错误'));
+        }
+    };
+
+    const handleReplySubmit = async () => {
+        if (!replyContent.trim() || !comment?.id || !articleId) return;
+
+        try {
+            const response = await replyToComment(articleId, comment.id, replyContent);
+            if (response.code === 201) {
+                message.success('回复成功');
+                setReplyContent('');
+                setShowReplyInput(false);
+                if (onCommentUpdate) {
+                    onCommentUpdate();
+                }
+            } else {
+                throw new Error(response.message || '回复失败');
+            }
+        } catch (error) {
+            console.error('回复失败:', error);
+            message.error('回复失败: ' + (error.message || '未知错误'));
+        }
+    };
+
+    if (!comment) return null;
+
+    const commentReplies = replies.filter(reply => reply.parent === comment.id);
+
     return (
-        <div className="group">
+        <div className={`group relative ${comment.is_top ? 'bg-blue-50/50 rounded-lg p-4 mb-4' : ''}`}>
+            {comment.is_top && (
+                <div className="absolute -left-2 top-0">
+                    <Badge variant="secondary" className="flex items-center gap-1">
+                        <Pin className="w-3 h-3" />
+                        置顶
+                    </Badge>
+                </div>
+            )}
             <div className="flex gap-4">
                 <Avatar className="w-10 h-10">
-                    <AvatarImage src={comment.author.avatar} alt={comment.author.name} />
-                    <AvatarFallback>{comment.author.name[0]}</AvatarFallback>
+                    <AvatarImage src={comment.author_avatar} alt={comment.author_name} />
+                    <AvatarFallback>{comment.author_name?.[0] || '?'}</AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
                     <div className="bg-gray-50 rounded-lg px-4 py-3">
                         <div className="flex items-center gap-2 mb-1">
                             <span className="font-semibold text-gray-900">
-                                {comment.author.name}
+                                {comment.author_name || '匿名用户'}
                             </span>
-                            {comment.author.badge && (
+                            {comment.author_badge && (
                                 <Badge variant="outline" className="text-xs">
-                                    {comment.author.badge}
+                                    {comment.author_badge}
                                 </Badge>
                             )}
                         </div>
@@ -144,7 +200,7 @@ const Comment = ({ comment, depth = 0, onReply }) => {
                     <div className="flex items-center gap-6 mt-2 text-sm text-gray-500">
                         <div className="flex items-center gap-2">
                             <Clock className="w-4 h-4" />
-                            <span>{comment.timestamp}</span>
+                            <span>{format(new Date(comment.created_at), 'yyyy-MM-dd HH:mm')}</span>
                         </div>
                         <button
                             onClick={handleLike}
@@ -152,11 +208,7 @@ const Comment = ({ comment, depth = 0, onReply }) => {
                                 isLiked ? 'text-blue-600' : ''
                             }`}
                         >
-                            {isLiked ? (
-                                <Heart className="w-4 h-4 fill-current" />
-                            ) : (
-                                <Heart className="w-4 h-4" />
-                            )}
+                            <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
                             <span>{likesCount}</span>
                         </button>
                         <button
@@ -166,25 +218,88 @@ const Comment = ({ comment, depth = 0, onReply }) => {
                             <Reply className="w-4 h-4" />
                             <span>回复</span>
                         </button>
+                        {canDelete && (
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <button className="flex items-center gap-1.5 hover:text-red-600 transition-colors">
+                                        <Trash2 className="w-4 h-4" />
+                                        <span>删除</span>
+                                    </button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>确认删除评论？</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            {commentReplies.length > 0
+                                                ? '此操作将同时删除该评论下的所有回复，且不可恢复。'
+                                                : '此操作不可恢复。'
+                                            }
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>取消</AlertDialogCancel>
+                                        <AlertDialogAction
+                                            onClick={handleDelete}
+                                            className="bg-red-600 hover:bg-red-700"
+                                        >
+                                            确认删除
+                                        </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        )}
                     </div>
 
                     {showReplyInput && (
                         <div className="mt-4 space-y-4">
-                            <Textarea
-                                value={replyContent}
-                                onChange={(e) => setReplyContent(e.target.value)}
-                                placeholder={`回复 ${comment.author.name}...`}
-                                className="min-h-[100px]"
-                            />
+                            <div className="relative">
+                                <Textarea
+                                    value={replyContent}
+                                    onChange={(e) => setReplyContent(e.target.value)}
+                                    placeholder={`回复 ${comment.author_name || '匿名用户'}...`}
+                                    className="min-h-[100px]"
+                                    maxLength={500}
+                                />
+                                <div className="absolute bottom-2 right-2">
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-8 w-8 p-0"
+                                            >
+                                                <Smile className="h-5 w-5" />
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent
+                                            className="w-full p-0"
+                                            align="end"
+                                        >
+                                            <Picker
+                                                data={data}
+                                                onEmojiSelect={(emoji) => {
+                                                    setReplyContent(prev => prev + emoji.native)
+                                                }}
+                                                theme="light"
+                                                set="native"
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+                                </div>
+                            </div>
                             <div className="flex justify-end gap-2">
                                 <Button
                                     variant="outline"
-                                    onClick={() => setShowReplyInput(false)}
+                                    onClick={() => {
+                                        setShowReplyInput(false);
+                                        setReplyContent('');
+                                    }}
                                 >
                                     取消
                                 </Button>
                                 <Button
                                     onClick={handleReplySubmit}
+                                    disabled={!replyContent.trim()}
                                     className="gap-2"
                                 >
                                     <Send className="w-4 h-4" />
@@ -194,7 +309,7 @@ const Comment = ({ comment, depth = 0, onReply }) => {
                         </div>
                     )}
 
-                    {comment.replies?.length > 0 && (
+                    {commentReplies.length > 0 && (
                         <div className="mt-4">
                             <button
                                 onClick={() => setShowReplies(!showReplies)}
@@ -205,16 +320,22 @@ const Comment = ({ comment, depth = 0, onReply }) => {
                                 ) : (
                                     <ChevronDown className="w-4 h-4" />
                                 )}
-                                <span>{showReplies ? '收起回复' : `显示 ${comment.replies.length} 条回复`}</span>
+                                <span>
+                                    {showReplies ? '收起回复' : `显示 ${commentReplies.length} 条回复`}
+                                </span>
                             </button>
                             {showReplies && (
                                 <div className="ml-6 mt-4 space-y-4 border-l-2 border-gray-100 pl-4">
-                                    {comment.replies.map(reply => (
+                                    {commentReplies.map(reply => (
                                         <Comment
                                             key={reply.id}
                                             comment={reply}
                                             depth={depth + 1}
                                             onReply={onReply}
+                                            articleId={articleId}
+                                            articleAuthorId={articleAuthorId}
+                                            onCommentUpdate={onCommentUpdate}
+                                            replies={replies}
                                         />
                                     ))}
                                 </div>
@@ -227,87 +348,147 @@ const Comment = ({ comment, depth = 0, onReply }) => {
     );
 };
 
-const CommentSection = () => {
-    const [comments, setComments] = useState(MOCK_COMMENTS);
+const CommentSection = ({ articleId, articleAuthorId }) => {
+    const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [total, setTotal] = useState(0);
 
-    const handleAddComment = () => {
-        if (newComment.trim()) {
-            const newCommentObj = {
-                id: Date.now(),
-                author: {
-                    name: "当前用户",
-                    avatar: "/avatars/avatar-5.jpg",
-                },
-                content: newComment,
-                timestamp: new Date().toLocaleString(),
-                likes: 0,
-                isLiked: false,
-                replies: []
-            };
-            setComments([newCommentObj, ...comments]);
-            setNewComment('');
+    // 按置顶和时间排序评论
+    const sortComments = (commentsToSort) => {
+        return [...commentsToSort].sort((a, b) => {
+            // 首先按置顶状态排序
+            if (a.is_top && !b.is_top) return -1;
+            if (!a.is_top && b.is_top) return 1;
+
+            // 如果置顶状态相同，则按时间倒序排序
+            return new Date(b.created_at) - new Date(a.created_at);
+        });
+    };
+
+    const fetchComments = async (pageNum = 1) => {
+        if (!articleId) return;
+
+        try {
+            setLoading(true);
+            const response = await getComments(articleId, { page: pageNum });
+
+            if (response.code === 200 || response.code === 201) {
+                const newComments = response.data || [];
+                if (pageNum === 1) {
+                    setComments(sortComments(newComments));
+                } else {
+                    setComments(prev => sortComments([...prev, ...newComments]));
+                }
+                setHasMore(false);
+                setTotal(newComments.length);
+                setPage(pageNum);
+            } else
+            {
+                throw new Error(response.message || '获取评论失败');
+            }
+        } catch (error) {
+            console.error('获取评论失败:', error);
+            message.error('获取评论失败: ' + (error.message || '未知错误'));
+            setComments([]);
+            setTotal(0);
+        } finally {
+            setLoading(false);
         }
     };
 
-    const handleReply = (commentId, content) => {
-        const newReply = {
-            id: Date.now(),
-            author: {
-                name: "当前用户",
-                avatar: "/avatars/avatar-5.jpg",
-            },
-            content: content,
-            timestamp: new Date().toLocaleString(),
-            likes: 0,
-            isLiked: false,
-        };
+    useEffect(() => {
+        if (articleId) {
+            fetchComments(1);
+        }
+    }, [articleId]);
 
-        const addReplyToComment = (comments) => {
-            return comments.map(comment => {
-                if (comment.id === commentId) {
-                    return {
-                        ...comment,
-                        replies: [...(comment.replies || []), newReply]
-                    };
-                }
-                if (comment.replies) {
-                    return {
-                        ...comment,
-                        replies: addReplyToComment(comment.replies)
-                    };
-                }
-                return comment;
+    const handleAddComment = async () => {
+        if (!newComment.trim() || !articleId) return;
+
+        try {
+            const response = await addComment({
+                article: articleId,
+                content: newComment.trim()
             });
-        };
 
-        setComments(addReplyToComment(comments));
+            if (response.code === 200 || response.code === 201) {
+                message.success('评论发表成功');
+                setNewComment('');
+                await fetchComments(1);
+            } else {
+                throw new Error(response.message || '评论发表失败');
+            }
+        } catch (error) {
+            console.error('评论发表失败:', error);
+            message.error('评论发表失败: ' + (error.message || '未知错误'));
+        }
     };
 
+    // 过滤出顶层评论
+    const topLevelComments = sortComments(
+        comments.filter(comment => !comment.parent)
+    );
+
     return (
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden mt-8">
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
             <div className="p-6 border-b border-gray-100">
                 <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
                     <MessageSquare className="w-5 h-5" />
                     评论区
                     <Badge variant="secondary" className="ml-2">
-                        {comments.length}
+                        {total}
                     </Badge>
                 </h3>
             </div>
 
             <div className="p-6">
-                {/* 评论输入框 */}
                 <div className="mb-8 space-y-4">
-                    <Textarea
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
-                        placeholder="写下你的评论..."
-                        className="min-h-[120px]"
-                    />
-                    <div className="flex justify-end">
+                    <div className="relative">
+                        <Textarea
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                            placeholder="写下你的评论..."
+                            className="min-h-[120px]"
+                            maxLength={500}
+                        />
+                        <div className="absolute bottom-2 right-2">
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-8 w-8 p-0"
+                                    >
+                                        <Smile className="h-5 w-5" />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent
+                                    className="w-full p-0"
+                                    align="end"
+                                >
+                                    <Picker
+                                        data={data}
+                                        onEmojiSelect={(emoji) => {
+                                            setNewComment(prev => prev + emoji.native)
+                                        }}
+                                        theme="light"
+                                        set="native"
+                                    />
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-500">
+                            {newComment.length}/500
+                        </span>
                         <Button
                             onClick={handleAddComment}
+                            disabled={!newComment.trim()}
                             className="gap-2"
                         >
                             <Send className="w-4 h-4" />
@@ -316,15 +497,37 @@ const CommentSection = () => {
                     </div>
                 </div>
 
-                {/* 评论列表 */}
                 <div className="space-y-6">
-                    {comments.map(comment => (
-                        <Comment
-                            key={comment.id}
-                            comment={comment}
-                            onReply={handleReply}
-                        />
-                    ))}
+                    {loading && comments.length === 0 ? (
+                        <div className="text-center text-gray-500 py-4">加载评论中...</div>
+                    ) : topLevelComments.length > 0 ? (
+                        topLevelComments.map(comment => (
+                            <Comment
+                                key={comment.id}
+                                comment={comment}
+                                articleId={articleId}
+                                articleAuthorId={articleAuthorId}
+                                onCommentUpdate={() => fetchComments(1)}
+                                replies={comments}
+                            />
+                        ))
+                    ) : (
+                        <div className="text-center text-gray-500 py-4">
+                            暂无评论，快来发表第一条评论吧！
+                        </div>
+                    )}
+
+                    {hasMore && comments.length > 0 && (
+                        <div className="text-center">
+                            <Button
+                                variant="outline"
+                                onClick={() => fetchComments(page + 1)}
+                                disabled={loading}
+                            >
+                                {loading ? '加载中...' : '加载更多'}
+                            </Button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

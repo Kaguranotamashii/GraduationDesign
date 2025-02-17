@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
 from probject import settings
-from .models import Article
+from .models import Article, ArticleLike
 from .serializers import ArticleSerializer
 from app.user.decorators import jwt_required
 from .utils import handle_uploaded_file, delete_file
@@ -284,12 +284,11 @@ def delete_article(request, article_id):
 
 @api_view(['GET'])
 def get_article_list(request):
-    """获取文章列表，支持分页和过滤"""
     paginator = StandardResultsSetPagination()
     queryset = filter_articles(request)
 
     page = paginator.paginate_queryset(queryset, request)
-    serializer = ArticleSerializer(page, many=True)
+    serializer = ArticleSerializer(page, many=True, context={'request': request})  # 添加 context
 
     return paginator.get_paginated_response({
         'code': 200,
@@ -371,17 +370,15 @@ def filter_articles(request):
 
 @api_view(['GET'])
 def get_article_detail(request, article_id):
-    """获取文章详情"""
     try:
         article = get_object_or_404(Article, id=article_id)
 
-        # 如果是已发布的文章，增加浏览量
         if article.status == 'published':
             article.views = F('views') + 1
             article.save()
             article.refresh_from_db()
 
-        serializer = ArticleSerializer(article)
+        serializer = ArticleSerializer(article, context={'request': request})  # 添加 context
         return Response({
             'code': 200,
             'message': '获取文章详情成功',
@@ -550,3 +547,95 @@ def upload_image(request):
             'code': 500,
             'message': f'上传失败: {str(e)}'
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
+@jwt_required
+def like_article(request, article_id):
+    """给文章点赞"""
+    try:
+        article = get_object_or_404(Article, id=article_id)
+
+        # 只能给已发布的文章点赞
+        if article.status != 'published':
+            return Response({
+                'code': 400,
+                'message': '只能给已发布的文章点赞'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # 检查是否已经点赞
+        like_record = ArticleLike.objects.filter(
+            article=article,
+            user=request.auth_user
+        ).first()
+
+        if like_record:
+            return Response({
+                'code': 400,
+                'message': '您已经点赞过这篇文章了'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # 创建点赞记录
+        ArticleLike.objects.create(
+            article=article,
+            user=request.auth_user
+        )
+
+        # 更新文章点赞数
+        article.likes = F('likes') + 1
+        article.save()
+        article.refresh_from_db()
+
+        # 使用序列化器获取最新数据
+        serializer = ArticleSerializer(article, context={'request': request})
+
+        return Response({
+            'code': 200,
+            'message': '点赞成功',
+            'data': serializer.data
+        })
+    except Article.DoesNotExist:
+        return Response({
+            'code': 404,
+            'message': '文章不存在'
+        }, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+@jwt_required
+def unlike_article(request, article_id):
+    """取消文章点赞"""
+    try:
+        article = get_object_or_404(Article, id=article_id)
+
+        # 查找并删除点赞记录
+        like_record = ArticleLike.objects.filter(
+            article=article,
+            user=request.auth_user
+        ).first()
+
+        if not like_record:
+            return Response({
+                'code': 400,
+                'message': '您还没有点赞过这篇文章'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        like_record.delete()
+
+        # 更新文章点赞数
+        article.likes = F('likes') - 1
+        article.save()
+        article.refresh_from_db()
+
+        # 使用序列化器获取最新数据
+        serializer = ArticleSerializer(article, context={'request': request})
+
+        return Response({
+            'code': 200,
+            'message': '取消点赞成功',
+            'data': serializer.data
+        })
+    except Article.DoesNotExist:
+        return Response({
+            'code': 404,
+            'message': '文章不存在'
+        }, status=status.HTTP_404_NOT_FOUND)

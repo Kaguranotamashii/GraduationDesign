@@ -9,3 +9,4 @@ from app.builder.models import Builder
 from app.article.models import Article
 from app.comment.models import Comment
 from app.public.models import Image
+from app.comment.models import CommentLike

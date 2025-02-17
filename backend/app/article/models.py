@@ -137,3 +137,34 @@ class Article(models.Model):
         if self.cover_image:
             return os.path.join(settings.MEDIA_URL, self.cover_image)
         return None
+
+
+# models.py
+
+class ArticleLike(models.Model):
+    """文章点赞记录"""
+    article = models.ForeignKey(
+        Article,
+        on_delete=models.CASCADE,
+        related_name='like_records',
+        verbose_name=_('文章')
+    )
+    user = models.ForeignKey(
+        'user.CustomUser',
+        on_delete=models.CASCADE,
+        verbose_name=_('用户')
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_('点赞时间')
+    )
+
+    class Meta:
+        verbose_name = _('文章点赞记录')
+        verbose_name_plural = _('文章点赞记录')
+        # 确保每个用户只能给同一篇文章点赞一次
+        unique_together = ['article', 'user']
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.user.username} 赞了 {self.article.title}"

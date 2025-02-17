@@ -25,4 +25,10 @@ urlpatterns = [
 
     # 文件上传
     path('upload-image/', views.upload_image, name='upload_image'),  # POST
+
+
+
+    path('articles/like/<int:article_id>/', views.like_article, name='like_article'),
+    path('articles/unlike/<int:article_id>/', views.unlike_article, name='unlike_article'),
+
 ]

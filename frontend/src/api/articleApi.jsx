@@ -102,16 +102,7 @@ export const publishDraft = async (draftId) => {
     }
 }
 
-// 功能性操作
-export const likeArticle = async (articleId) => {
-    try {
-        const response = await apiClient.post(`article/articles/like/${articleId}/`);
-        return response.data;
-    } catch (error) {
-        console.error('Error liking article:', error);
-        throw error;
-    }
-}
+
 
 export const toggleFeatured = async (articleId) => {
     try {
@@ -160,6 +151,28 @@ export const uploadImage = async (formData) => {
         return response.data;
     } catch (error) {
         console.error('Error uploading image:', error);
+        throw error;
+    }
+}
+export const likeArticle = async (articleId) => {
+    try {
+        const response = await apiClient.post(`article/articles/like/${articleId}/`);
+        return response.data;
+    } catch (error) {
+        console.error('Error liking article:', error);
+        throw error;
+    }
+}
+
+
+
+// 取消点赞文章
+export const unlikeArticle = async (articleId) => {
+    try {
+        const response = await apiClient.post(`article/articles/unlike/${articleId}/`);
+        return response.data;
+    } catch (error) {
+        console.error('Error unliking article:', error);
         throw error;
     }
 }

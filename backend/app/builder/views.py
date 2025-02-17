@@ -388,3 +388,120 @@ def get_model_details(request, pk):
             "code": 500,
             "message": f"获取失败: {str(e)}"
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+from rest_framework.decorators import api_view, parser_classes, permission_classes
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.response import Response
+from rest_framework import status
+from django.core.exceptions import PermissionDenied
+from django.shortcuts import get_object_or_404
+
+from .models import Builder
+from .serializers import BuilderSerializer
+from .utils import save_building_image, delete_building_image, save_model_file, delete_model_file
+
+def check_builder_permission(user, builder):
+    """检查用户是否有权限操作该模型"""
+    if not (user.is_staff or builder.creator == user):
+        raise PermissionDenied("您没有权限执行此操作")
+
+
+# JSON 相关操作
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@parser_classes([JSONParser])
+def add_builder_json(request, pk):
+    """添加建筑模型的 JSON 数据"""
+    try:
+        builder = get_object_or_404(Builder, pk=pk)
+        check_builder_permission(request.user, builder)
+
+        if not request.data.get('json'):
+            return Response({
+                'code': 400,
+                'message': '请提供 JSON 数据'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        builder.json = request.data['json']
+        builder.save()
+
+        return Response({
+            'code': 200,
+            'message': 'JSON 数据添加成功',
+            'data': BuilderSerializer(builder).data
+        })
+
+    except PermissionDenied as e:
+        return Response({
+            'code': 403,
+            'message': str(e)
+        }, status=status.HTTP_403_FORBIDDEN)
+    except Exception as e:
+        return Response({
+            'code': 500,
+            'message': f'JSON 数据添加失败: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+@parser_classes([JSONParser])
+def update_builder_json(request, pk):
+    """更新建筑模型的 JSON 数据"""
+    try:
+        builder = get_object_or_404(Builder, pk=pk)
+        check_builder_permission(request.user, builder)
+
+        if not request.data.get('json'):
+            return Response({
+                'code': 400,
+                'message': '请提供 JSON 数据'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        builder.json = request.data['json']
+        builder.save()
+
+        return Response({
+            'code': 200,
+            'message': 'JSON 数据更新成功',
+            'data': BuilderSerializer(builder).data
+        })
+
+    except PermissionDenied as e:
+        return Response({
+            'code': 403,
+            'message': str(e)
+        }, status=status.HTTP_403_FORBIDDEN)
+    except Exception as e:
+        return Response({
+            'code': 500,
+            'message': f'JSON 数据更新失败: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_builder_json(request, pk):
+    """删除建筑模型的 JSON 数据"""
+    try:
+        builder = get_object_or_404(Builder, pk=pk)
+        check_builder_permission(request.user, builder)
+
+        builder.json = None
+        builder.save()
+
+        return Response({
+            'code': 200,
+            'message': 'JSON 数据删除成功'
+        })
+
+    except PermissionDenied as e:
+        return Response({
+            'code': 403,
+            'message': str(e)
+        }, status=status.HTTP_403_FORBIDDEN)
+    except Exception as e:
+        return Response({
+            'code': 500,
+            'message': f'JSON 数据删除失败: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
