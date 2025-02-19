@@ -58,6 +58,53 @@ class ModelMarkerManager {
         canvas.addEventListener('click', this.handleNormalClick);
     }
 
+    // 在 ModelMarkerManager 类中添加以下方法
+    loadMarkers(markersData) {
+        if (!Array.isArray(markersData)) {
+            console.error('Invalid markers data format', markersData);
+            return;
+        }
+
+        // 清除现有标注
+        this.markers.clear();
+        this.markerHistory = [];
+        this.historyIndex = -1;
+
+        // 加载每个标注
+        markersData.forEach(markerData => {
+            const position = new THREE.Vector3(
+                markerData.position.x,
+                markerData.position.y,
+                markerData.position.z
+            );
+
+            // 创建新的标注对象
+            const marker = {
+                id: markerData.id,
+                description: markerData.description,
+                faces: markerData.faces,
+                position: position,
+                regions: markerData.regions.map(region => ({
+                    faces: region.faces,
+                    center: new THREE.Vector3(
+                        region.center.x,
+                        region.center.y,
+                        region.center.z
+                    )
+                }))
+            };
+
+            // 将标注添加到管理器中
+            this.markers.set(marker.id, marker);
+            this.addToHistory(marker);
+        });
+
+        // 如果有回调，通知数据变更
+        if (this.onMarkersChanged) {
+            this.onMarkersChanged(this.getMarkersData());
+        }
+    };
+
     createTooltipContainer() {
         this.tooltipContainer = document.createElement('div');
         this.tooltipContainer.style.cssText = `

@@ -5,6 +5,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from probject import settings
 from .models import Article
 from .models import ArticleLike
+from ..builder.models import Builder
 from ..builder.serializers import BuilderSerializer
 
 
@@ -12,7 +13,11 @@ class ArticleSerializer(serializers.ModelSerializer):
     """文章序列化器"""
     cover_image_url = serializers.SerializerMethodField()
     builder_name = serializers.SerializerMethodField()
-    builder = BuilderSerializer(read_only=True)
+    builder = serializers.PrimaryKeyRelatedField(
+        queryset=Builder.objects.all(),
+        required=False,
+        allow_null=True
+    )  # 用于写入的 ID 字段
     is_liked = serializers.SerializerMethodField()
 
 
@@ -66,7 +71,9 @@ class ArticleSerializer(serializers.ModelSerializer):
         return False
 
     def get_builder_name(self, obj):
+
         """获取关联建筑名称"""
+
         return obj.builder.name if obj.builder else '无'
 
 

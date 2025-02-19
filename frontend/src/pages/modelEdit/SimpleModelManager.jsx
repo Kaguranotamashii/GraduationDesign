@@ -9,11 +9,13 @@ class SimpleModelManager {
         this.modelGeometry = null;
     }
 
-    loadModel(modelPath) {
+// SimpleModelManager.jsx
+    loadModel(modelPath, onProgress) {
         return new Promise((resolve, reject) => {
             const loader = new GLTFLoader();
 
-            loader.load(modelPath,
+            loader.load(
+                modelPath,
                 (gltf) => {
                     if (this.model) {
                         this.sceneManager.scene.remove(this.model);
@@ -29,7 +31,7 @@ class SimpleModelManager {
                         this.modelGeometry.dimensions.y,
                         this.modelGeometry.dimensions.z
                     );
-                    const scale = 20 / maxDim;  // 将模型缩放到合适大小
+                    const scale = 20 / maxDim;
                     this.model.scale.setScalar(scale);
 
                     // 居中模型
@@ -47,7 +49,10 @@ class SimpleModelManager {
                     resolve(this.model);
                 },
                 (progress) => {
-                    console.log(`Model loading: ${Math.round((progress.loaded / progress.total) * 100)}%`);
+                    // 调用进度回调
+                    if (onProgress) {
+                        onProgress(progress);
+                    }
                 },
                 (error) => {
                     console.error('Error loading model:', error);
@@ -56,7 +61,6 @@ class SimpleModelManager {
             );
         });
     }
-
     disposeModel() {
         if (this.model) {
             this.model.traverse((child) => {

@@ -36,6 +36,7 @@ const CreateArticle = () => {
         const fetchData = async () => {
             try {
                 const buildersResponse = await getAllModels();
+                console.log( '获取数据成功:', buildersResponse.data)
                 if (buildersResponse.code === 200) {
                     setBuilders(buildersResponse.data);
                 }
@@ -72,13 +73,23 @@ const CreateArticle = () => {
                 formData.append('cover_image_file', coverFile);
             }
             formData.append('status', values.status || 'draft');
+            debugger
 
+            // 确保builder作为数字类型传递
             if (values.builder) {
-                formData.append('builder', values.builder);
+                // 强制转换为字符串，确保是单个值而不是数组
+                formData.append('builder', String(values.builder));
+
+                // 调试信息
+                console.log('Builder ID being sent:', String(values.builder));
+                console.log('Builder type:', typeof values.builder);
             }
             if (tags.length > 0) {
                 formData.append('tags', tags.join(','));
+
             }
+            console.log( values.status  )
+
 
             const response = await (values.status === 'draft' ? saveDraft(formData) : createArticle(formData));
 
@@ -215,15 +226,7 @@ const CreateArticle = () => {
     };
 
     return (
-        <Card
-            title="发布新文章"
-            className="shadow-sm"
-            extra={lastSavedTime && (
-                <span className="text-gray-500 text-sm">
-                    上次保存时间: {lastSavedTime.toLocaleTimeString()}
-                </span>
-            )}
-        >
+        <Card title="发布新文章" className="shadow-sm">
             <Form
                 form={form}
                 layout="vertical"
@@ -348,19 +351,13 @@ const CreateArticle = () => {
                     <Space>
                         <Button
                             type="primary"
-                            onClick={() => {
-                                form.setFieldsValue({ status: 'draft' });
-                                form.submit();
-                            }}
+                            onClick={handleDraftClick}
                             loading={loading}
                         >
                             保存为草稿
                         </Button>
                         <Button
-                            onClick={() => {
-                                form.setFieldsValue({ status: 'published' });
-                                form.submit();
-                            }}
+                            onClick={handlePublishClick}
                             loading={loading}
                         >
                             直接发布

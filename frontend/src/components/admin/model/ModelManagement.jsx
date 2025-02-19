@@ -23,7 +23,6 @@ import {
     UploadOutlined,
     SearchOutlined,
     ReloadOutlined,
-    EyeOutlined,
 } from '@ant-design/icons';
 import { MapContainer, TileLayer, useMapEvent, Marker } from 'react-leaflet';
 import L from 'leaflet';
@@ -35,10 +34,12 @@ import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 
 import {
     getAllModelsPaginated,
-    addModel,
+    addBuilder,
     getBuildingCategories,
     getBuildingTags,
-    deleteModelFile,
+
+    uploadBuildingModel,
+    updateBuilderInfo
 } from '@/api/builderApi';
 
 const { Option } = Select;
@@ -62,16 +63,16 @@ function MapClickHandler({ onLocationSelect }) {
     return null;
 }
 
-const ModelManagement = () => {
+const BuilderManagement = () => {
     // 状态定义
     const [loading, setLoading] = useState(false);
-    const [models, setModels] = useState([]);
+    const [builders, setBuilders] = useState([]);
     const [total, setTotal] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [modalVisible, setModalVisible] = useState(false);
     const [modalType, setModalType] = useState('add');
-    const [currentModel, setCurrentModel] = useState(null);
+    const [currentBuilder, setCurrentBuilder] = useState(null);
     const [categories, setCategories] = useState([]);
     const [tags, setTags] = useState([]);
     const [location, setLocation] = useState(null);
@@ -80,26 +81,35 @@ const ModelManagement = () => {
     const [form] = Form.useForm();
     const [searchForm] = Form.useForm();
 
-    // 获取模型列表
-    const fetchModels = async (page = currentPage, size = pageSize, searchParams = {}) => {
+    // 获取建筑列表
+    const fetchBuilders = async (page = currentPage, size = pageSize, searchParams = {}) => {
         try {
             setLoading(true);
             const params = {
                 page,
-                page_size: size,
-                ...searchParams
+                page_size: size
             };
-            const response = await getAllModelsPaginated(params);
 
+            // 只添加有值的搜索参数
+            if (searchParams.search) params.search = searchParams.search;
+            if (searchParams.category) params.category = searchParams.category;
+            if (searchParams.tags?.length) params.tags = searchParams.tags;
+            if (searchParams.date_range?.length) {
+                params.date_range = searchParams.date_range.map(date =>
+                    date ? date.format('YYYY-MM-DD') : ''
+                ).filter(Boolean);
+            }
+
+            const response = await getAllModelsPaginated(params);
             if (response && response.results) {
-                setModels(response.results);
+                setBuilders(response.results);
                 setTotal(response.count);
             } else {
-                throw new Error('获取模型列表失败');
+                throw new Error('获取建筑列表失败');
             }
         } catch (error) {
-            message.error(error.message || '获取模型列表失败');
-            setModels([]);
+            message.error(error.message || '获取建筑列表失败');
+            setBuilders([]);
             setTotal(0);
         } finally {
             setLoading(false);
@@ -126,7 +136,7 @@ const ModelManagement = () => {
     };
 
     useEffect(() => {
-        fetchModels();
+        fetchBuilders();
         fetchCategoriesAndTags();
     }, []);
 
@@ -135,7 +145,7 @@ const ModelManagement = () => {
         try {
             const values = await searchForm.validateFields();
             setCurrentPage(1);
-            fetchModels(1, pageSize, values);
+            fetchBuilders(1, pageSize, values);
         } catch (err) {
             console.error('Search form validation failed:', err);
         }
@@ -145,7 +155,29 @@ const ModelManagement = () => {
     const handleReset = () => {
         searchForm.resetFields();
         setCurrentPage(1);
-        fetchModels(1, pageSize);
+        fetchBuilders(1, pageSize);
+    };
+
+    // 编辑建筑
+    const handleEdit = (record) => {
+        setCurrentBuilder(record);
+        setModalType('edit');
+        try {
+            const locationData = JSON.parse(record.address);
+            setLocation(locationData);
+        } catch (e) {
+            setLocation([35.8617, 104.1954]); // 默认位置
+        }
+
+        // 设置表单初始值
+        form.setFieldsValue({
+            name: record.name,
+            description: record.description,
+            category: record.category,
+            tags: record.tags_list || []
+        });
+
+        setModalVisible(true);
     };
 
     // 表单提交处理
@@ -156,35 +188,38 @@ const ModelManagement = () => {
         }
 
         try {
-            const formData = new FormData();
-            Object.keys(values).forEach(key => {
-                if (key === 'tags' && Array.isArray(values[key])) {
-                    formData.append(key, values[key].join(','));
-                } else if (key === 'image' && values[key]) {
-                    const file = values[key].fileList?.[0]?.originFileObj;
-                    if (file) {
-                        formData.append('image', file);
-                    }
-                } else if (key === 'model' && values[key]) {
-                    const file = values[key].fileList?.[0]?.originFileObj;
-                    if (file) {
-                        formData.append('model', file);
-                    }
-                } else {
-                    formData.append(key, values[key]);
-                }
-            });
+            const data = {
+                ...values,
+                address: JSON.stringify(location),
+                tags: values.tags ? values.tags.join(',') : ''
+            };
 
-            // 添加位置信息
-            formData.append('address', JSON.stringify(location));
+            let response;
+            if (modalType === 'add') {
+                // 处理添加
+                const formData = new FormData();
+                Object.keys(data).forEach(key => {
+                    if (key === 'image' && values[key]) {
+                        const file = values[key].fileList?.[0]?.originFileObj;
+                        if (file) {
+                            formData.append('image', file);
+                        }
+                    } else {
+                        formData.append(key, data[key]);
+                    }
+                });
+                response = await addBuilder(formData);
+            } else {
+                // 处理编辑
+                response = await updateBuilderInfo(currentBuilder.id, data);
+            }
 
-            const response = await addModel(formData);
             if (response.code === 200) {
                 message.success(modalType === 'add' ? '添加成功' : '更新成功');
                 setModalVisible(false);
                 form.resetFields();
                 setLocation(null);
-                fetchModels();
+                fetchBuilders();
             } else {
                 throw new Error(response.message);
             }
@@ -193,35 +228,16 @@ const ModelManagement = () => {
         }
     };
 
-    // 处理编辑
-    const handleEdit = (record) => {
-        setCurrentModel(record);
-        setModalType('edit');
-        try {
-            const locationData = JSON.parse(record.address);
-            setLocation(locationData);
-        } catch (e) {
-            setLocation([35.8617, 104.1954]); // 默认位置
-        }
-        form.setFieldsValue({
-            ...record,
-            tags: record.tags_list,
-            image: undefined,
-            model: undefined
-        });
-        setModalVisible(true);
-    };
-
     // 处理删除
     const handleDelete = async (id) => {
         try {
-            const response = await deleteModelFile(id);
+            const response = await deleteBuilderFile(id);
             if (response.code === 200) {
                 message.success('删除成功');
-                if (models.length === 1 && currentPage > 1) {
+                if (builders.length === 1 && currentPage > 1) {
                     setCurrentPage(currentPage - 1);
                 } else {
-                    fetchModels();
+                    fetchBuilders();
                 }
             } else {
                 throw new Error(response.message);
@@ -236,7 +252,22 @@ const ModelManagement = () => {
         setCurrentPage(pagination.current);
         setPageSize(pagination.pageSize);
         const searchValues = searchForm.getFieldsValue();
-        fetchModels(pagination.current, pagination.pageSize, searchValues);
+        fetchBuilders(pagination.current, pagination.pageSize, searchValues);
+    };
+
+    // 处理模型上传
+    const handleModelUpload = async (builderId, file) => {
+        try {
+            const response = await uploadBuildingModel(builderId, file);
+            if (response.code === 200) {
+                message.success('模型文件上传成功');
+                fetchBuilders(currentPage, pageSize); // 刷新列表
+            } else {
+                throw new Error(response.message);
+            }
+        } catch (error) {
+            message.error(error.message || '模型文件上传失败');
+        }
     };
 
     // 表格列配置
@@ -262,7 +293,7 @@ const ModelManagement = () => {
             )
         },
         {
-            title: '模型名称',
+            title: '建筑名称',
             dataIndex: 'name',
             key: 'name',
             width: 180,
@@ -318,7 +349,7 @@ const ModelManagement = () => {
         {
             title: '操作',
             key: 'action',
-            width: 180,
+            width: 200,
             fixed: 'right',
             render: (_, record) => (
                 <Space size="middle">
@@ -329,8 +360,23 @@ const ModelManagement = () => {
                     >
                         编辑
                     </Button>
+                    <Upload
+                        showUploadList={false}
+                        accept=".glb,.gltf"
+                        beforeUpload={(file) => {
+                            handleModelUpload(record.id, file);
+                            return false;
+                        }}
+                    >
+                        <Button
+                            type="link"
+                            icon={<UploadOutlined />}
+                        >
+                            上传模型
+                        </Button>
+                    </Upload>
                     <Popconfirm
-                        title="确定要删除这个模型吗？"
+                        title="确定要删除这个建筑吗？"
                         description="删除后无法恢复，请谨慎操作。"
                         onConfirm={() => handleDelete(record.id)}
                         okText="确定"
@@ -347,11 +393,11 @@ const ModelManagement = () => {
                     </Popconfirm>
                 </Space>
             ),
-        },
+        }
     ];
 
     return (
-        <Card title="模型管理" className="shadow-sm">
+        <Card title="建筑管理" className="shadow-sm">
             {/* 搜索表单 */}
             <Form
                 form={searchForm}
@@ -361,7 +407,7 @@ const ModelManagement = () => {
             >
                 <Form.Item name="search">
                     <Input
-                        placeholder="搜索模型名称或描述"
+                        placeholder="搜索建筑名称"
                         allowClear
                         style={{ width: 200 }}
                         prefix={<SearchOutlined className="text-gray-400" />}
@@ -420,19 +466,19 @@ const ModelManagement = () => {
                         icon={<PlusOutlined />}
                         onClick={() => {
                             setModalType('add');
-                            setCurrentModel(null);
+                            setCurrentBuilder(null);
                             setLocation(null);
                             form.resetFields();
                             setModalVisible(true);
                         }}
                     >
-                        添加模型
+                        添加建筑
                     </Button>
                     <Button
                         icon={<ReloadOutlined />}
                         onClick={() => {
                             handleReset();
-                            fetchModels();
+                            fetchBuilders();
                         }}
                     >
                         刷新
@@ -446,7 +492,7 @@ const ModelManagement = () => {
             {/* 表格 */}
             <Table
                 columns={columns}
-                dataSource={models}
+                dataSource={builders}
                 rowKey="id"
                 loading={loading}
                 pagination={{
@@ -463,7 +509,7 @@ const ModelManagement = () => {
 
             {/* 添加/编辑模态框 */}
             <Modal
-                title={modalType === 'add' ? '添加模型' : '编辑模型'}
+                title={modalType === 'add' ? '添加建筑' : '编辑建筑'}
                 open={modalVisible}
                 onCancel={() => {
                     setModalVisible(false);
@@ -481,19 +527,19 @@ const ModelManagement = () => {
                 >
                     <Form.Item
                         name="name"
-                        label="模型名称"
-                        rules={[{ required: true, message: '请输入模型名称' }]}
+                        label="建筑名称"
+                        rules={[{ required: true, message: '请输入建筑名称' }]}
                     >
-                        <Input placeholder="请输入模型名称" maxLength={200} />
+                        <Input placeholder="请输入建筑名称" maxLength={200} />
                     </Form.Item>
 
                     <Form.Item
                         name="description"
-                        label="模型描述"
-                        rules={[{ required: true, message: '请输入模型描述' }]}
+                        label="建筑描述"
+                        rules={[{ required: true, message: '请输入建筑描述' }]}
                     >
                         <TextArea
-                            placeholder="请输入模型描述"
+                            placeholder="请输入建筑描述"
                             rows={4}
                             maxLength={1000}
                             showCount
@@ -534,11 +580,11 @@ const ModelManagement = () => {
 
                     <Form.Item
                         name="category"
-                        label="分类"
-                        rules={[{ required: true, message: '请选择分类' }]}
+                        label="建筑分类"
+                        rules={[{ required: true, message: '请选择建筑分类' }]}
                     >
                         <Select
-                            placeholder="请选择分类"
+                            placeholder="请选择建筑分类"
                             allowClear
                             showSearch
                             optionFilterProp="children"
@@ -551,11 +597,11 @@ const ModelManagement = () => {
 
                     <Form.Item
                         name="tags"
-                        label="标签"
+                        label="建筑标签"
                     >
                         <Select
                             mode="tags"
-                            placeholder="请选择或输入标签"
+                            placeholder="请选择或输入建筑标签"
                             allowClear
                             showSearch
                             optionFilterProp="children"
@@ -566,54 +612,35 @@ const ModelManagement = () => {
                         </Select>
                     </Form.Item>
 
-                    <Form.Item
-                        name="image"
-                        label="预览图"
-                        valuePropName="fileList"
-                        getValueFromEvent={(e) => {
-                            if (Array.isArray(e)) {
-                                return e;
-                            }
-                            return e?.fileList;
-                        }}
-                    >
-                        <Upload
-                            accept="image/*"
-                            listType="picture-card"
-                            maxCount={1}
-                            beforeUpload={() => false}
+                    {modalType === 'add' && (
+                        <Form.Item
+                            name="image"
+                            label="建筑预览图"
+                            valuePropName="fileList"
+                            getValueFromEvent={(e) => {
+                                if (Array.isArray(e)) {
+                                    return e;
+                                }
+                                return e?.fileList;
+                            }}
                         >
-                            <div>
-                                <PlusOutlined />
-                                <div style={{ marginTop: 8 }}>上传图片</div>
-                            </div>
-                        </Upload>
-                    </Form.Item>
-
-                    <Form.Item
-                        name="model"
-                        label="模型文件"
-                        valuePropName="fileList"
-                        getValueFromEvent={(e) => {
-                            if (Array.isArray(e)) {
-                                return e;
-                            }
-                            return e?.fileList;
-                        }}
-                        rules={[{ required: true, message: '请上传模型文件' }]}
-                    >
-                        <Upload
-                            accept=".glb,.gltf"
-                            maxCount={1}
-                            beforeUpload={() => false}
-                        >
-                            <Button icon={<UploadOutlined />}>上传模型文件</Button>
-                        </Upload>
-                    </Form.Item>
+                            <Upload
+                                accept="image/*"
+                                listType="picture-card"
+                                maxCount={1}
+                                beforeUpload={() => false}
+                            >
+                                <div>
+                                    <PlusOutlined />
+                                    <div style={{ marginTop: 8 }}>上传图片</div>
+                                </div>
+                            </Upload>
+                        </Form.Item>
+                    )}
                 </Form>
             </Modal>
         </Card>
     );
 };
 
-export default ModelManagement;
+export default BuilderManagement;

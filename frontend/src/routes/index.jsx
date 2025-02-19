@@ -19,6 +19,9 @@ import ArticleManagement from "@/components/admin/article/ArticleManagement.jsx"
 import ModelManagement from "@/components/admin/model/ModelManagement.jsx";
 import CommentManagement from "@/components/admin/comment/CommentManagement.jsx";
 import MyComment from "@/components/admin/comment/MyComment.jsx";
+import ModelEditor from "@/pages/modelEdit/ModelEdit.jsx";
+import PrivateBuilderEditRoute from "@/components/Guard/PrivateBuilderEditRoute.jsx";
+import ARDemo from "@/pages/ARModelEditor/ARDemo.jsx";
 
 
 // 页面组件导入...
@@ -59,6 +62,19 @@ const router = createBrowserRouter([
             {
                 path: 'about',
                 element: <AboutPage />,
+            },
+            {
+                path: 'modelEdit',
+                children: [
+                    {
+                        path: ':builderId',  // 添加动态路由参数
+                        element: < PrivateBuilderEditRoute><ModelEditor /></ PrivateBuilderEditRoute>,
+                    }
+                ]
+            },
+            {
+                path: 'ar-demo',
+                element: <ARDemo />
             },
             // 后台管理路由
             {

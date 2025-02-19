@@ -1,9 +1,9 @@
 import apiClient from "@/utils/apiClient.jsx";
 
 // 基础模型操作
-export const addModel = async (modelData) => {
+export const addBuilder = async (modelData) => {
     try {
-        const response = await apiClient.post('builder/add-models/', modelData);
+        const response = await apiClient.post('builder/add-builder/', modelData);
         return response.data;
     } catch (error) {
         console.error('Error adding model:', error);
@@ -33,15 +33,27 @@ export const getAllModels = async () => {
 
 export const getAllModelsPaginated = async (params) => {
     try {
-        const queryString = new URLSearchParams(params).toString();
-        const response = await apiClient.get(`builder/all-page-models/?${queryString}`);
+        console.log("Sending params:", params); // 添加日志
+        const queryString = new URLSearchParams();
+
+        // 正确处理参数
+        Object.entries(params).forEach(([key, value]) => {
+            if (value !== undefined && value !== null && value !== '') {
+                queryString.append(key, value);
+            }
+        });
+
+        const url = `builder/all-page-models/?${queryString.toString()}`;
+        console.log("Request URL:", url); // 添加日志
+
+        const response = await apiClient.get(url);
+        console.log("Response:", response.data); // 添加日志
         return response.data;
     } catch (error) {
         console.error('Error fetching paginated models:', error);
         throw error;
     }
 }
-
 // 分类和标签操作
 export const getBuildingCategories = async () => {
     try {
@@ -63,6 +75,15 @@ export const getBuildingTags = async () => {
     }
 }
 
+export const addModel = async (modelData) => {
+    try {
+        const response = await apiClient.post('builder/add-model/', modelData);
+        return response.data;
+    } catch (error) {
+        console.error('Error adding model:', error);
+        throw error;
+    }
+}
 // 模型文件管理
 export const uploadModelFile = async (modelId, fileData) => {
     try {
@@ -138,3 +159,43 @@ export const deleteBuilderJson = async (builderId) => {
         throw error;
     }
 }
+
+// 在 builderApi.jsx 中添加
+export const uploadBuildingModel = async (builderId, modelFile) => {
+    try {
+        const formData = new FormData();
+        formData.append('model', modelFile);
+
+        const response = await apiClient.post(`builder/upload-building-model/${builderId}/`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error uploading building model:', error);
+        throw error;
+    }
+};
+
+// 在 builderApi.jsx 中添加
+export const updateBuilderInfo = async (builderId, data) => {
+    try {
+        const response = await apiClient.put(`builder/update-builder-info/${builderId}/`, data);
+        return response.data;
+    } catch (error) {
+        console.error('Error updating builder info:', error);
+        throw error;
+    }
+};
+
+// 在 builderApi.jsx 中添加
+export const getBuilderModelUrl = async (builderId) => {
+    try {
+        const response = await apiClient.get(`builder/details/${builderId}/`);
+        return response.data;
+    } catch (error) {
+        console.error('Error getting builder model URL:', error);
+        throw error;
+    }
+};

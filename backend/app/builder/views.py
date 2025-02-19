@@ -6,7 +6,7 @@ from rest_framework import status
 from probject import settings
 from .models import Builder
 from .serializers import BuilderSerializer
-from app.user.decorators import jwt_required
+from app.user.decorators import jwt_required, admin_required
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
@@ -175,21 +175,58 @@ def get_all_models(request):
             status=status.HTTP_200_OK
         )
     except Exception as e:
+        print(f"Error: {str(e)}")
         return Response(
             {"code": 500, "message": "Internal Server Error"},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
 
+from django.db.models import Q
+from datetime import datetime
+
 @api_view(['GET'])
 def get_all_buildings_paginated(request):
     """获取所有建筑模型列表（分页）"""
-    queryset = Builder.objects.all().order_by('-created_at')
+    queryset = Builder.objects.all()
+
+    # 处理搜索参数
+    search = request.GET.get('search')
+    category = request.GET.get('category')
+    tags = request.GET.getlist('tags[]')
+    date_range = request.GET.getlist('date_range[]')
+
+    # 只搜索模型名称
+    if search:
+        queryset = queryset.filter(name__icontains=search)
+
+    # 其他过滤条件保持不变
+    if category:
+        queryset = queryset.filter(category=category)
+
+    if tags:
+        tag_query = Q()
+        for tag in tags:
+            tag_query |= Q(tags__icontains=tag)
+        queryset = queryset.filter(tag_query)
+
+    if len(date_range) == 2:
+        try:
+            start_date = datetime.strptime(date_range[0], '%Y-%m-%d').date()
+            end_date = datetime.strptime(date_range[1], '%Y-%m-%d').date()
+            queryset = queryset.filter(
+                created_at__date__gte=start_date,
+                created_at__date__lte=end_date
+            )
+        except (ValueError, TypeError):
+            pass
+
+    queryset = queryset.order_by('-created_at')
+
     paginator = PageNumberPagination()
     page = paginator.paginate_queryset(queryset, request)
     serializer = BuilderSerializer(page, many=True)
     return paginator.get_paginated_response(serializer.data)
-
 @api_view(['GET'])
 def get_building_categories(request):
     """获取建筑物分类列表"""
@@ -370,10 +407,11 @@ def get_model_details(request, pk):
             "message": "获取成功",
             "data": {
                 "id": builder.id,
+                "creator": builder.creator.id,
                 "name": builder.name,
                 "model_url": f"{settings.URL_BASE}/media/{builder.model}" if builder.model else None,
-                "json": builder.json,
-                "created_at": builder.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                "json": builder.json if builder.model else None,
+                "created_at": builder.created_at.strftime("%Y-%m-%d sssssssss%H:%M:%S"),
                 "updated_at": builder.updated_at.strftime("%Y-%m-%d %H:%M:%S")
             }
         })
@@ -445,13 +483,17 @@ def add_builder_json(request, pk):
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated])
-@parser_classes([JSONParser])
+@jwt_required
 def update_builder_json(request, pk):
     """更新建筑模型的 JSON 数据"""
     try:
         builder = get_object_or_404(Builder, pk=pk)
-        check_builder_permission(request.user, builder)
+        # 只检查用户是否是创建者或管理员
+        if builder.creator.id != request.auth_user.id and not request.auth_user.is_staff:
+            return Response({
+                'code': 403,
+                'message': '您没有权限修改此建筑的标注数据'
+            }, status=status.HTTP_403_FORBIDDEN)
 
         if not request.data.get('json'):
             return Response({
@@ -468,11 +510,6 @@ def update_builder_json(request, pk):
             'data': BuilderSerializer(builder).data
         })
 
-    except PermissionDenied as e:
-        return Response({
-            'code': 403,
-            'message': str(e)
-        }, status=status.HTTP_403_FORBIDDEN)
     except Exception as e:
         return Response({
             'code': 500,
@@ -504,4 +541,104 @@ def delete_builder_json(request, pk):
         return Response({
             'code': 500,
             'message': f'JSON 数据删除失败: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
+@jwt_required
+@admin_required
+def upload_building_model(request, pk):
+    """上传建筑的模型文件"""
+    try:
+        builder = Builder.objects.get(pk=pk)
+
+        # 权限检查
+        if builder.creator.id != request.auth_user.id and not request.auth_user.is_staff:
+            return Response({
+                "code": 403,
+                "message": "无权限修改此建筑"
+            }, status=status.HTTP_403_FORBIDDEN)
+
+        if 'model' not in request.FILES:
+            return Response({
+                "code": 400,
+                "message": "请选择要上传的建筑模型文件"
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # 删除旧模型文件（如果存在）
+            if builder.model:
+                delete_model_file(builder.model.name)
+
+            # 保存新模型文件
+            model_path = save_model_file(
+                request.FILES['model'],
+                name=f"建筑模型-{builder.name}"
+            )
+            builder.model = model_path
+            builder.save()
+
+            return Response({
+                "code": 200,
+                "message": "建筑模型文件上传成功",
+                "data": BuilderSerializer(builder).data
+            })
+        except ValueError as e:
+            return Response({
+                "code": 400,
+                "message": str(e)
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+    except Builder.DoesNotExist:
+        return Response({
+            "code": 404,
+            "message": "建筑不存在"
+        }, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({
+            "code": 500,
+            "message": f"上传失败: {str(e)}"
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+@api_view(['PUT'])
+@jwt_required
+@admin_required
+def update_builder_info(request, pk):
+    """更新建筑基本信息"""
+    try:
+        builder = Builder.objects.get(pk=pk)
+
+        # 权限检查
+        if builder.creator.id != request.auth_user.id and not request.auth_user.is_staff:
+            return Response({
+                "code": 403,
+                "message": "无权限修改此建筑"
+            }, status=status.HTTP_403_FORBIDDEN)
+
+        data = request.data.copy()
+        serializer = BuilderSerializer(builder, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                "code": 200,
+                "message": "更新成功",
+                "data": serializer.data
+            })
+        return Response({
+            "code": 400,
+            "message": "参数错误",
+            "errors": serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    except Builder.DoesNotExist:
+        return Response({
+            "code": 404,
+            "message": "建筑不存在"
+        }, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({
+            "code": 500,
+            "message": f"更新失败: {str(e)}"
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

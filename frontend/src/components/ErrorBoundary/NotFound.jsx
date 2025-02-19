@@ -2,11 +2,13 @@
 import React from 'react';
 import { Button, Result } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import MainLayout from "@/layout/MainLayout.jsx";
 
 const NotFound = () => {
     const navigate = useNavigate();
 
     return (
+        <MainLayout>
         <Result
             status="404"
             title="404"
@@ -17,6 +19,7 @@ const NotFound = () => {
                 </Button>
             }
         />
+        </MainLayout>
     );
 };
 

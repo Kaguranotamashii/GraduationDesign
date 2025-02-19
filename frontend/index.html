@@ -2,6 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- 在index.html中添加 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + React</title>
@@ -10,5 +12,12 @@
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
+  <script>
+    // 在使用前检查设备兼容性
+    if (!navigator.mediaDevices || !window.DeviceOrientationEvent) {
+      console.log( "您的设备不支持陀螺仪功能")
+    }
+    console.log( "您的设备支持陀螺仪功能")
+  </script>
 
 </html>

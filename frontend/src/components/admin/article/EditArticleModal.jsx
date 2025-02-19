@@ -61,12 +61,24 @@ const EditArticleModal = ({ visible, article, onCancel, onSuccess }) => {
             const updateData = new FormData();
             updateData.append('title', values.title);
             updateData.append('content', content);
+
+            // 确保builder作为数字类型传递
+            if (values.builder) {
+                // 强制转换为字符串，确保是单个值而不是数组
+                updateData.append('builder', String(values.builder));
+
+                // 调试信息
+                console.log('Builder ID being sent:', String(values.builder));
+                console.log('Builder type:', typeof values.builder);
+            }
+
+
             if (coverFile) {
                 updateData.append('cover_image_file', coverFile);
             }
-            if (values.builder) {
-                updateData.append('builder', values.builder);
-            }
+            // if (values.builder) {
+            //     updateData.append('builder', values.builder);
+            // }
             if (tags.length > 0) {
                 updateData.append('tags', tags.join(','));
             }

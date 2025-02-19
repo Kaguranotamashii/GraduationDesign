@@ -18,7 +18,7 @@ import {
 } from '@ant-design/icons';
 
 import {
-    addModels,
+    addBuilder,
     getBuildingCategories,
     getBuildingTags
 } from '@/api/builderApi';
@@ -122,7 +122,7 @@ const AddHeritageSiteForm = ({
             // 直接使用标签数组，因为后端已经处理好了格式
             modelData.append('tags', tags);
 
-            await addModels(modelData);
+            await addBuilder(modelData);
             message.success('添加成功！');
             form.resetFields();
             setSelectedLocation(null);

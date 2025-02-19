@@ -12,6 +12,7 @@ from .models import Article, ArticleLike
 from .serializers import ArticleSerializer
 from app.user.decorators import jwt_required
 from .utils import handle_uploaded_file, delete_file
+from ..builder.models import Builder
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -30,6 +31,10 @@ def create_article(request):
         data = request.data.copy()
         data['author'] = request.auth_user.id
 
+        # 调试日志
+        print("接收到的原始数据:", request.data)
+        print("状态字段:", request.data.get('status'))
+
         # 处理封面图片
         if 'cover_image_file' in request.FILES:
             cover_image_path = handle_uploaded_file(
@@ -38,24 +43,42 @@ def create_article(request):
             )
             data['cover_image'] = cover_image_path
 
-        # 如果未指定状态，默认为草稿
-        if 'status' not in data:
-            data['status'] = 'draft'
+        # 验证状态值
+        status_value = data.get('status', 'draft')
+        if status_value not in ['draft', 'published']:
+            return Response({
+                'code': 400,
+                'message': '无效的状态值',
+                'received_status': status_value
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # 确保状态字段存在
+        data['status'] = status_value
+
+        print("处理后的数据:", data)  # 调试日志
 
         serializer = ArticleSerializer(data=data)
         if serializer.is_valid():
+            print("验证后的数据:", serializer.validated_data)  # 调试日志
+
             article = serializer.save()
 
             # 根据状态设置相应的时间
+            current_time = timezone.now()
+
             if article.status == 'published':
-                article.published_at = timezone.now()
-            else:
-                article.draft_saved_at = timezone.now()
+                article.published_at = current_time
+                article.draft_saved_at = None  # 如果直接发布，清除草稿时间
+            else:  # status == 'draft'
+                article.draft_saved_at = current_time
+                article.published_at = None  # 如果是草稿，清除发布时间
+
             article.save()
 
             return Response({
                 'code': 200,
                 'message': '文章创建成功',
+                'status': article.status,  # 返回实际保存的状态
                 'data': ArticleSerializer(article).data
             })
 
@@ -64,18 +87,18 @@ def create_article(request):
             'message': '数据验证失败',
             'errors': serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
+
     except Exception as e:
+        print(f"创建错误: {str(e)}")  # 错误日志
         return Response({
             'code': 500,
             'message': f'创建失败: {str(e)}'
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
 @api_view(['PUT', 'PATCH'])
 @jwt_required
 @parser_classes([MultiPartParser, FormParser, JSONParser])
 def update_article(request, article_id):
-    """更新文章"""
     try:
         article = get_object_or_404(Article, id=article_id)
 
@@ -88,29 +111,46 @@ def update_article(request, article_id):
 
         data = request.data.copy()
 
+        # 处理 builder
+        if 'builder' in data:
+            try:
+                # 直接使用 builder ID，不需要重命名为 builder_id
+                builder_id = int(data['builder'])
+                # 验证 builder 是否存在
+                if not Builder.objects.filter(id=builder_id).exists():
+                    return Response({
+                        'code': 400,
+                        'message': '指定的建筑不存在'
+                    }, status=status.HTTP_400_BAD_REQUEST)
+            except (ValueError, TypeError):
+                return Response({
+                    'code': 400,
+                    'message': 'builder ID必须是一个有效的整数'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
         # 处理封面图片
         if 'cover_image_file' in request.FILES:
-            # 删除旧的封面图片
             if article.cover_image:
                 delete_file(article.cover_image)
-
-            # 保存新的封面图片
             cover_image_path = handle_uploaded_file(
                 request.FILES['cover_image_file'],
                 'articles/covers'
             )
             data['cover_image'] = cover_image_path
 
-        # 处理状态变更
-        old_status = article.status
-        new_status = data.get('status', old_status)
+        # 在更新之前打印数据，用于调试
+        print("更新数据:", data)
 
         serializer = ArticleSerializer(article, data=data, partial=True)
+
         if serializer.is_valid():
+            # 打印验证后的数据
+            print("验证后的数据:", serializer.validated_data)
+
             updated_article = serializer.save()
 
-            # 如果状态从草稿变为已发布，更新发布时间
-            if old_status == 'draft' and new_status == 'published':
+            # 如果状态发生变化
+            if 'status' in data and data['status'] == 'published' and article.status == 'draft':
                 updated_article.published_at = timezone.now()
                 updated_article.save()
 
@@ -125,17 +165,13 @@ def update_article(request, article_id):
             'message': '数据验证失败',
             'errors': serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
-    except Article.DoesNotExist:
-        return Response({
-            'code': 404,
-            'message': '文章不存在'
-        }, status=status.HTTP_404_NOT_FOUND)
+
     except Exception as e:
+        print(f"更新错误: {str(e)}")  # 添加错误日志
         return Response({
             'code': 500,
             'message': f'更新失败: {str(e)}'
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 
 @api_view(['POST'])
 @jwt_required
