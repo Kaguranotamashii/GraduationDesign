@@ -2,14 +2,23 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- 在index.html中添加 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + React</title>
-    <script type="module" crossorigin src="/assets/index-920eYnNg.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DvkWke2i.css">
+    <script type="module" crossorigin src="/assets/index-DsCi2YCG.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CW0Xrnuv.css">
   </head>
   <body>
     <div id="root"></div>
   </body>
+  <script>
+    // 在使用前检查设备兼容性
+    if (!navigator.mediaDevices || !window.DeviceOrientationEvent) {
+      console.log( "您的设备不支持陀螺仪功能")
+    }
+    console.log( "您的设备支持陀螺仪功能")
+  </script>
 
 </html>
