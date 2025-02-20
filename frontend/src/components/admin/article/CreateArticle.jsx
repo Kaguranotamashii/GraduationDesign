@@ -58,6 +58,7 @@ const CreateArticle = () => {
 
 
 
+    // 修改 handleSubmit 函数
     const handleSubmit = async (values) => {
         if (!content) {
             message.error('请输入文章内容');
@@ -72,39 +73,61 @@ const CreateArticle = () => {
             if (coverFile) {
                 formData.append('cover_image_file', coverFile);
             }
-            formData.append('status', values.status || 'draft');
-            debugger
+
+            // 确保状态值存在
+            const status = values.status || 'draft';
+            formData.append('status', status);
+
+            console.log('提交的状态:', status); // 调试日志
 
             // 确保builder作为数字类型传递
             if (values.builder) {
-                // 强制转换为字符串，确保是单个值而不是数组
                 formData.append('builder', String(values.builder));
-
-                // 调试信息
-                console.log('Builder ID being sent:', String(values.builder));
-                console.log('Builder type:', typeof values.builder);
             }
+
             if (tags.length > 0) {
                 formData.append('tags', tags.join(','));
-
             }
-            console.log( values.status  )
 
+            console.log( formData.status)
 
-            const response = await (values.status === 'draft' ? saveDraft(formData) : createArticle(formData));
+            // 根据状态选择接口
+            const response = await (status === 'draft' ? saveDraft(formData) : createArticle(formData));
 
             if (response.code === 200) {
-                message.success(values.status === 'draft' ? '草稿保存成功！' : '文章发布成功！');
+                message.success(status === 'draft' ? '草稿保存成功！' : '文章发布成功！');
                 navigate('/admin/articles');
             }
         } catch (error) {
-            console.error(values.status === 'draft' ? '保存草稿失败:' : '发布文章失败:', error);
-            message.error((values.status === 'draft' ? '保存草稿' : '发布文章') + '失败：' + (error.message || '未知错误'));
+            console.error('保存文章失败:', error);
+            message.error('保存失败：' + (error.message || '未知错误'));
         } finally {
             setLoading(false);
         }
     };
 
+    // 在表单中添加以下处理函数
+    const handleDraftClick = () => {
+        // 设置表单状态值并提交
+        form.validateFields()
+            .then(values => {
+                handleSubmit({ ...values, status: 'draft' });
+            })
+            .catch(err => {
+                console.error('表单验证失败:', err);
+            });
+    };
+
+    const handlePublishClick = () => {
+        // 设置表单状态值并提交
+        form.validateFields()
+            .then(values => {
+                handleSubmit({ ...values, status: 'published' });
+            })
+            .catch(err => {
+                console.error('表单验证失败:', err);
+            });
+    };
     // 封面上传配置
     const uploadProps = {
         accept: 'image/*',
