@@ -1,0 +1,273 @@
+/* Typography Styles */
+.prose {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 1.125rem;
+    color: #333;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+}
+
+.prose h1 {
+    font-size: 2.5rem;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    color: #1a202c;
+    font-weight: 700;
+    text-align: center;
+}
+
+.prose h2 {
+    font-size: 2rem;
+    color: #2d3748;
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e2e8f0;
+    font-weight: 600;
+}
+
+.prose h3 {
+    font-size: 1.75rem;
+    color: #4a5568;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.prose p {
+    margin-bottom: 1.25rem;
+    color: #4a5568;
+}
+
+.prose a {
+    color: #3182ce;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.prose a:hover {
+    text-decoration: underline;
+}
+
+/* List Styles */
+.prose ul, .prose ol {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+}
+
+.prose li {
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+.prose li > p {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Code Styles */
+.prose code {
+    background-color: #f7fafc;
+    padding: 0.2em 0.4em;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+}
+
+.prose pre {
+    background-color: #2d3748;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+.prose pre code {
+    background-color: transparent;
+    color: #e2e8f0;
+    padding: 0;
+}
+
+/* Image Styles */
+.prose img {
+    display: block;
+    margin: 1.5rem auto;
+    max-width: 100%;
+    border-radius: 0.375rem;
+}
+
+/* Table of Contents Styles */
+.markdown-nav .title-anchor {
+    display: block;
+    padding: 0.5rem;
+    color: #4a5568;
+    text-decoration: none;
+    border-radius: 0.375rem;
+    transition: all 0.2s;
+    font-size: 0.875rem;
+}
+
+.markdown-nav .title-anchor:hover,
+.markdown-nav .title-anchor.active {
+    background-color: #f7fafc;
+    color: #3182ce;
+}
+
+/* Blockquote Styles */
+.prose blockquote {
+    border-left: 4px solid #4299e1;
+    background-color: #f7fafc;
+    padding: 1rem;
+    margin: 1rem 0;
+    font-style: italic;
+    color: #2d3748;
+}
+
+/* Table Styles */
+.prose table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 1rem 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.375rem;
+    overflow: hidden;
+}
+
+.prose th {
+    background-color: #f7fafc;
+    font-weight: 600;
+    text-align: left;
+    padding: 0.75rem;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.prose td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+/* Header Info Section */
+.header-info {
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    color: white;
+}
+
+.header-info .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+}
+
+.header-info .container .left {
+    display: flex;
+    align-items: center;
+}
+
+.header-info .container .left button {
+    background: white;
+    color: #3b82f6;
+    margin-right: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    transition: background 0.3s;
+}
+
+.header-info .container .left button:hover {
+    background: #3b82f6;
+    color: white;
+}
+
+.header-info .container .right {
+    display: flex;
+    align-items: center;
+}
+
+.header-info .container .right button {
+    background: white;
+    color: #3b82f6;
+    margin-left: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    transition: background 0.3s;
+}
+
+.header-info .container .right button:hover {
+    background: #3b82f6;
+    color: white;
+}
+
+/* Title Section with Cover Image */
+.title-section {
+    position: relative;
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    color: white;
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.title-section .container {
+    position: relative;
+    z-index: 1;
+}
+
+.title-section .container h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.title-section .container .tags {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.title-section .container .tags .badge {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    transition: background 0.3s;
+}
+
+.title-section .container .tags .badge:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.title-section .container .meta {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.title-section .background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    opacity: 0.3;
+}
+
+/* Back to Top Button */
+.back-to-top {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    background: #3b82f6;
+    color: white;
+    border-radius: 50%;
+    padding: 0.75rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s;
+}
+
+.back-to-top:hover {
+    background: #6366f1;
+}

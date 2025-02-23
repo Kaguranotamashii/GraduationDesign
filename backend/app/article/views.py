@@ -3,7 +3,7 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
-from django.db.models import F, Q
+from django.db.models import F, Q, Sum
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
@@ -22,13 +22,23 @@ class StandardResultsSetPagination(PageNumberPagination):
     max_page_size = 100
 
 
+def force_utf8_encoding(data):
+    """确保所有字符串都转换为 UTF-8 编码"""
+    if isinstance(data, str):
+        return data.encode('utf-8').decode('utf-8')
+    elif isinstance(data, dict):
+        return {k: force_utf8_encoding(v) for k, v in data.items()}
+    elif isinstance(data, list):
+        return [force_utf8_encoding(v) for v in data]
+    return data
+
 @api_view(['POST'])
 @jwt_required
 @parser_classes([MultiPartParser, FormParser, JSONParser])
 def create_article(request):
     """创建文章（可以是草稿或直接发布）"""
     try:
-        data = request.data.copy()
+        data = force_utf8_encoding(request.data.copy())  # 统一编码为UTF-8
         data['author'] = request.auth_user.id
 
         # 调试日志
@@ -95,13 +105,20 @@ def create_article(request):
             'message': f'创建失败: {str(e)}'
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+from rest_framework.decorators import api_view, parser_classes
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.response import Response
+from rest_framework import status
+from django.shortcuts import get_object_or_404
+from django.utils import timezone
+
 @api_view(['PUT', 'PATCH'])
 @jwt_required
 @parser_classes([MultiPartParser, FormParser, JSONParser])
 def update_article(request, article_id):
     try:
         article = get_object_or_404(Article, id=article_id)
-
         # 检查权限
         if article.author.id != request.auth_user.id and not request.auth_user.is_staff:
             return Response({
@@ -139,13 +156,13 @@ def update_article(request, article_id):
             data['cover_image'] = cover_image_path
 
         # 在更新之前打印数据，用于调试
-        print("更新数据:", data)
+        print("更新数据:".encode('utf-8'), data)
 
         serializer = ArticleSerializer(article, data=data, partial=True)
 
         if serializer.is_valid():
             # 打印验证后的数据
-            print("验证后的数据:", serializer.validated_data)
+            print("验证后的数据:".encode('utf-8'), serializer.validated_data)
 
             updated_article = serializer.save()
 
@@ -167,11 +184,13 @@ def update_article(request, article_id):
         }, status=status.HTTP_400_BAD_REQUEST)
 
     except Exception as e:
-        print(f"更新错误: {str(e)}")  # 添加错误日志
+        print(f"更新错误: {str(e).encode('utf-8')}")  # 添加错误日志
         return Response({
             'code': 500,
             'message': f'更新失败: {str(e)}'
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 
 @api_view(['POST'])
 @jwt_required
@@ -456,40 +475,6 @@ def like_article(request, article_id):
             'message': '文章不存在'
         }, status=status.HTTP_404_NOT_FOUND)
 
-@api_view(['POST'])
-@jwt_required
-def toggle_featured(request, article_id):
-    """设置/取消精选文章（仅管理员，且仅限已发布的文章）"""
-    if not request.auth_user.is_staff:
-        return Response({
-            'code': 403,
-            'message': '只有管理员可以设置精选文章'
-        }, status=status.HTTP_403_FORBIDDEN)
-
-    try:
-        article = get_object_or_404(Article, id=article_id)
-
-        # 只能将已发布的文章设为精选
-        if article.status != 'published':
-            return Response({
-                'code': 400,
-                'message': '只能将已发布的文章设为精选'
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-        article.is_featured = not article.is_featured
-        article.save()
-
-        return Response({
-            'code': 200,
-            'message': f"{'设置' if article.is_featured else '取消'}精选成功",
-            'data': {'is_featured': article.is_featured}
-        })
-    except Article.DoesNotExist:
-        return Response({
-            'code': 404,
-            'message': '文章不存在'
-        }, status=status.HTTP_404_NOT_FOUND)
-
 
 @api_view(['GET'])
 def get_featured_articles(request):
@@ -675,3 +660,114 @@ def unlike_article(request, article_id):
             'code': 404,
             'message': '文章不存在'
         }, status=status.HTTP_404_NOT_FOUND)
+
+# 获取热度前十的文章，根据点赞和浏览量计算
+@api_view(['GET'])
+def get_top_articles(request):
+    try:
+        # 计算热度得分
+        articles = Article.objects.annotate(
+            score=(F('likes') + F('views')) * 0.5
+        ).order_by('-score')[:10]
+        for article in articles:
+            article.content = article.content[:30]
+        serializer = ArticleSerializer(articles, many=True)
+        return Response({
+            'code': 200,
+           'message': '获取热度前十的文章成功',
+            'data': serializer.data
+        })
+    except Exception as e:
+        return Response({
+            'code': 500,
+           'message': f'获取失败: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+def get_article_list_v2(request):
+    # 默认获取所有已发布文章，而不是过滤
+    articles = Article.objects.filter(status='published').order_by('-created_at')  # 添加排序
+
+    # 获取查询参数并进行过滤
+    title = request.query_params.get('title')
+    content = request.query_params.get('content')
+    author = request.query_params.get('author')
+    tags = request.query_params.get('tags')
+
+    # 只在有值时才进行过滤
+    if title and title.strip():
+        articles = articles.filter(title__icontains=title.strip())
+    if content and content.strip():
+        articles = articles.filter(content__icontains=content.strip())
+    if author and author.strip():
+        articles = articles.filter(author__username__icontains=author.strip())
+    if tags!= 'undefined' and tags.strip():
+        tags_list = [tag.strip() for tag in tags.split(',') if tag.strip()]
+        if tags_list:
+            query = Q()
+            for tag in tags_list:
+                query |= Q(tags__icontains=tag)
+            articles = articles.filter(query)
+
+    # 添加调试日志
+    print(f"Query parameters: {request.query_params}")
+    print(f"Article count before pagination: {articles.count()}")
+
+    # 分页
+    paginator = StandardResultsSetPagination()
+    paginated_articles = paginator.paginate_queryset(articles, request)
+
+    # 截取内容
+    for article in paginated_articles:
+        if article.content:
+            article.content = article.content[:30]
+
+    serializer = ArticleSerializer(paginated_articles, many=True)
+
+    response_data = {
+        'code': 200,
+        'message': '获取文章列表成功',
+        'data': {
+            'count': articles.count(),
+            'next': paginator.get_next_link(),
+            'previous': paginator.get_previous_link(),
+            'results': serializer.data
+        }
+    }
+
+    print(f"Response data: {response_data}")  # 调试日志
+    return Response(response_data)
+
+
+
+#获取全部标签，注意每个文章的标签都是一个带有逗号分隔的字符串
+@api_view(['GET'])
+def get_all_tags(request):
+    """获取所有文章标签（去重，仅包含已发布文章）"""
+    try:
+        # 获取所有已发布文章的标签
+        articles = Article.objects.filter(status='published')
+        tags = set()
+
+        for article in articles:
+            if article.tags:
+                # 清理并分割标签
+                cleaned_tags = [tag.strip() for tag in article.tags.split(',') if tag.strip()]
+                tags.update(cleaned_tags)
+
+        # 按字母顺序排序
+        sorted_tags = sorted(tags)
+
+        return Response({
+            'code': 200,
+            'message': '获取标签成功',
+            'data': sorted_tags
+        })
+
+    except Exception as e:
+        return Response({
+            'code': 500,
+            'message': f'获取标签失败: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

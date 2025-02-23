@@ -19,7 +19,7 @@ urlpatterns = [
 
     # 功能性接口
     path('articles/like/<int:article_id>/', views.like_article, name='like_article'),  # POST
-    path('articles/featured/toggle/<int:article_id>/', views.toggle_featured, name='toggle_featured'),  # POST
+ 
     path('articles/featured/list/', views.get_featured_articles, name='get_featured_articles'),  # GET
     path('articles/my-articles/', views.get_my_articles, name='get_my_articles'),  # GET
 
@@ -30,5 +30,17 @@ urlpatterns = [
 
     path('articles/like/<int:article_id>/', views.like_article, name='like_article'),
     path('articles/unlike/<int:article_id>/', views.unlike_article, name='unlike_article'),
+
+    path('articles/top-articles/', views.get_top_articles, name='get_top_articles'),
+
+    path('articles/tags/', views.get_all_tags, name='get_tags'),
+
+    path('articles/searchV2/', views.get_article_list_v2, name='search_articles')
+
+
+
+
+
+
 
 ]

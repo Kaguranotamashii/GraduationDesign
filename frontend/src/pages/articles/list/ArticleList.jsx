@@ -1,349 +1,472 @@
-import React, { useState, useEffect } from 'react';
-import { Search, Calendar, User, Eye, ThumbsUp, Tag, TrendingUp, BookOpen, Star, Clock, ChevronRight, Filter, Camera, Paintbrush, Mountain } from 'lucide-react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { Search, Calendar, Eye, Heart, ChevronLeft, ChevronRight, TrendingUp, ChevronDown } from 'lucide-react';
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import {
-    Card,
-    CardContent,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Navbar from '@/components/home/Navbar';
-import Footer from '@/components/home/Footer';
-import AllArticlesSection from "@/components/articles/AllArticles/AllArticlesSection.jsx";
+import { Button } from "@/components/ui/button";
+import { searchArticlesV2, getTopArticles, getAllTags } from '@/api/articleApi';
+import Navbar from "@/components/home/Navbar";
+import Footer from "@/components/home/Footer";
 
-const ArticleList = () => {
-    const [articles, setArticles] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('all');
-    const [selectedTimeframe, setSelectedTimeframe] = useState('all');
-    const [currentFeaturedIndex, setCurrentFeaturedIndex] = useState(0);
+// 改进的分页组件
+const Pagination = ({ currentPage, totalPages, onPageChange }) => (
+    <div className="flex items-center justify-center gap-3 mt-16">
+        <Button
+            variant="outline"
+            size="icon"
+            className="w-10 h-10 rounded-full hover:bg-blue-50 hover:text-blue-600 transition-colors"
+            onClick={() => onPageChange(currentPage - 1)}
+            disabled={currentPage <= 1}
+        >
+            <ChevronLeft className="h-5 w-5" />
+        </Button>
 
-    // 背景图片集合
-    const backgroundImages = {
-        "古建筑": "https://images.unsplash.com/photo-1470004914212-05527e49370b",
-        "园林艺术": "https://images.unsplash.com/photo-1546436836-07a91091f160",
-        "文化遗产": "https://images.unsplash.com/photo-1510332981392-36692ea3a195",
-        "建筑智慧": "https://images.unsplash.com/photo-1604328698692-f76ea9498e76",
-        "传统民居": "https://images.unsplash.com/photo-1527838832700-5059252407fa",
-        "现代传承": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab"
+        <div className="flex gap-2">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <Button
+                    key={page}
+                    variant={currentPage === page ? "default" : "outline"}
+                    className={`w-10 h-10 rounded-full ${
+                        currentPage === page
+                            ? "bg-blue-600 hover:bg-blue-700"
+                            : "hover:bg-blue-50 hover:text-blue-600"
+                    }`}
+                    onClick={() => onPageChange(page)}
+                >
+                    {page}
+                </Button>
+            ))}
+        </div>
+
+        <Button
+            variant="outline"
+            size="icon"
+            className="w-10 h-10 rounded-full hover:bg-blue-50 hover:text-blue-600 transition-colors"
+            onClick={() => onPageChange(currentPage + 1)}
+            disabled={currentPage >= totalPages}
+        >
+            <ChevronRight className="h-5 w-5" />
+        </Button>
+    </div>
+);
+
+// 改进的文章卡片组件
+const ArticleCard = React.memo(({ article, showBadge = false, onClick }) => {
+    const formatDate = (dateString) => {
+        return new Date(dateString).toLocaleDateString('zh-CN');
     };
 
-    useEffect(() => {
-        setTimeout(() => {
-            const demoArticles = Array.from({ length: 15 }, (_, i) => ({
-                id: i + 1,
-                title: [
-                    '故宫的建筑艺术：探索紫禁城的建筑之美',
-                    '颐和园建筑布局与江南园林的异同',
-                    '中国传统园林设计中的美学思想探析',
-                    '天坛祭天建筑群的礼制文化研究',
-                    '北京四合院：传统民居建筑的典范',
-                    '苏州园林：诗意栖居的艺术典范',
-                    '中国古建筑的匠心智慧：斗拱结构解析',
-                    '江南水乡古镇建筑特色研究',
-                    '明清园林建筑的空间意境营造',
-                    '传统建筑装饰艺术的符号语言',
-                    '中国古代建筑的防震智慧',
-                    '园林建筑中的诗情画意',
-                    '古建筑修复技艺的传承与创新',
-                    '中国传统建筑的可持续发展理念',
-                    '数字技术在古建筑保护中的应用'
-                ][i],
-                content: '探索传统建筑文化的深度解读，感受千年建筑智慧的传承...',
-                author: ['张三', '李四', '王五', '赵六', '钱七', '孙八', '周九', '吴十'][i % 8],
-                date: `2024-0${Math.floor(i/4) + 1}-${10 + i}`,
-                views: Math.floor(Math.random() * 1000 + 100),
-                likes: Math.floor(Math.random() * 500 + 50),
-                readTime: Math.floor(Math.random() * 10 + 5),
-                category: ['古建筑', '园林艺术', '文化遗产', '建筑智慧', '传统民居', '现代传承'][i % 6],
-                tags: [
-                    ['建筑文化', '古代建筑', '文化遗产'],
-                    ['园林设计', '建筑艺术', '文化传承'],
-                    ['建筑智慧', '传统技艺', '匠心精神'],
-                    ['数字保护', '创新应用', '可持续发展']
-                ][i % 4],
-                cover_image: Object.values(backgroundImages)[i % Object.keys(backgroundImages).length],
-                featured: i < 3,
-                trending: i >= 3 && i < 6,
-                isNew: i >= 12,
-                difficulty: ['入门', '进阶', '专业'][i % 3],
-                type: ['图文', '视频', '专题'][i % 3]
-            }));
-            setArticles(demoArticles);
-            setLoading(false);
-        }, 1000);
+    return (
+        <Card
+            className="group hover:shadow-2xl transition-all duration-500 cursor-pointer bg-white overflow-hidden rounded-xl"
+            onClick={() => onClick(article.id)}
+        >
+            <div className="aspect-[16/10] relative overflow-hidden">
+                <img
+                    src={article.cover_image_url || '/api/placeholder/400/300'}
+                    alt={article.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                {showBadge && article.is_featured && (
+                    <Badge className="absolute top-3 right-3 bg-blue-500/90 backdrop-blur-sm px-3 py-1 text-sm">
+                        精选
+                    </Badge>
+                )}
+            </div>
+            <CardContent className="p-6">
+                <div className="flex items-center gap-3 text-sm text-gray-500 mb-4">
+                    <Calendar className="w-4 h-4" />
+                    <span>{formatDate(article.created_at)}</span>
+                    {article.builder_name && (
+                        <>
+                            <span className="w-1 h-1 rounded-full bg-gray-300" />
+                            <span>{article.builder_name}</span>
+                        </>
+                    )}
+                </div>
+                <h3 className="text-xl font-bold mb-3 group-hover:text-blue-600 transition-colors line-clamp-2 leading-tight">
+                    {article.title}
+                </h3>
+                <p className="text-gray-600 mb-4 line-clamp-2 leading-relaxed">
+                    {article.content}
+                </p>
+
+                {article.tags && (
+                    <div className="flex flex-wrap gap-2 mb-4">
+                        {article.tags.split(',').map((tag, index) => (
+                            <Badge
+                                key={index}
+                                variant="secondary"
+                                className="bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+                            >
+                                {tag.trim()}
+                            </Badge>
+                        ))}
+                    </div>
+                )}
+            </CardContent>
+            <CardFooter className="px-6 py-4 bg-gray-50 flex justify-between items-center border-t border-gray-100">
+                <div className="flex items-center gap-6 text-sm text-gray-600">
+                    <div className="flex items-center gap-2">
+                        <Eye className="w-4 h-4" />
+                        <span>{article.views}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Heart className={`w-4 h-4 transition-colors ${article.is_liked ? 'fill-red-500 text-red-500' : ''}`} />
+                        <span>{article.likes}</span>
+                    </div>
+                </div>
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 transition-colors"
+                >
+                    阅读全文
+                </Button>
+            </CardFooter>
+        </Card>
+    );
+});
+
+// 热门文章卡片组件
+const TopArticleCard = ({ article, onClick }) => (
+    <Card
+        className="group cursor-pointer hover:shadow-xl transition-all duration-300 rounded-xl overflow-hidden"
+        onClick={() => onClick(article.id)}
+    >
+        <div className="relative aspect-[4/3] overflow-hidden">
+            <img
+                src={article.cover_image_url || '/api/placeholder/400/300'}
+                alt={article.title}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                <h3 className="font-bold text-lg mb-2 line-clamp-2 group-hover:text-blue-200 transition-colors">
+                    {article.title}
+                </h3>
+                <div className="flex items-center justify-between text-sm text-white/80">
+                    <div className="flex items-center gap-2">
+                        <Eye className="w-4 h-4" />
+                        <span>{article.views}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Heart className={`w-4 h-4 ${article.is_liked ? 'fill-red-400' : ''}`} />
+                        <span>{article.likes}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </Card>
+);
+
+// 改进的搜索组件
+const SearchBar = ({ onSearch }) => {
+    const [inputValue, setInputValue] = useState('');
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            onSearch(inputValue);
+            // 滚动到文章列表
+            setTimeout(() => {
+                window.scrollTo({
+                    top: 990,
+                    behavior: 'smooth'
+                });
+            }, 100);
+        }
+    };
+
+    return (
+        <div className="relative max-w-2xl mx-auto">
+            <Input
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="输入关键词后按回车搜索..."
+                className="w-full pl-12 h-14 bg-white/20 border-white/30 text-white
+                          placeholder:text-white/60 focus:bg-white/30 rounded-full
+                          backdrop-blur-sm focus:ring-2 focus:ring-blue-400
+                          focus:border-transparent"
+            />
+            <Search className="absolute left-4 top-4 w-6 h-6 text-white/60" />
+            <div className="absolute right-4 top-4 text-white/60 text-sm">
+                按回车搜索
+            </div>
+        </div>
+    );
+};
+
+// 主组件
+const ArticleList = () => {
+    const [state, setState] = useState({
+        articles: [],
+        topArticles: [],
+        loading: true,
+        error: null
+    });
+    const [searchTerm, setSearchTerm] = useState('');
+    const [currentTag, setCurrentTag] = useState('all');
+    const [allTags, setAllTags] = useState([]);
+    const [pagination, setPagination] = useState({
+        currentPage: 1,
+        totalPages: 1,
+        pageSize: 9
+    });
+
+    // 获取所有标签
+    const fetchTags = useCallback(async () => {
+        try {
+            const response = await getAllTags();
+            if (response?.code === 200 && response.data) {
+                setAllTags(response.data);
+            }
+        } catch (err) {
+            console.error('Error fetching tags:', err);
+        }
     }, []);
 
+    // 获取热门文章
+    const fetchTopArticles = useCallback(async () => {
+        try {
+            const response = await getTopArticles();
+            if (response?.code === 200 && response.data) {
+                setState(prev => ({
+                    ...prev,
+                    topArticles: response.data.slice(0, 5)
+                }));
+            }
+        } catch (err) {
+            console.error('Error fetching top articles:', err);
+        }
+    }, []);
+
+    // 获取文章列表
+    const fetchArticles = useCallback(async (page = 1) => {
+        try {
+            setState(prev => ({ ...prev, loading: true, error: null }));
+
+            const searchParams = {
+                page,
+                page_size: pagination.pageSize,
+                title: searchTerm,
+                tags: currentTag !== 'all' ? currentTag : undefined,
+                status: 'published'
+            };
+
+            const response = await searchArticlesV2(searchParams);
+
+            if (response?.code === 200 && response.data) {
+                setState(prev => ({
+                    ...prev,
+                    articles: response.data.results || [],
+                    loading: false
+                }));
+
+                setPagination(prev => ({
+                    ...prev,
+                    currentPage: page,
+                    totalPages: Math.ceil(response.data.count / pagination.pageSize)
+                }));
+            } else {
+                setState(prev => ({
+                    ...prev,
+                    error: '获取文章列表失败',
+                    loading: false,
+                    articles: []
+                }));
+            }
+        } catch (err) {
+            console.error('Error fetching articles:', err);
+            setState(prev => ({
+                ...prev,
+                error: '获取文章列表失败，请稍后重试',
+                loading: false,
+                articles: []
+            }));
+        }
+    }, [searchTerm, currentTag, pagination.pageSize]);
+
+    // 初始化数据
     useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentFeaturedIndex((prev) =>
-                prev === featuredArticles.length - 1 ? 0 : prev + 1
-            );
-        }, 5000);
-        return () => clearInterval(timer);
-    }, [articles]);
-
-    const featuredArticles = articles.filter(article => article.featured);
-    const trendingArticles = articles.filter(article => article.trending);
-    const regularArticles = articles.filter(article => !article.featured && !article.trending);
-
-    const CategoryIcon = ({ category }) => {
-        const icons = {
-            "古建筑": Camera,
-            "园林艺术": Paintbrush,
-            "文化遗产": Camera,
-            "建筑智慧": Mountain,
+        const initializeData = async () => {
+            await Promise.all([
+                fetchTags(),
+                fetchTopArticles()
+            ]);
         };
-        const Icon = icons[category] || Camera;
-        return <Icon className="w-4 h-4" />;
-    };
+        initializeData();
+    }, [fetchTags, fetchTopArticles]);
 
-    const DifficultyBadge = ({ level }) => {
-        const colors = {
-            '入门': 'bg-green-100 text-green-800',
-            '进阶': 'bg-yellow-100 text-yellow-800',
-            '专题': 'bg-red-100 text-red-800'
-        };
+    // 监听搜索和标签变化
+    useEffect(() => {
+        fetchArticles(1);
+    }, [fetchArticles, searchTerm, currentTag]);
+
+    const handleSearch = useCallback((searchValue) => {
+        setSearchTerm(searchValue);
+    }, []);
+
+    const handleArticleClick = useCallback((articleId) => {
+        window.location.href = `/articles/${articleId}`;
+    }, []);
+
+    const handlePageChange = useCallback((page) => {
+        fetchArticles(page);
+        window.scrollTo({ top: 800, behavior: 'smooth' });
+    }, [fetchArticles]);
+
+    const handleTagChange = useCallback((tag) => {
+        setCurrentTag(tag);
+        setPagination(prev => ({ ...prev, currentPage: 1 }));
+    }, []);
+
+    // 渲染错误提示
+    const renderError = () => {
+        if (!state.error) return null;
         return (
-            <span className={`text-xs px-2 py-1 rounded-full ${colors[level]}`}>
-                {level}
-            </span>
+            <div className="text-center p-4 mb-4 bg-red-50 text-red-600 rounded-lg">
+                {state.error}
+            </div>
         );
     };
 
     return (
-        <div className="min-h-screen flex flex-col">
-            <div className="fixed top-0 left-0 right-0 z-50">
-                <Navbar />
-            </div>
+        <div className="min-h-screen bg-gray-50">
+            <Navbar />
 
-            <main className="flex-grow pt-16">
-                {/* Hero Section with Dynamic Background */}
-                <div
-                    className="relative h-96 bg-cover bg-center"
-                    style={{
-                        backgroundImage: `url(${featuredArticles[currentFeaturedIndex]?.cover_image})`,
-                    }}
-                >
-                    <div className="absolute inset-0 bg-black/50" />
-                    <div className="relative container mx-auto px-4 h-full flex flex-col justify-center items-center text-white text-center">
-                        <h1 className="text-6xl font-bold mb-6">
-                            探索<span className="text-red-500">建筑文化</span>之美
-                        </h1>
-                        <p className="text-xl mb-8 max-w-2xl">
-                            感受千年建筑智慧的传承，领略东方建筑艺术的精髓
-                        </p>
-
-                    </div>
+            {/* Hero Section with updated search */}
+            <div className="relative h-[600px] text-white shadow-xl overflow-hidden">
+                <div className="absolute inset-0">
+                    <img
+                        src="/images/article.png"
+                        alt="Background"
+                        className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30 backdrop-blur-[2px]" />
                 </div>
 
-                <div className="container mx-auto px-4 py-12">
-                    {/* Advanced Search and Filter */}
-                    {/*<div className="mb-12 bg-white p-6 rounded-xl shadow-sm">*/}
-                    {/*    <div className="flex flex-col space-y-4">*/}
-                    {/*        <div className="flex flex-col md:flex-row gap-4">*/}
-                    {/*            <div className="flex-1 relative">*/}
-                    {/*                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />*/}
-                    {/*                <Input*/}
-                    {/*                    type="text"*/}
-                    {/*                    placeholder="搜索感兴趣的文章..."*/}
-                    {/*                    className="pl-10"*/}
-                    {/*                    value={searchQuery}*/}
-                    {/*                    onChange={(e) => setSearchQuery(e.target.value)}*/}
-                    {/*                />*/}
-                    {/*            </div>*/}
-                    {/*            <Select value={selectedCategory} onValueChange={setSelectedCategory}>*/}
-                    {/*                <SelectTrigger className="w-[180px] bg-white">*/}
-                    {/*                    <SelectValue placeholder="选择分类" />*/}
-                    {/*                </SelectTrigger>*/}
-                    {/*                <SelectContent>*/}
-                    {/*                    <SelectItem value="all">全部分类</SelectItem>*/}
-                    {/*                    {Object.keys(backgroundImages).map(cat => (*/}
-                    {/*                        <SelectItem key={cat} value={cat}>{cat}</SelectItem>*/}
-                    {/*                    ))}*/}
-                    {/*                </SelectContent>*/}
-                    {/*            </Select>*/}
-                    {/*            <Select value={selectedTimeframe} onValueChange={setSelectedTimeframe}>*/}
-                    {/*                <SelectTrigger className="w-[180px] bg-white">*/}
-                    {/*                    <SelectValue placeholder="时间范围" />*/}
-                    {/*                </SelectTrigger>*/}
-                    {/*                <SelectContent>*/}
-                    {/*                    <SelectItem value="all">全部时间</SelectItem>*/}
-                    {/*                    <SelectItem value="week">最近一周</SelectItem>*/}
-                    {/*                    <SelectItem value="month">最近一月</SelectItem>*/}
-                    {/*                    <SelectItem value="year">最近一年</SelectItem>*/}
-                    {/*                </SelectContent>*/}
-                    {/*            </Select>*/}
-                    {/*        </div>*/}
-                    {/*        <div className="flex flex-wrap gap-2">*/}
-                    {/*            <Badge className="cursor-pointer hover:bg-gray-100" variant="outline">*/}
-                    {/*                建筑文化*/}
-                    {/*            </Badge>*/}
-                    {/*            <Badge className="cursor-pointer hover:bg-gray-100" variant="outline">*/}
-                    {/*                古代建筑*/}
-                    {/*            </Badge>*/}
-                    {/*            <Badge className="cursor-pointer hover:bg-gray-100" variant="outline">*/}
-                    {/*                文化遗产*/}
-                    {/*            </Badge>*/}
-                    {/*            /!* Add more quick filter badges *!/*/}
-                    {/*        </div>*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
+                <div className="container mx-auto px-4 h-full flex flex-col justify-center items-center relative z-10">
+                    <h1 className="text-6xl md:text-7xl font-bold mb-8 text-center">
+                        探索<span className="text-blue-400 drop-shadow">建筑文化</span>的魅力
+                    </h1>
+                    <p className="text-xl md:text-2xl mb-12 text-white/90 max-w-3xl text-center leading-relaxed">
+                        发现独特的建筑故事，感受时光与空间的对话
+                    </p>
+                    <SearchBar onSearch={handleSearch} />
+                    <Button
+                        variant="outline"
+                        className="mt-8 text-white border-white/30 hover:bg-white/20 transition-colors"
+                        onClick={() => window.scrollTo({ top: 800, behavior:'smooth' })}
+                    >
+                        <ChevronDown className="w-5 h-5 mr-2" />
+                        浏览文章
+                    </Button>
+                </div>
+            </div>
 
-                    {/* Featured Articles Carousel */}
-                    {featuredArticles.length > 0 && (
-                        <div className="mb-16">
-                            <h2 className="text-2xl font-bold mb-6 flex items-center">
-                                <Star className="w-6 h-6 mr-2 text-yellow-500" />
-                                精选文章
-                            </h2>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                {featuredArticles.map((article, index) => (
-                                    <Card
+            {/* Main Content Container */}
+            <div className="container mx-auto px-4 -mt-20 relative z-10">
+                {/* Top Articles Section */}
+                {!state.loading && state.topArticles?.length > 0 && (
+                    <div className="mb-16">
+                        <div className="bg-white rounded-2xl shadow-xl p-8">
+                            <div className="flex items-center mb-8">
+                                <TrendingUp className="w-7 h-7 text-blue-500 mr-3" />
+                                <h2 className="text-3xl font-bold">热门推荐</h2>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                                {state.topArticles.map((article) => (
+                                    <TopArticleCard
                                         key={article.id}
-                                        className={`group hover:shadow-xl transition-all duration-500 
-                                                  ${index === currentFeaturedIndex ? 'ring-2 ring-red-500' : ''}`}
-                                    >
-                                        <div className="relative aspect-[4/3] overflow-hidden">
-                                            <img
-                                                src={article.cover_image}
-                                                alt={article.title}
-                                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                            />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-                                            <div className="absolute top-4 left-4 flex gap-2">
-                                                <Badge className="bg-red-500">精选</Badge>
-                                                <DifficultyBadge level={article.difficulty} />
-                                            </div>
-                                            <div className="absolute bottom-4 left-4 right-4 text-white">
-                                                <h3 className="text-xl font-bold mb-2 group-hover:text-red-400 transition-colors">
-                                                    {article.title}
-                                                </h3>
-                                                <div className="flex items-center text-sm">
-                                                    <User className="w-4 h-4 mr-1" />
-                                                    <span className="mr-4">{article.author}</span>
-                                                    <Clock className="w-4 h-4 mr-1" />
-                                                    <span>{article.readTime} 分钟阅读</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Card>
+                                        article={article}
+                                        onClick={handleArticleClick}
+                                    />
                                 ))}
                             </div>
                         </div>
+                    </div>
+                )}
+
+                {/* Main Articles Section */}
+                <div className="bg-white rounded-2xl shadow-xl p-8 mb-16">
+                    {renderError()}
+
+                    {/* Tags Section */}
+                    <div className="mb-8">
+                        <div className="flex flex-wrap gap-3">
+                            <Badge
+                                key="all"
+                                variant={currentTag === 'all' ? "default" : "outline"}
+                                className={`cursor-pointer hover:shadow-md transition-all px-6 py-2.5 text-sm ${
+                                    currentTag === 'all'
+                                        ? 'bg-blue-600 hover:bg-blue-700'
+                                        : 'hover:bg-blue-50'
+                                }`}
+                                onClick={() => handleTagChange('all')}
+                            >
+                                全部文章
+                            </Badge>
+                            {allTags.map(tag => (
+                                <Badge
+                                    key={tag}
+                                    variant={currentTag === tag ? "default" : "outline"}
+                                    className={`cursor-pointer hover:shadow-md transition-all px-4 py-2 text-sm ${
+                                        currentTag === tag
+                                            ? 'bg-blue-600 hover:bg-blue-700'
+                                            : 'hover:bg-blue-50'
+                                    }`}
+                                    onClick={() => handleTagChange(tag)}
+                                >
+                                    {tag}
+                                </Badge>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Articles Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {state.articles.map(article => (
+                            <ArticleCard
+                                key={article.id}
+                                article={article}
+                                showBadge={true}
+                                onClick={handleArticleClick}
+                            />
+                        ))}
+                    </div>
+
+                    {/* Empty State */}
+                    {!state.loading && state.articles.length === 0 && (
+                        <div className="text-center py-20">
+                            <div className="mb-6">
+                                <Search className="w-16 h-16 text-gray-300 mx-auto" />
+                            </div>
+                            <h3 className="text-xl font-semibold text-gray-600 mb-3">
+                                暂无相关文章
+                            </h3>
+                            <p className="text-gray-500 max-w-md mx-auto">
+                                试试更换关键词或选择其他标签重新搜索
+                            </p>
+                        </div>
                     )}
 
-                    {/* Content Tabs */}
-                    <Tabs defaultValue="trending" className="mb-16">
-                        <TabsList className="mb-6">
-                            <TabsTrigger value="trending" className="text-lg">
-                                <TrendingUp className="w-5 h-5 mr-2" />
-                                热门阅读
-                            </TabsTrigger>
-                            <TabsTrigger value="latest" className="text-lg">
-                                <Clock className="w-5 h-5 mr-2" />
-                                最新发布
-                            </TabsTrigger>
-                        </TabsList>
-
-                        <TabsContent value="trending">
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {trendingArticles.map((article) => (
-                                    <Card key={article.id} className="group hover:shadow-lg transition-all duration-300">
-                                        <div className="p-6">
-                                            <div className="flex items-center gap-2 mb-4">
-                                                <CategoryIcon category={article.category} />
-                                                <span className="text-sm text-gray-600">{article.category}</span>
-                                            </div>
-                                            <h3 className="text-lg font-bold mb-3 group-hover:text-red-600 transition-colors">
-                                                {article.title}
-                                            </h3>
-                                            <div className="flex items-center text-sm text-gray-600 mb-4">
-                                                <Eye className="w-4 h-4 mr-1" />
-                                                <span className="mr-4">{article.views} 阅读</span>
-                                                <ThumbsUp className="w-4 h-4 mr-1" />
-                                                <span>{article.likes} 喜欢</span>
-                                            </div>
-                                            <div className="flex flex-wrap gap-2">
-                                                {article.tags.map((tag, idx) => (
-                                                    <Badge key={idx} variant="outline"
-                                                           className="hover:bg-red-50 hover:text-red-600 transition-colors">
-                                                        {tag}
-                                                    </Badge>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </Card>
-                                ))}
-                            </div>
-                        </TabsContent>
-
-                        <TabsContent value="latest">
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {regularArticles.filter(a => a.isNew).map((article) => (
-                                    <Card key={article.id} className="group overflow-hidden">
-                                        <div className="relative aspect-video">
-                                            <img
-                                                src={article.cover_image}
-                                                alt={article.title}
-                                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                            />
-                                            <div className="absolute top-2 right-2">
-                                                <Badge className="bg-blue-500">最新</Badge>
-                                            </div>
-                                        </div>
-                                        <CardContent className="p-6">
-                                            <div className="flex items-center gap-2 mb-4">
-                                                <DifficultyBadge level={article.difficulty} />
-                                                <span className="text-sm text-gray-500">•</span>
-                                                <span className="text-sm text-gray-600">{article.type}</span>
-                                            </div>
-                                            <h3 className="text-lg font-bold mb-3 group-hover:text-red-600 transition-colors">
-                                                {article.title}
-                                            </h3>
-                                            <p className="text-gray-600 mb-4 line-clamp-2">{article.content}</p>
-                                            <div className="flex items-center text-sm text-gray-600">
-                                                <User className="w-4 h-4 mr-1" />
-                                                <span className="mr-4">{article.author}</span>
-                                                <Calendar className="w-4 h-4 mr-1" />
-                                                <span>{article.date}</span>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
-                                ))}
-                            </div>
-                        </TabsContent>
-                    </Tabs>
-
-
-                    <AllArticlesSection articles={articles} />
-
-
+                    {/* Pagination */}
+                    {pagination.totalPages > 1 && (
+                        <Pagination
+                            currentPage={pagination.currentPage}
+                            totalPages={pagination.totalPages}
+                            onPageChange={handlePageChange}
+                        />
+                    )}
                 </div>
-            </main>
+            </div>
+
+
 
             <Footer />
-
-            {/* Enhanced Loading State */}
-            {loading && (
-                <div className="fixed inset-0 bg-white/80 backdrop-blur-sm flex justify-center items-center z-50">
-                    <div className="relative">
-                        <div className="w-16 h-16 border-4 border-red-200 border-t-red-600 rounded-full animate-spin" />
-                        <div className="mt-4 text-gray-600">正在加载精彩内容...</div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };

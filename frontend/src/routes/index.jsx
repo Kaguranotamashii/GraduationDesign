@@ -22,6 +22,7 @@ import MyComment from "@/components/admin/comment/MyComment.jsx";
 import ModelEditor from "@/pages/modelEdit/ModelEdit.jsx";
 import PrivateBuilderEditRoute from "@/components/Guard/PrivateBuilderEditRoute.jsx";
 import ARDemo from "@/pages/ARModelEditor/ARDemo.jsx";
+import ModelViewerV2 from "@/pages/modelViewer/ModelViewerV2.jsx";
 
 
 // 页面组件导入...
@@ -69,6 +70,15 @@ const router = createBrowserRouter([
                     {
                         path: ':builderId',  // 添加动态路由参数
                         element: < PrivateBuilderEditRoute><ModelEditor /></ PrivateBuilderEditRoute>,
+                    }
+                ]
+            },
+            {
+              path: 'modelViewer',
+                children: [
+                    {
+                        path: ':builderId',  // 添加动态路由参数
+                        element: < ModelViewerV2 />,
                     }
                 ]
             },

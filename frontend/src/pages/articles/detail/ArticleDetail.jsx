@@ -17,6 +17,7 @@ import CommentSection from "@/components/articles/Comments/CommentSection";
 import { getArticleDetail, likeArticle, unlikeArticle } from '@/api/articleApi';
 import { format, parseISO } from 'date-fns';
 import { toast } from "sonner";
+import "./ArticleDetail.css"
 
 const ArticleDetail = () => {
     const { id } = useParams();
@@ -155,6 +156,7 @@ const ArticleDetail = () => {
     }
 
     return (
+
         <div className="min-h-screen bg-gray-50">
             {/* Reading Progress Bar */}
             <div

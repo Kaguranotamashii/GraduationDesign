@@ -176,3 +176,35 @@ export const unlikeArticle = async (articleId) => {
         throw error;
     }
 }
+
+
+// 获取热度文章
+export const getTopArticles = async () => {
+    try {
+        const response = await apiClient.get('article/articles/top-articles/');
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching popular articles:', error);
+        throw error;
+    }
+}
+
+export const getAllTags = async () => {
+    try {
+        const response = await apiClient.get('article/articles/tags/');
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching all tags:', error);
+        throw error;
+    }
+}
+export const searchArticlesV2 = async (params) => {
+    try {
+        const response = await apiClient.get(`article/articles/searchV2/?${new URLSearchParams(params)}`);
+        return response.data;
+    }
+    catch (error) {
+        console.error('Error searching articles:', error);
+        throw error;
+    }
+}
