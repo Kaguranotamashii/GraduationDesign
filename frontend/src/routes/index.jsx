@@ -28,7 +28,7 @@ import ModelViewerV2 from "@/pages/modelViewer/ModelViewerV2.jsx";
 // 页面组件导入...
 // 其他组件保持不变...
 
-// @ts-ignore
+
 const router = createBrowserRouter([
     {
         path: '/',
