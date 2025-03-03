@@ -1,8 +1,0 @@
-
-#### 获取用户列表
-#GET http://localhost:8005/app/user/user_all/
-#Content-Type: application/json
-
-
-### 发送测试邮件
-GET http://localhost:8005/app/user/send-test-email/?email=1274599076@qq.com
