@@ -86,6 +86,7 @@ const AdminLayout = () => {
                         }
                     ]
                 },
+
                 {
                     key: 'models',
                     icon: <DatabaseOutlined />,

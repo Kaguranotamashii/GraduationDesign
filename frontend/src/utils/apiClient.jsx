@@ -7,7 +7,7 @@ import {store} from "../store/store"; // 直接导入 store
 
 // 创建 Axios 实例
 const apiClient = axios.create({
-    baseURL: 'http://localhost:8005/app',
+    baseURL: '/app',
     timeout: 20000,
     withCredentials: true,
 });

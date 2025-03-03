@@ -4,11 +4,12 @@ import fs from 'fs';
 import tailwindcss from '@tailwindcss/vite'
 import path from "path"
 
+var url = ' http://10.153.84.237:8005'
+
 export default defineConfig({
     plugins: [
         react(),
         tailwindcss(),
-
     ],
     resolve: {
         alias: {
@@ -17,10 +18,22 @@ export default defineConfig({
     },
     server: {
         https: {
-            key: fs.readFileSync('./key.pem'),  // 确保路径正确
-            cert: fs.readFileSync('./cert.pem') // 确保路径正确
+            key: fs.readFileSync('./key.pem'),
+            cert: fs.readFileSync('./cert.pem')
         },
+        proxy: {
+            '/media': {
+                target: url,
+                changeOrigin: true,
+                secure: false
+            },
+            '/app': {
+                target: url,
+                changeOrigin: true,
+                secure: false
+            },
+
+        }
     },
     publicDir: 'public',
-
 });

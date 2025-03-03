@@ -320,20 +320,20 @@ const ModelViewerV2 = () => {
                         </span>
                         {node.isLeaf && (
                             <div className="tree-node-actions flex gap-1">
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => handleEditMarker(node.markerId, node)}
-                                >
-                                    <Edit2 className="h-4 w-4"/>
-                                </Button>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => handleDeleteMarker(node.markerId)}
-                                >
-                                    <Trash2 className="h-4 w-4"/>
-                                </Button>
+                                {/*<Button*/}
+                                {/*    variant="ghost"*/}
+                                {/*    size="icon"*/}
+                                {/*    onClick={() => handleEditMarker(node.markerId, node)}*/}
+                                {/*>*/}
+                                {/*    <Edit2 className="h-4 w-4"/>*/}
+                                {/*</Button>*/}
+                                {/*<Button*/}
+                                {/*    variant="ghost"*/}
+                                {/*    size="icon"*/}
+                                {/*    onClick={() => handleDeleteMarker(node.markerId)}*/}
+                                {/*>*/}
+                                {/*    <Trash2 className="h-4 w-4"/>*/}
+                                {/*</Button>*/}
                             </div>
                         )}
                     </div>
@@ -404,25 +404,7 @@ const ModelViewerV2 = () => {
                 <ScrollArea className="h-full w-full px-4">
                     <div className="py-4">
                         <div className="flex gap-2 mb-4">
-                            <Button variant="outline" size="sm" onClick={handleToggleEdit}>
-                                <Edit2 className="h-4 w-4 mr-2"/>
-                                {isEditing ? '完成编辑' : '编辑'}
-                            </Button>
-                            {isEditing && (
-                                <>
-                                    <Button
-                                        variant={isMarking ? "default" : "outline"}
-                                        size="sm"
-                                        onClick={handleToggleMarking}
-                                    >
-                                        {isMarking ? '停止标记' : '开始标记'}
-                                    </Button>
-                                    <Button variant="outline" size="sm" onClick={handleExport}>
-                                        <Download className="h-4 w-4 mr-2"/>
-                                        导出
-                                    </Button>
-                                </>
-                            )}
+
                         </div>
                         {renderTreeNodes(markerTree)}
                     </div>

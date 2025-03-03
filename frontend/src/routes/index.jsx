@@ -21,8 +21,12 @@ import CommentManagement from "@/components/admin/comment/CommentManagement.jsx"
 import MyComment from "@/components/admin/comment/MyComment.jsx";
 import ModelEditor from "@/pages/modelEdit/ModelEdit.jsx";
 import PrivateBuilderEditRoute from "@/components/Guard/PrivateBuilderEditRoute.jsx";
-import ARDemo from "@/pages/ARModelEditor/ARDemo.jsx";
+import ARDemo1 from "@/pages/ARModelEditor/ARDemo.jsx";
+
 import ModelViewerV2 from "@/pages/modelViewer/ModelViewerV2.jsx";
+import MyModels from "@/components/admin/model/MyModels.jsx";
+import MyModelsUploads from "@/components/admin/model/MyModelsUploads.jsx";
+import ModelsPage from "@/pages/models/ModelsPage.jsx";
 
 
 // 页面组件导入...
@@ -45,6 +49,10 @@ const router = createBrowserRouter([
             {
                 path: 'map',
                 element: <MapPage/>
+            },
+            {
+                path:'models',
+                element: <ModelsPage/>
             },
             // 公开文章路由
             {
@@ -83,9 +91,10 @@ const router = createBrowserRouter([
                 ]
             },
             {
-                path: 'ar-demo',
-                element: <ARDemo />
+                path: 'ar1/:builderId',
+                element: <ARDemo1 />
             },
+
             // 后台管理路由
             {
                 path: 'admin',
@@ -117,6 +126,21 @@ const router = createBrowserRouter([
                         ]
                     },
                     // 模型管理模块
+                    {
+                            path: 'models',
+                        children: [
+                            {
+                                index: true,
+                                element: <MyModels />
+                            },
+                            {
+                                path: 'create',
+                                element: <MyModelsUploads />
+
+                            }
+
+                        ]
+                    },
 
                     // 评论管理模块
                     {
