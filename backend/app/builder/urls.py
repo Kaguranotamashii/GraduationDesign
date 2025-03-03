@@ -32,6 +32,14 @@ urlpatterns = [
     path('update-builder-info/<int:pk>/', views.update_builder_info, name='update_builder_info'),
 
 
+    # 新增的路由，用于管理我的模型
+    path('my-models/', views.get_my_models, name='get_my_models_paginated'),
+    path('my-models/<int:pk>/', views.get_model_detail, name='get_my_model_detail'),
+    path('my-models/<int:pk>/update/', views.update_my_model, name='update_my_model'),
+    path('my-models/<int:pk>/delete/', views.delete_my_model, name='delete_my_model'),
+
+    path('models-with-3d/', views.get_all_models_with_3d, name='get_all_models_with_3d'),
+
 
 
 ]

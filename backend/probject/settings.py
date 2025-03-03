@@ -33,7 +33,7 @@ SECRET_KEY = 'django-insecure-dx52(m5pb3ksr1vaxi8ol@1-+f%x@2p2c*d66pl9gwlukjd4xm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -53,6 +53,10 @@ INSTALLED_APPS = [
     'app.analytics.apps.AnalyticsConfig',
     'app.public.apps.PublicConfig',
     'django_celery_beat',
+
+
+    'sslserver',
+    'django_extensions',
 
 
 
