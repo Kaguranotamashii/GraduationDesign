@@ -162,25 +162,63 @@ def get_my_models(request):
     return paginator.get_paginated_response(serializer.data)
 
 
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Builder
+from .serializers import BuilderSerializer
+
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Builder
+from .serializers import BuilderSerializer
+from django.conf import settings
+
 @api_view(['GET'])
 def get_all_models(request):
     """
-    获取所有建筑模型列表
+    获取所有建筑模型列表，包含模型文件URL（有则返回URL，无则返回null）和关联文章ID
     """
     try:
+        # 获取所有建筑模型并按创建时间倒序排列
         queryset = Builder.objects.all().order_by('-created_at')
         serializer = BuilderSerializer(queryset, many=True)
+
+        # 获取基本序列化数据
+        data = serializer.data
+
+        # 为每个建筑添加额外的信息
+        enhanced_data = []
+        for idx, builder in enumerate(queryset):
+            builder_data = dict(data[idx])
+            # 修改 has_model：有模型返回 model_url，无模型返回 null
+            builder_data['has_model'] = (
+                f"{settings.URL_BASE}/media/{builder.model}" if builder.model else None
+            )
+            # 获取关联的文章ID（如果存在）
+            related_article = builder.articles.first()  # 获取第一个关联文章
+            builder_data['article_id'] = related_article.id if related_article else None
+
+            enhanced_data.append(builder_data)
+
         return Response(
-            {"code": 200, "data": serializer.data},
+            {
+                "code": 200,
+                "data": enhanced_data
+            },
             status=status.HTTP_200_OK
         )
     except Exception as e:
         print(f"Error: {str(e)}")
         return Response(
-            {"code": 500, "message": "Internal Server Error"},
+            {
+                "code": 500,
+                "message": "Internal Server Error"
+            },
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
-
 
 from django.db.models import Q
 from datetime import datetime
