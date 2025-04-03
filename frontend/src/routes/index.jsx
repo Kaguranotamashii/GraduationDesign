@@ -27,6 +27,8 @@ import ModelViewerV2 from "@/pages/modelViewer/ModelViewerV2.jsx";
 import MyModels from "@/components/admin/model/MyModels.jsx";
 import MyModelsUploads from "@/components/admin/model/MyModelsUploads.jsx";
 import ModelsPage from "@/pages/models/ModelsPage.jsx";
+import PrivacyPolicy from "@/pages/PrivacyPolicy/PrivacyPolicy.jsx";
+import TermsOfUse from "@/pages/TermsOfUse/TermsOfUse.jsx";
 
 
 // 页面组件导入...
@@ -94,6 +96,16 @@ const router = createBrowserRouter([
                 path: 'ar1/:builderId',
                 element: <ARDemo1 />
             },
+
+            {
+                path: 'privacy',
+                element: <PrivacyPolicy />
+            },
+            {
+                path: 'terms',
+                element: <TermsOfUse />
+            },
+
 
             // 后台管理路由
             {

@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { MessageSquare, GithubIcon, Instagram, BookOpen, Mail } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
 
 const Footer = () => {
-    const location = useLocation();
+
+    const location = useLocation(); // Correct usage of useLocation hook
+    const prevPathname = useRef(location.pathname); // Initialize prevPathname with the current path
 
     // 判断是否在管理界面
     const isAdminPage = location.pathname.includes('/admin');
@@ -35,6 +37,19 @@ const Footer = () => {
             { icon: <Mail className="w-5 h-5" />, href: '#', label: '邮件', color: 'hover:text-yellow-500' }
         ]
     };
+
+    // 滚动到顶部的功能
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    useEffect(() => {
+        // 如果路径发生变化，滚动到顶部
+        if (location.pathname !== prevPathname.current) {
+            scrollToTop();
+            prevPathname.current = location.pathname; // 更新前一个路径
+        }
+    }, [location]); // 依赖项是 location，意味着当 location 改变时才触发
 
     // 管理界面使用简化版页脚
     if (isAdminPage) {
@@ -186,42 +201,17 @@ const Footer = () => {
                     </div>
                 </div>
 
-                {/* 装饰性波浪 */}
-                <div className="absolute bottom-0 left-0 right-0 h-8 bg-[url('/src/assets/images/wave-pattern.png')] bg-repeat-x opacity-10"></div>
-            </div>
-
-            {/* 装饰性流动线条 - 可以用CSS实现 */}
-            <div className="absolute inset-0 overflow-hidden opacity-10 pointer-events-none">
-                <div className="flowing-lines"></div>
+                {/* 回到顶部按钮 */}
+                <button
+                    onClick={scrollToTop}
+                    className="fixed bottom-10 right-10 p-4 bg-red-800 text-white rounded-full shadow-lg hover:bg-red-600 transition-colors"
+                    aria-label="回到顶部"
+                >
+                    ↑
+                </button>
             </div>
         </footer>
     );
 };
-
-// 在你的全局CSS中添加以下样式来实现装饰性流动线条
-/*
-.flowing-lines {
-  position: absolute;
-  width: 200%;
-  height: 100%;
-  background: repeating-linear-gradient(
-    45deg,
-    transparent,
-    transparent 80px,
-    rgba(255, 215, 0, 0.1) 80px,
-    rgba(255, 215, 0, 0.1) 160px
-  );
-  animation: flow 20s linear infinite;
-}
-
-@keyframes flow {
-  0% {
-    transform: translateX(0) translateY(0);
-  }
-  100% {
-    transform: translateX(-50%) translateY(0);
-  }
-}
-*/
 
 export default Footer;
