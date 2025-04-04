@@ -4,7 +4,7 @@ import fs from 'fs';
 import tailwindcss from '@tailwindcss/vite'
 import path from "path"
 
-var url = ' http://10.153.211.63:8005'
+var url = 'http://10.157.248.175:8005'
 
 export default defineConfig({
     plugins: [
