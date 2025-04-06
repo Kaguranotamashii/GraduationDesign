@@ -41,6 +41,8 @@ viteProcess.stdout.on('data', (data) => {
         // 写入更新后的配置文件
         fs.writeFileSync(configFilePath, configContent, 'utf-8');
 
+
+        console.log( cleanedLog )
         console.log(`已更新 URL 为：${newUrl}`);
     }
 });

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Form, Input, Button, Modal, message } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Form, Input, Button, Modal, message, Spin } from 'antd'; // Import Spin for a more prominent loading indicator
 import { useDispatch } from 'react-redux';
 import { setToken, setUser } from '../../store/authSlice';
 import {loginUser, registerUser, sendVerificationEmail} from "../../api/userApi";
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Auth = () => {
     const [loginModalOpen, setLoginModalOpen] = useState(false);
@@ -12,6 +13,8 @@ const Auth = () => {
     const [countdown, setCountdown] = useState(0);
     const dispatch = useDispatch();
     const [form] = Form.useForm();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const startCountdown = () => {
         setCountdown(60);
@@ -56,6 +59,16 @@ const Auth = () => {
                 dispatch(setUser(response.data.user));
                 message.success('登录成功');
                 setLoginModalOpen(false);
+                // Introduce a small delay before navigation to allow modal to fully close
+                setTimeout(() => {
+                    if (window.history.length > 1 && location.pathname === '/auth') {
+                        navigate(-1);
+                    } else if (location.pathname === '/auth') {
+                        navigate('/'); // Or your default dashboard route
+                    }
+                }, 300); // Adjust the delay as needed (milliseconds)
+            } else {
+                message.error('登录失败'); // Ensure an error message is shown for non-200 responses
             }
         } catch (error) {
             message.error('登录失败');
@@ -120,6 +133,10 @@ const Auth = () => {
                     form={form}
                     onFinish={handleLogin}
                     layout="vertical"
+                    initialValues={{
+                        username: 'root',
+                        password: '12345678',
+                    }}
                 >
                     <Form.Item
                         name="username"
@@ -156,7 +173,7 @@ const Auth = () => {
                             loading={loading}
                             className="w-full h-10 rounded-full bg-black hover:bg-gray-800"
                         >
-                            登录
+                            {loading ? <Spin size="small" /> : '登录'} {/* Display a Spin component when loading */}
                         </Button>
                     </Form.Item>
                 </Form>
@@ -185,6 +202,7 @@ const Auth = () => {
             width={600}
             centered
         >
+            {/* ... RegisterModal content remains the same ... */}
             <div className="p-8">
                 <div className="flex justify-center mb-6">
                     <img src="/logo.png" alt="Logo" className="h-8" />
@@ -270,7 +288,7 @@ const Auth = () => {
                                 disabled={countdown > 0 || sendingCode}
                                 size="large"
                             >
-                                {countdown > 0 ? `${countdown}s` : '获取验证码'}
+                                {sendingCode ? '发送中...' : countdown > 0 ? `${countdown}s` : '获取验证码'}
                             </Button>
                         </div>
                     </Form.Item>
@@ -282,7 +300,7 @@ const Auth = () => {
                             loading={loading}
                             className="w-full h-10 rounded-full bg-black hover:bg-gray-800"
                         >
-                            注册
+                            {loading ? <Spin size="small" /> : '注册'} {/* You might want a separate loading state for registration */}
                         </Button>
                     </Form.Item>
                 </Form>
@@ -306,12 +324,12 @@ const Auth = () => {
     return (
         <div className="flex flex-col min-h-screen">
             <div className="flex flex-1">
-                {/* 左侧Logo区域 */}
+                {/* Left Logo Area */}
                 <div className="flex items-center justify-center w-1/2 p-8">
                     <img src="/logo.png" alt="Logo" className="max-w-md w-full" />
                 </div>
 
-                {/* 右侧内容区域 */}
+                {/* Right Content Area */}
                 <div className="flex flex-col justify-center w-1/2 p-8">
                     <h1 className="text-6xl font-bold mb-12">正在发生</h1>
                     <h2 className="text-3xl font-bold mb-8">现在加入</h2>
@@ -362,7 +380,7 @@ const Auth = () => {
                 <RegisterModal />
             </div>
 
-            {/* 页脚 */}
+            {/* Footer */}
             <nav className="flex flex-wrap justify-center gap-x-4 gap-y-2 px-4 py-3 text-sm text-gray-500">
                 <a href="/about" className="hover:underline">关于</a>
 

@@ -512,25 +512,6 @@ const ArticleList = () => {
                     // 尝试获取所有文章以获取准确的标签计数
                     let allArticles = response.data.results || [];
 
-                    // 如果分页且有更多文章，尝试获取所有文章
-                    if (response.data.count > pagination.pageSize) {
-                        try {
-                            // 直接请求大量文章可能导致性能问题，可以考虑限制一个合理的数量
-                            const maxArticles = Math.min(1000, response.data.count);
-                            const fullResponse = await searchArticlesV2({
-                                page: 1,
-                                page_size: maxArticles,
-                                status: 'published'
-                            });
-
-                            if (fullResponse?.code === 200 && fullResponse.data?.results) {
-                                allArticles = fullResponse.data.results;
-                                console.log(`Retrieved ${allArticles.length} articles for tag counting`);
-                            }
-                        } catch (err) {
-                            console.error('Error fetching all articles for tag counting:', err);
-                        }
-                    }
 
                     // 使用改进的计数逻辑计算标签数量
                     calculateTagCounts(allArticles);
