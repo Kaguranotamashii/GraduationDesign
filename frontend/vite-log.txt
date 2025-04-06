@@ -1,0 +1,851 @@
+
+  [32m[1mVITE[22m v6.0.11[39m  [2mready in [0m[1m534[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttps://localhost:[1m5173[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttps://169.254.154.113:[1m5173[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttps://169.254.233.85:[1m5173[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttps://10.157.248.175:[1m5173[22m/[39m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+
+  VITE v6.0.11  ready in 487 ms
+
+  ➜  Local:   https://localhost:5173/
+  ➜  Network: https://169.254.154.113:5173/
+  ➜  Network: https://169.254.233.85:5173/
+  ➜  Network: https://10.157.248.175:5173/
+20:21:22 [vite] vite.config.js changed, restarting server...
+20:21:22 [vite] server restarted.
+
+  VITE v6.0.11  ready in 507 ms
+
+  ➜  Local:   https://localhost:5173/
+  ➜  Network: https://169.254.154.113:5173/
+  ➜  Network: https://169.254.233.85:5173/
+  ➜  Network: https://10.157.248.175:5173/
+20:23:49 [vite] vite.config.js changed, restarting server...
+20:23:49 [vite] server restarted.
+20:52:06 [vite] (client) hmr update /src/pages/map/components/HeritageMarkers.jsx
+20:58:41 [vite] (client) hmr update /src/pages/map/components/HeritageMarkers.jsx
+21:00:25 [vite] (client) hmr update /src/pages/map/components/HeritageMarkers.jsx
+21:03:10 [vite] (client) hmr update /src/pages/map/components/HeritageMarkers.jsx
+21:04:16 [vite] (client) hmr update /src/pages/map/components/HeritageMarkers.jsx
+21:09:34 [vite] (client) hmr update /src/pages/map/components/HeritageMarkers.jsx
+21:16:27 [vite] (client) hmr update /src/components/home/Navbar.jsx
+21:18:42 [vite] (client) hmr update /src/components/home/Navbar.jsx
+21:22:33 [vite] (client) hmr update /src/components/home/Navbar.jsx
+21:23:21 [vite] (client) hmr update /src/components/home/Navbar.jsx
+21:29:28 [vite] (client) hmr update /src/components/home/Navbar.jsx
+21:32:15 [vite] (client) hmr update /src/components/home/Footer.jsx
+21:34:45 [vite] (client) hmr update /src/components/home/Footer.jsx
+21:37:06 [vite] (client) hmr update /src/components/home/Footer.jsx
+21:37:17 [vite] (client) hmr update /src/components/home/Footer.jsx
+21:39:04 [vite] (client) hmr update /src/components/home/Footer.jsx
+21:40:45 [vite] (client) hmr update /src/components/home/Footer.jsx
+21:44:24 [vite] (client) hmr update /src/components/home/Footer.jsx
+21:48:04 [vite] (client) hmr update /src/components/home/Footer.jsx
+21:48:18 [vite] (client) hmr update /src/components/home/Footer.jsx
+21:48:40 [vite] (client) hmr update /src/components/home/Footer.jsx
+21:48:48 [vite] (client) hmr update /src/components/home/Footer.jsx
+21:48:52 [vite] (client) hmr update /src/components/home/Footer.jsx
+21:49:02 [vite] (client) hmr update /src/components/home/Footer.jsx
+21:49:10 [vite] (client) hmr update /src/components/home/Footer.jsx
+21:49:17 [vite] (client) hmr update /src/components/home/Footer.jsx
+21:49:22 [vite] (client) hmr update /src/components/home/Footer.jsx
+21:49:27 [vite] (client) hmr update /src/components/home/Footer.jsx
+21:49:49 [vite] (client) hmr update /src/components/home/Footer.jsx
+21:49:52 [vite] (client) hmr update /src/components/home/Footer.jsx
+21:50:02 [vite] (client) hmr update /src/components/home/Footer.jsx
+
+  VITE v6.0.11  ready in 3470 ms
+
+  ➜  Local:   https://localhost:5173/
+  ➜  Network: https://169.254.154.113:5173/
+  ➜  Network: https://169.254.233.85:5173/
+  ➜  Network: https://10.157.69.198:5173/
+19:36:47 [vite] vite.config.js changed, restarting server...
+19:36:48 [vite] server restarted.
+19:39:13 [vite] (client) hmr update /src/pages/home/index.jsx
+19:40:07 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+19:40:07 [vite] (client) hmr invalidate /src/pages/home/HomeComponents.jsx Could not Fast Refresh (export removed)
+19:40:07 [vite] (client) hmr update /src/pages/home/index.jsx
+19:42:40 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+19:42:40 [vite] Internal server error: G:\GraduationDesign\probject\frontend\src\pages\home\HomeComponents.jsx: Identifier 'React' has already been declared. (56:7)
+
+  54 | );
+  55 |
+> 56 | import React from 'react';
+     |        ^
+  57 |
+  58 | export const FeatureSection = ({ featureRef }) => (
+  59 |     <section
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/pages/home/HomeComponents.jsx:56:7
+  56 |  import React from 'react';
+  57 |  
+  58 |  export const FeatureSection = ({ featureRef }) => (
+     |                                    ^
+  59 |      <section
+  60 |          ref={featureRef}
+      at constructor (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:360:19)
+      at JSXParserMixin.raise (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3327:19)
+      at ScopeHandler.checkRedeclarationInScope (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:1555:19)
+      at ScopeHandler.declareName (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:1521:12)
+      at JSXParserMixin.declareNameFromIdentifier (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:7476:16)
+      at JSXParserMixin.checkIdentifier (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:7472:12)
+      at JSXParserMixin.checkLVal (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:7413:12)
+      at JSXParserMixin.finishImportSpecifier (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13888:10)
+      at JSXParserMixin.parseImportSpecifierLocal (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13885:31)
+      at JSXParserMixin.maybeParseDefaultImportSpecifier (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13991:12)
+      at JSXParserMixin.parseImportSpecifiersAndAfter (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13862:29)
+      at JSXParserMixin.parseImport (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13858:17)
+      at JSXParserMixin.parseStatementContent (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12504:27)
+      at JSXParserMixin.parseStatementLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12396:17)
+      at JSXParserMixin.parseModuleItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12373:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12950:36)
+      at JSXParserMixin.parseBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12943:10)
+      at JSXParserMixin.parseProgram (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12270:10)
+      at JSXParserMixin.parseTopLevel (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12260:25)
+      at JSXParserMixin.parse (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:14110:10)
+      at parse (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:14144:38)
+      at parser (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\parser\index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\transformation\normalize-file.js:64:37)
+      at normalizeFile.next (<anonymous>)
+      at run (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\transformation\index.js:22:50)
+      at run.next (<anonymous>)
+      at transform (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\transform.js:22:33)
+      at transform.next (<anonymous>)
+      at step (G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:261:32)
+      at G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:273:13
+      at async.call.result.err.err (G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:223:11)
+      at G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:189:28
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\gensync-utils\async.js:67:7
+      at G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:113:33
+      at step (G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:287:14)
+      at G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:273:13
+      at async.call.result.err.err (G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:223:11)
+19:42:51 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+19:43:01 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+19:45:15 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+19:45:30 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+19:45:30 [vite] Internal server error: G:\GraduationDesign\probject\frontend\src\pages\home\HomeComponents.jsx: Identifier 'React' has already been declared. (56:7)
+
+  54 | );
+  55 |
+> 56 | import React from 'react';
+     |        ^
+  57 |
+  58 | export const FeatureSection = ({ featureRef }) => (
+  59 |     <section
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/pages/home/HomeComponents.jsx:56:7
+  56 |  import React from 'react';
+  57 |  
+  58 |  export const FeatureSection = ({ featureRef }) => (
+     |                                    ^
+  59 |      <section
+  60 |          ref={featureRef}
+      at constructor (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:360:19)
+      at JSXParserMixin.raise (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3327:19)
+      at ScopeHandler.checkRedeclarationInScope (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:1555:19)
+      at ScopeHandler.declareName (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:1521:12)
+      at JSXParserMixin.declareNameFromIdentifier (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:7476:16)
+      at JSXParserMixin.checkIdentifier (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:7472:12)
+      at JSXParserMixin.checkLVal (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:7413:12)
+      at JSXParserMixin.finishImportSpecifier (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13888:10)
+      at JSXParserMixin.parseImportSpecifierLocal (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13885:31)
+      at JSXParserMixin.maybeParseDefaultImportSpecifier (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13991:12)
+      at JSXParserMixin.parseImportSpecifiersAndAfter (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13862:29)
+      at JSXParserMixin.parseImport (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13858:17)
+      at JSXParserMixin.parseStatementContent (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12504:27)
+      at JSXParserMixin.parseStatementLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12396:17)
+      at JSXParserMixin.parseModuleItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12373:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12950:36)
+      at JSXParserMixin.parseBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12943:10)
+      at JSXParserMixin.parseProgram (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12270:10)
+      at JSXParserMixin.parseTopLevel (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12260:25)
+      at JSXParserMixin.parse (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:14110:10)
+      at parse (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:14144:38)
+      at parser (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\parser\index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\transformation\normalize-file.js:64:37)
+      at normalizeFile.next (<anonymous>)
+      at run (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\transformation\index.js:22:50)
+      at run.next (<anonymous>)
+      at transform (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\transform.js:22:33)
+      at transform.next (<anonymous>)
+      at step (G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:261:32)
+      at G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:273:13
+      at async.call.result.err.err (G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:223:11)
+      at G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:189:28
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\gensync-utils\async.js:67:7
+      at G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:113:33
+      at step (G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:287:14)
+      at G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:273:13
+      at async.call.result.err.err (G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:223:11)
+19:45:32 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+19:45:35 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+19:45:35 [vite] (client) hmr invalidate /src/pages/home/HomeComponents.jsx Could not Fast Refresh (new export)
+19:45:35 [vite] (client) hmr update /src/pages/home/index.jsx
+19:46:26 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+19:46:50 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+19:46:50 [vite] (client) hmr invalidate /src/pages/home/HomeComponents.jsx Could not Fast Refresh (export removed)
+19:46:50 [vite] (client) hmr update /src/pages/home/index.jsx
+19:47:15 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+19:47:15 [vite] (client) hmr invalidate /src/pages/home/HomeComponents.jsx Could not Fast Refresh (export removed)
+19:47:15 [vite] (client) hmr update /src/pages/home/index.jsx
+19:47:36 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+19:48:00 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+19:48:20 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+19:49:58 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+19:50:50 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+19:52:18 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+19:53:33 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+19:53:33 [vite] Internal server error: G:\GraduationDesign\probject\frontend\src\pages\home\HomeComponents.jsx: Identifier 'React' has already been declared. (57:7)
+
+  55 |     </div>
+  56 | );
+> 57 | import React from 'react';
+     |        ^
+  58 |
+  59 | export const FeatureSection = ({ featureRef }) => (
+  60 |     <section
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/pages/home/HomeComponents.jsx:57:7
+  57 |  import React from 'react';
+  58 |  
+  59 |  export const FeatureSection = ({ featureRef }) => (
+     |                                     ^
+  60 |      <section
+  61 |          ref={featureRef}
+      at constructor (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:360:19)
+      at JSXParserMixin.raise (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3327:19)
+      at ScopeHandler.checkRedeclarationInScope (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:1555:19)
+      at ScopeHandler.declareName (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:1521:12)
+      at JSXParserMixin.declareNameFromIdentifier (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:7476:16)
+      at JSXParserMixin.checkIdentifier (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:7472:12)
+      at JSXParserMixin.checkLVal (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:7413:12)
+      at JSXParserMixin.finishImportSpecifier (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13888:10)
+      at JSXParserMixin.parseImportSpecifierLocal (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13885:31)
+      at JSXParserMixin.maybeParseDefaultImportSpecifier (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13991:12)
+      at JSXParserMixin.parseImportSpecifiersAndAfter (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13862:29)
+      at JSXParserMixin.parseImport (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13858:17)
+      at JSXParserMixin.parseStatementContent (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12504:27)
+      at JSXParserMixin.parseStatementLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12396:17)
+      at JSXParserMixin.parseModuleItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12373:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12950:36)
+      at JSXParserMixin.parseBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12943:10)
+      at JSXParserMixin.parseProgram (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12270:10)
+      at JSXParserMixin.parseTopLevel (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12260:25)
+      at JSXParserMixin.parse (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:14110:10)
+      at parse (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:14144:38)
+      at parser (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\parser\index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\transformation\normalize-file.js:64:37)
+      at normalizeFile.next (<anonymous>)
+      at run (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\transformation\index.js:22:50)
+      at run.next (<anonymous>)
+      at transform (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\transform.js:22:33)
+      at transform.next (<anonymous>)
+      at step (G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:261:32)
+      at G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:273:13
+      at async.call.result.err.err (G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:223:11)
+      at G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:189:28
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\gensync-utils\async.js:67:7
+      at G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:113:33
+      at step (G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:287:14)
+      at G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:273:13
+      at async.call.result.err.err (G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:223:11)
+19:53:39 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+19:53:54 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+19:54:04 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+19:55:00 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+19:56:40 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+19:58:51 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+20:03:20 [vite] (client) hmr update /src/pages/auth/Auth.jsx
+20:03:20 [vite] Internal server error: Failed to resolve import "./Auth.css" from "src/pages/auth/Auth.jsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: G:/GraduationDesign/probject/frontend/src/pages/auth/Auth.jsx:7:7
+  22 |  import { setToken, setUser } from "../../store/authSlice";
+  23 |  import { loginUser, registerUser, sendVerificationEmail } from "../../api/userApi";
+  24 |  import "./Auth.css";
+     |          ^
+  25 |  const Auth = () => {
+  26 |    _s();
+      at TransformPluginContext._formatError (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:47574:41)
+      at TransformPluginContext.error (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:47569:16)
+      at normalizeUrl (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:45818:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:45937:39
+      at async Promise.all (index 9)
+      at async TransformPluginContext.transform (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:45864:7)
+      at async EnvironmentPluginContainer.transform (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:47400:18)
+      at async loadAndTransform (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:41198:27)
+      at async viteTransformMiddleware (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:42642:24)
+20:03:39 [vite] (client) hmr update /src/App.jsx
+20:03:56 [vite] (client) hmr update /src/pages/auth/Auth.jsx
+20:04:39 [vite] (client) hmr update /src/pages/auth/Auth.jsx
+20:07:51 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+20:08:07 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+20:08:17 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+20:08:20 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+20:09:09 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+20:09:10 [vite] Internal server error: G:\GraduationDesign\probject\frontend\src\pages\home\HomeComponents.jsx: Unexpected token (183:4)
+
+  181 |
+  182 | const ArticleCard = ({ article }) => {
+> 183 |     const excerpt = article.content?.replace(/<[^>]+>/g, '').substring(0, 100) + '...';
+      |     ^
+  184 |     const category = article.tags?.split(',')[0].trim() || '建筑研究';
+  185 |
+  186 |     return (
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/pages/home/HomeComponents.jsx:183:4
+  185|  
+  186|      return (
+  187|          <div className="article-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+     |                   ^
+  188|              <img
+  189|                  src={article.cover_image_url || 'https://via.placeholder.com/400x250'}
+      at constructor (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:360:19)
+      at JSXParserMixin.raise (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3327:19)
+      at JSXParserMixin.unexpected (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3347:16)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11116:16)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at JSXParserMixin.parseExpressionBase (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10465:23)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12090:12)
+      at JSXParserMixin.parseExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:17)
+      at JSXParserMixin.jsxParseExpressionContainer (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6805:31)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6884:36)
+      at JSXParserMixin.jsxParseElement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6922:17)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6932:19)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12090:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11349:28)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at JSXParserMixin.parseFunctionBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11766:24)
+      at JSXParserMixin.parseArrowExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11748:10)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11361:12)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+20:09:18 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+20:09:58 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+20:10:13 [vite] (client) hmr update /src/pages/home/HomeComponents.jsx
+20:13:11 [vite] (client) hmr update /src/pages/auth/Auth.jsx
+20:13:39 [vite] (client) hmr update /src/pages/auth/Auth.jsx
+20:16:03 [vite] (client) hmr update /src/pages/auth/Auth.jsx
+20:23:12 [vite] (client) hmr update /src/pages/articles/list/ArticleList.jsx
+20:24:10 [vite] (client) hmr update /src/pages/articles/list/ArticleList.jsx
+20:24:59 [vite] (client) hmr update /src/pages/articles/list/ArticleList.jsx
+20:25:27 [vite] (client) hmr update /src/pages/articles/list/ArticleList.jsx
+20:31:50 [vite] (client) hmr update /src/pages/models/ModelsPage.jsx
+20:31:54 [vite] (client) hmr update /src/pages/models/ModelsPage.jsx
+20:31:58 [vite] (client) hmr update /src/pages/models/ModelsPage.jsx
+20:32:00 [vite] (client) hmr update /src/pages/models/ModelsPage.jsx
+20:32:44 [vite] (client) hmr update /src/pages/models/ModelsPage.jsx
+20:33:02 [vite] (client) hmr update /src/pages/models/ModelsPage.jsx
+20:34:05 [vite] (client) hmr update /src/pages/models/ModelsPage.jsx
+20:34:13 [vite] (client) hmr update /src/pages/models/ModelsPage.jsx
+20:47:15 [vite] http proxy error: /app/builder/tags/
+Error: connect ECONNREFUSED 10.157.69.198:8005
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)
+20:55:35 [vite] (client) hmr update /src/pages/home/index.jsx, /src/components/admin/article/CreateArticle.jsx, /src/components/Guard/PrivateBuilderEditRoute.jsx, /src/components/admin/model/MyModels.jsx, /src/pages/modelEdit/ModelEdit.jsx, /src/pages/models/ModelsPage.jsx, /src/components/admin/model/ModelManagement.jsx, /src/pages/modelViewer/ModelViewerV2.jsx, /src/components/admin/article/EditArticleModal.jsx, /src/pages/map/components/HeritageMarkers.jsx, /src/pages/map/components/AddHeritageSiteForm.jsx
+20:56:28 [vite] (client) hmr update /src/pages/home/index.jsx, /src/components/admin/article/CreateArticle.jsx, /src/components/Guard/PrivateBuilderEditRoute.jsx, /src/components/admin/model/MyModels.jsx, /src/pages/modelEdit/ModelEdit.jsx, /src/pages/models/ModelsPage.jsx, /src/components/admin/model/ModelManagement.jsx, /src/pages/modelViewer/ModelViewerV2.jsx, /src/components/admin/article/EditArticleModal.jsx, /src/pages/map/components/HeritageMarkers.jsx, /src/pages/map/components/AddHeritageSiteForm.jsx
+20:56:28 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |         const queryString = new URLSearchParams();
+  360 |         // 处理基本参数
+  361 |         if (params.page) queryString.append('page', params.page);
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:28 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |         const queryString = new URLSearchParams();
+  360 |         // 处理基本参数
+  361 |         if (params.page) queryString.append('page', params.page);
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:28 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |         const queryString = new URLSearchParams();
+  360 |         // 处理基本参数
+  361 |         if (params.page) queryString.append('page', params.page);
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:28 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |         const queryString = new URLSearchParams();
+  360 |         // 处理基本参数
+  361 |         if (params.page) queryString.append('page', params.page);
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:28 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |         const queryString = new URLSearchParams();
+  360 |         // 处理基本参数
+  361 |         if (params.page) queryString.append('page', params.page);
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:28 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |         const queryString = new URLSearchParams();
+  360 |         // 处理基本参数
+  361 |         if (params.page) queryString.append('page', params.page);
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:28 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |         const queryString = new URLSearchParams();
+  360 |         // 处理基本参数
+  361 |         if (params.page) queryString.append('page', params.page);
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:28 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |         const queryString = new URLSearchParams();
+  360 |         // 处理基本参数
+  361 |         if (params.page) queryString.append('page', params.page);
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:28 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |         const queryString = new URLSearchParams();
+  360 |         // 处理基本参数
+  361 |         if (params.page) queryString.append('page', params.page);
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:28 [vite] (client) hmr update /src/pages/home/index.jsx, /src/components/admin/article/CreateArticle.jsx, /src/components/Guard/PrivateBuilderEditRoute.jsx, /src/components/admin/model/MyModels.jsx, /src/pages/modelEdit/ModelEdit.jsx, /src/pages/models/ModelsPage.jsx, /src/components/admin/model/ModelManagement.jsx, /src/pages/modelViewer/ModelViewerV2.jsx, /src/components/admin/article/EditArticleModal.jsx, /src/pages/map/components/HeritageMarkers.jsx, /src/pages/map/components/AddHeritageSiteForm.jsx
+20:56:28 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |         const queryString = new URLSearchParams();
+  360 |         // 处理基本参数
+  361 |         if (params.page) queryString.append('page', params.page);
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:28 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |         const queryString = new URLSearchParams();
+  360 |         // 处理基本参数
+  361 |         if (params.page) queryString.append('page', params.page);
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:28 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |         const queryString = new URLSearchParams();
+  360 |         // 处理基本参数
+  361 |         if (params.page) queryString.append('page', params.page);
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:28 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |         const queryString = new URLSearchParams();
+  360 |         // 处理基本参数
+  361 |         if (params.page) queryString.append('page', params.page);
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:28 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |         const queryString = new URLSearchParams();
+  360 |         // 处理基本参数
+  361 |         if (params.page) queryString.append('page', params.page);
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:28 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |         const queryString = new URLSearchParams();
+  360 |         // 处理基本参数
+  361 |         if (params.page) queryString.append('page', params.page);
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:28 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |         const queryString = new URLSearchParams();
+  360 |         // 处理基本参数
+  361 |         if (params.page) queryString.append('page', params.page);
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:28 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |         const queryString = new URLSearchParams();
+  360 |         // 处理基本参数
+  361 |         if (params.page) queryString.append('page', params.page);
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:28 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |         const queryString = new URLSearchParams();
+  360 |         // 处理基本参数
+  361 |         if (params.page) queryString.append('page', params.page);
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:28 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |         const queryString = new URLSearchParams();
+  360 |         // 处理基本参数
+  361 |         if (params.page) queryString.append('page', params.page);
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:28 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |         const queryString = new URLSearchParams();
+  360 |         // 处理基本参数
+  361 |         if (params.page) queryString.append('page', params.page);
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:29 [vite] Internal server error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |         const queryString = new URLSearchParams();
+  360 |         // 处理基本参数
+  361 |         if (params.page) queryString.append('page', params.page);
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+      at constructor (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:360:19)
+      at JSXParserMixin.raise (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3327:19)
+      at JSXParserMixin.parseTryStatement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12858:12)
+      at JSXParserMixin.parseStatementContent (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12433:21)
+      at JSXParserMixin.parseStatementLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12396:17)
+      at JSXParserMixin.parseStatementListItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12376:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12950:61)
+      at JSXParserMixin.parseBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12943:10)
+      at JSXParserMixin.parseBlock (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12931:10)
+      at JSXParserMixin.parseFunctionBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11773:24)
+      at JSXParserMixin.parseArrowExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11748:10)
+      at JSXParserMixin.parseAsyncArrowFromCallExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10929:10)
+      at JSXParserMixin.parseCoverCallAndAsyncArrowHead (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10859:27)
+      at JSXParserMixin.parseSubscript (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10788:19)
+      at JSXParserMixin.parseSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10761:19)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10752:17)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12085:16)
+      at JSXParserMixin.parseMaybeAssignAllowIn (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:17)
+      at JSXParserMixin.parseVar (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13018:91)
+      at JSXParserMixin.parseVarStatement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12864:10)
+      at JSXParserMixin.parseStatementContent (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12479:23)
+      at JSXParserMixin.parseStatementLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12396:17)
+      at JSXParserMixin.parseStatementListItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12376:17)
+      at JSXParserMixin.parseExportDeclaration (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13556:17)
+      at JSXParserMixin.maybeParseExportDeclaration (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13515:31)
+      at JSXParserMixin.parseExport (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13440:29)
+      at JSXParserMixin.parseStatementContent (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12509:27)
+      at JSXParserMixin.parseStatementLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12396:17)
+      at JSXParserMixin.parseModuleItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12373:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12950:36)
+      at JSXParserMixin.parseBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12943:10)
+      at JSXParserMixin.parseProgram (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12270:10)
+      at JSXParserMixin.parseTopLevel (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12260:25)
+      at JSXParserMixin.parse (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:14110:10)
+      at parse (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:14144:38)
+      at parser (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\parser\index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\transformation\normalize-file.js:64:37)
+      at normalizeFile.next (<anonymous>)
+      at run (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\transformation\index.js:22:50)
+      at run.next (<anonymous>)
+      at transform (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\transform.js:22:33)
+      at transform.next (<anonymous>)
+20:56:37 [vite] (client) hmr update /src/pages/home/index.jsx, /src/components/admin/article/CreateArticle.jsx, /src/components/Guard/PrivateBuilderEditRoute.jsx, /src/components/admin/model/MyModels.jsx, /src/pages/modelEdit/ModelEdit.jsx, /src/pages/models/ModelsPage.jsx, /src/components/admin/model/ModelManagement.jsx, /src/pages/modelViewer/ModelViewerV2.jsx, /src/components/admin/article/EditArticleModal.jsx, /src/pages/map/components/HeritageMarkers.jsx, /src/pages/map/components/AddHeritageSiteForm.jsx
+20:56:37 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |
+  360 |     }
+  361 | }
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:37 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |
+  360 |     }
+  361 | }
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:37 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |
+  360 |     }
+  361 | }
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:37 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |
+  360 |     }
+  361 | }
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:37 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |
+  360 |     }
+  361 | }
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:37 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |
+  360 |     }
+  361 | }
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:37 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |
+  360 |     }
+  361 | }
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:37 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |
+  360 |     }
+  361 | }
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:37 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |
+  360 |     }
+  361 | }
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:37 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |
+  360 |     }
+  361 | }
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:56:37 [vite] Internal server error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |
+  360 |     }
+  361 | }
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+      at constructor (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:360:19)
+      at JSXParserMixin.raise (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3327:19)
+      at JSXParserMixin.parseTryStatement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12858:12)
+      at JSXParserMixin.parseStatementContent (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12433:21)
+      at JSXParserMixin.parseStatementLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12396:17)
+      at JSXParserMixin.parseStatementListItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12376:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12950:61)
+      at JSXParserMixin.parseBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12943:10)
+      at JSXParserMixin.parseBlock (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12931:10)
+      at JSXParserMixin.parseFunctionBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11773:24)
+      at JSXParserMixin.parseArrowExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11748:10)
+      at JSXParserMixin.parseAsyncArrowFromCallExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10929:10)
+      at JSXParserMixin.parseCoverCallAndAsyncArrowHead (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10859:27)
+      at JSXParserMixin.parseSubscript (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10788:19)
+      at JSXParserMixin.parseSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10761:19)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10752:17)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12085:16)
+      at JSXParserMixin.parseMaybeAssignAllowIn (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:17)
+      at JSXParserMixin.parseVar (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13018:91)
+      at JSXParserMixin.parseVarStatement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12864:10)
+      at JSXParserMixin.parseStatementContent (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12479:23)
+      at JSXParserMixin.parseStatementLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12396:17)
+      at JSXParserMixin.parseStatementListItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12376:17)
+      at JSXParserMixin.parseExportDeclaration (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13556:17)
+      at JSXParserMixin.maybeParseExportDeclaration (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13515:31)
+      at JSXParserMixin.parseExport (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13440:29)
+      at JSXParserMixin.parseStatementContent (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12509:27)
+      at JSXParserMixin.parseStatementLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12396:17)
+      at JSXParserMixin.parseModuleItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12373:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12950:36)
+      at JSXParserMixin.parseBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12943:10)
+      at JSXParserMixin.parseProgram (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12270:10)
+      at JSXParserMixin.parseTopLevel (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12260:25)
+      at JSXParserMixin.parse (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:14110:10)
+      at parse (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:14144:38)
+      at parser (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\parser\index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\transformation\normalize-file.js:64:37)
+      at normalizeFile.next (<anonymous>)
+      at run (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\transformation\index.js:22:50)
+      at run.next (<anonymous>)
+      at transform (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\transform.js:22:33)
+      at transform.next (<anonymous>)
+20:56:37 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\api\builderApi.jsx: Missing catch or finally clause. (358:4)
+
+  356 | // path('searchModels/', views.search_buildings_models, name='search_buildings'),
+  357 | export const searchBuildingModels = async (params) => {
+> 358 |     try {
+      |     ^
+  359 |
+  360 |     }
+  361 | }
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/api/builderApi.jsx:358:4
+20:58:27 [vite] (client) hmr update /src/pages/models/ModelsPage.jsx
+20:58:27 [vite] (client) hmr update /src/pages/home/index.jsx, /src/components/admin/article/CreateArticle.jsx, /src/components/Guard/PrivateBuilderEditRoute.jsx, /src/components/admin/model/MyModels.jsx, /src/pages/modelEdit/ModelEdit.jsx, /src/pages/models/ModelsPage.jsx, /src/components/admin/model/ModelManagement.jsx, /src/pages/modelViewer/ModelViewerV2.jsx, /src/components/admin/article/EditArticleModal.jsx, /src/pages/map/components/HeritageMarkers.jsx, /src/pages/map/components/AddHeritageSiteForm.jsx
+20:59:37 [vite] (client) hmr update /src/pages/models/ModelsPage.jsx
+21:02:59 [vite] (client) hmr update /src/pages/models/ModelsPage.jsx
