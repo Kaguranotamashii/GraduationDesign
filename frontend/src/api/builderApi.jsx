@@ -325,3 +325,54 @@ export const getAllModelsWithThreeD = async (params = {}) => {
         throw error;
     }
 }
+
+
+
+
+
+
+
+
+// 分类和标签操作
+export const getBuildingCategoriesModels = async () => {
+    try {
+        const response = await apiClient.get('builder/categories_models/');
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching building categories:', error);
+        throw error;
+    }
+}
+
+export const getBuildingTagsModels = async () => {
+    try {
+        const response = await apiClient.get('builder/tags_models/');
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching building tags:', error);
+        throw error;
+    }
+}
+// 搜索建筑物模型（新函数）
+export const searchBuildingModels = async (params = {}) => {
+    try {
+        // 构造查询参数
+        const queryParams = new URLSearchParams();
+        if (params.category) {
+            queryParams.append('category', params.category);
+        }
+        if (params.tag) {
+            queryParams.append('tag', params.tag);
+        }
+
+        // 发送 GET 请求
+        const response = await apiClient.get(`builder/search_buildings_models/?${queryParams.toString()}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error searching building models:', error);
+        throw error;
+    }
+};
+
+
+

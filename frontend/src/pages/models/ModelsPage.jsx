@@ -10,10 +10,12 @@ import {
     BarsOutlined,
     FullscreenOutlined
 } from '@ant-design/icons';
-import { getAllModelsWithThreeD, getBuildingCategories, getBuildingTags } from '@/api/builderApi';
+import { getAllModelsWithThreeD, getBuildingCategoriesModels, getBuildingTagsModels } from '@/api/builderApi';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import Navbar from "@/components/home/Navbar.jsx";
+import Footer from "@/components/home/Footer.jsx";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -372,8 +374,8 @@ const ModelsPage = () => {
         const fetchFilters = async () => {
             try {
                 const [categoriesRes, tagsRes] = await Promise.all([
-                    getBuildingCategories(),
-                    getBuildingTags()
+                    getBuildingCategoriesModels(),
+                    getBuildingTagsModels()
                 ]);
 
                 if (categoriesRes.code === 200) {
@@ -588,14 +590,7 @@ const ModelsPage = () => {
             </div>
 
             <div className="flex items-center justify-center">
-                <Tooltip title="预览模型">
-                    <button
-                        className="w-12 h-12 bg-yellow-600 text-white hover:bg-yellow-500 transition-colors flex items-center justify-center"
-                        onClick={(e) => handlePreviewModel(e, model)}
-                    >
-                        <FullscreenOutlined />
-                    </button>
-                </Tooltip>
+
                 <div className="w-12 h-12 bg-gray-100 group-hover:bg-red-800 transition-colors duration-300 flex items-center justify-center">
                     <EyeOutlined className="text-gray-600 group-hover:text-white transition-colors duration-300" />
                 </div>
@@ -604,135 +599,142 @@ const ModelsPage = () => {
     );
 
     return (
-        <div className="min-h-screen bg-gray-50 py-12">
-            <div className="container mx-auto px-4">
-                {/* 顶部标题 */}
-                <div className="mb-10 text-center">
-                    <h1 className="text-4xl font-bold text-red-800 mb-4 font-serif">古建筑模型库</h1>
-                    <p className="text-gray-600 max-w-2xl mx-auto">
-                        探索中国传统建筑的数字化模型，从不同角度欣赏古建筑的精湛工艺与艺术之美。
-                    </p>
-                </div>
+        <div>
+            <Navbar />
 
-                {/* 过滤器和搜索栏 */}
-                <div className="bg-white p-6 rounded-none shadow-md mb-8 border-l-4 border-red-800">
-                    <div className="flex flex-wrap gap-4 items-center justify-between">
-                        <div className="flex flex-wrap gap-4 items-center">
-                            <Select
-                                placeholder="选择分类"
-                                allowClear
-                                style={{ width: 150 }}
-                                value={categoryFilter}
-                                onChange={handleCategoryChange}
-                                className="rounded-none"
-                            >
-                                {categories.map(category => (
-                                    <Option key={category} value={category}>{category}</Option>
-                                ))}
-                            </Select>
+            <div className="min-h-screen bg-gray-50 py-12">
+                <div className="container mx-auto px-4">
+                    {/* 顶部标题 */}
+                    <div className="mb-10 text-center">
+                        <h1 className="text-4xl font-bold text-red-800 mb-4 font-serif">古建筑模型库</h1>
+                        <p className="text-gray-600 max-w-2xl mx-auto">
+                            探索中国传统建筑的数字化模型，从不同角度欣赏古建筑的精湛工艺与艺术之美。
+                        </p>
+                    </div>
 
-                            <Select
-                                placeholder="选择标签"
-                                mode="multiple"
-                                allowClear
-                                style={{ width: 250 }}
-                                value={tagFilter}
-                                onChange={handleTagChange}
-                                className="rounded-none"
-                                maxTagCount={2}
-                            >
-                                {tags.map(tag => (
-                                    <Option key={tag} value={tag}>{tag}</Option>
-                                ))}
-                            </Select>
+                    {/* 过滤器和搜索栏 */}
+                    <div className="bg-white p-6 rounded-none shadow-md mb-8 border-l-4 border-red-800">
+                        <div className="flex flex-wrap gap-4 items-center justify-between">
+                            <div className="flex flex-wrap gap-4 items-center">
+                                <Select
+                                    placeholder="选择分类"
+                                    allowClear
+                                    style={{width: 150}}
+                                    value={categoryFilter}
+                                    onChange={handleCategoryChange}
+                                    className="rounded-none"
+                                >
+                                    {categories.map(category => (
+                                        <Option key={category} value={category}>{category}</Option>
+                                    ))}
+                                </Select>
 
-                            <Search
-                                placeholder="搜索建筑名称"
-                                onSearch={handleSearch}
-                                style={{ width: 250 }}
-                                className="rounded-none"
+                                <Select
+                                    placeholder="选择标签"
+                                    mode="multiple"
+                                    allowClear
+                                    style={{width: 250}}
+                                    value={tagFilter}
+                                    onChange={handleTagChange}
+                                    className="rounded-none"
+                                    maxTagCount={2}
+                                >
+                                    {tags.map(tag => (
+                                        <Option key={tag} value={tag}>{tag}</Option>
+                                    ))}
+                                </Select>
+
+                                <Search
+                                    placeholder="搜索建筑名称"
+                                    onSearch={handleSearch}
+                                    style={{width: 250}}
+                                    className="rounded-none"
+                                />
+                            </div>
+
+                            <div className="flex items-center gap-4">
+                                <span className="text-gray-500">视图:</span>
+                                <div className="flex border border-gray-300 rounded-none">
+                                    <button
+                                        className={`px-3 py-2 ${viewMode === 'grid' ? 'bg-red-800 text-white' : 'bg-white text-gray-600'}`}
+                                        onClick={() => setViewMode('grid')}
+                                    >
+                                        <AppstoreOutlined/>
+                                    </button>
+                                    <button
+                                        className={`px-3 py-2 ${viewMode === 'list' ? 'bg-red-800 text-white' : 'bg-white text-gray-600'}`}
+                                        onClick={() => setViewMode('list')}
+                                    >
+                                        <BarsOutlined/>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 模型列表 */}
+                    {loading ? (
+                        <div className="flex justify-center items-center h-64">
+                            <Spin size="large"/>
+                        </div>
+                    ) : models.length > 0 ? (
+                        <div className="mb-8">
+                            {viewMode === 'grid' ? (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                    {models.map(model => renderGridItem(model))}
+                                </div>
+                            ) : (
+                                <div className="flex flex-col space-y-4">
+                                    {models.map(model => renderListItem(model))}
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="bg-white p-12 rounded-none shadow-md flex flex-col items-center justify-center">
+                            <Empty description="暂无模型数据"/>
+                            <p className="mt-4 text-gray-500">请尝试调整筛选条件或搜索关键词</p>
+                        </div>
+                    )}
+
+                    {/* 分页 */}
+                    {total > 0 && (
+                        <div className="flex justify-center mt-8">
+                            <Pagination
+                                current={currentPage}
+                                pageSize={pageSize}
+                                total={total}
+                                onChange={handlePageChange}
+                                showSizeChanger
+                                showTotal={(total) => `共 ${total} 个模型`}
                             />
                         </div>
+                    )}
 
-                        <div className="flex items-center gap-4">
-                            <span className="text-gray-500">视图:</span>
-                            <div className="flex border border-gray-300 rounded-none">
-                                <button
-                                    className={`px-3 py-2 ${viewMode === 'grid' ? 'bg-red-800 text-white' : 'bg-white text-gray-600'}`}
-                                    onClick={() => setViewMode('grid')}
-                                >
-                                    <AppstoreOutlined />
-                                </button>
-                                <button
-                                    className={`px-3 py-2 ${viewMode === 'list' ? 'bg-red-800 text-white' : 'bg-white text-gray-600'}`}
-                                    onClick={() => setViewMode('list')}
-                                >
-                                    <BarsOutlined />
-                                </button>
-                            </div>
-                        </div>
+                    {/* 底部说明 */}
+                    <div className="mt-16 bg-gray-100 p-6 rounded-none border-t-2 border-red-800">
+                        <h3 className="text-lg font-bold text-gray-800 mb-3">关于模型库</h3>
+                        <p className="text-gray-600 mb-4">
+                            本模型库收录了众多中国传统建筑的三维数字模型，让您足不出户便可欣赏古代建筑的风采。每个模型均由专业团队精心制作，
+                            力求还原建筑的原貌与细节。通过这些模型，我们希望能够帮助用户更好地了解和欣赏中国古建筑的魅力。
+                        </p>
+                        <p className="text-gray-600">
+                            如果您对模型有任何建议或者希望贡献自己的模型作品，欢迎与我们联系。
+                        </p>
                     </div>
                 </div>
 
-                {/* 模型列表 */}
-                {loading ? (
-                    <div className="flex justify-center items-center h-64">
-                        <Spin size="large" />
-                    </div>
-                ) : models.length > 0 ? (
-                    <div className="mb-8">
-                        {viewMode === 'grid' ? (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                {models.map(model => renderGridItem(model))}
-                            </div>
-                        ) : (
-                            <div className="flex flex-col space-y-4">
-                                {models.map(model => renderListItem(model))}
-                            </div>
-                        )}
-                    </div>
-                ) : (
-                    <div className="bg-white p-12 rounded-none shadow-md flex flex-col items-center justify-center">
-                        <Empty description="暂无模型数据" />
-                        <p className="mt-4 text-gray-500">请尝试调整筛选条件或搜索关键词</p>
-                    </div>
+                {/* 全屏预览模态框 */}
+                {previewModel && (
+                    <ModelPreview
+                        modelUrl={previewModel.model_url}
+                        onClose={handleClosePreview}
+                    />
                 )}
-
-                {/* 分页 */}
-                {total > 0 && (
-                    <div className="flex justify-center mt-8">
-                        <Pagination
-                            current={currentPage}
-                            pageSize={pageSize}
-                            total={total}
-                            onChange={handlePageChange}
-                            showSizeChanger
-                            showTotal={(total) => `共 ${total} 个模型`}
-                        />
-                    </div>
-                )}
-
-                {/* 底部说明 */}
-                <div className="mt-16 bg-gray-100 p-6 rounded-none border-t-2 border-red-800">
-                    <h3 className="text-lg font-bold text-gray-800 mb-3">关于模型库</h3>
-                    <p className="text-gray-600 mb-4">
-                        本模型库收录了众多中国传统建筑的三维数字模型，让您足不出户便可欣赏古代建筑的风采。每个模型均由专业团队精心制作，
-                        力求还原建筑的原貌与细节。通过这些模型，我们希望能够帮助用户更好地了解和欣赏中国古建筑的魅力。
-                    </p>
-                    <p className="text-gray-600">
-                        如果您对模型有任何建议或者希望贡献自己的模型作品，欢迎与我们联系。
-                    </p>
-                </div>
             </div>
-
-            {/* 全屏预览模态框 */}
-            {previewModel && (
-                <ModelPreview
-                    modelUrl={previewModel.model_url}
-                    onClose={handleClosePreview}
-                />
-            )}
+            <Footer />
         </div>
+
+
     );
 };
 

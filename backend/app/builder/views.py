@@ -1025,3 +1025,78 @@ def get_all_models_with_3d(request):
 
 # 然后在 urls.py 中添加这个路由
 # path('models-with-3d/', views.get_all_models_with_3d, name='get_all_models_with_3d'),
+
+
+
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import Builder
+from django.db.models import Q
+
+@api_view(['GET'])
+def get_building_categories_models(request):
+    """获取包含模型地址的建筑物分类列表（排除空字符串和 NULL）"""
+    # 筛选 model 不为 NULL 且不为空字符串的记录
+    categories = (
+        Builder.objects
+        .filter(~Q(model__isnull=True) & ~Q(model=""))  # 排除 NULL 和空字符串
+        .values_list('category', flat=True)
+        .distinct()
+    )
+    return Response({
+        "code": 200,
+        "data": list(categories)  # 预期返回 ["祭祀建筑"]
+    })
+
+@api_view(['GET'])
+def get_building_tags_models(request):
+    """获取包含模型地址的建筑物标签列表（排除空字符串和 NULL）"""
+    # 筛选 model 不为 NULL 且不为空字符串的记录
+    tags_queryset = (
+        Builder.objects
+        .filter(~Q(model__isnull=True) & ~Q(model=""))  # 排除 NULL 和空字符串
+        .values_list('tags', flat=True)
+    )
+
+    # 处理标签
+    all_tags = []
+    for tag_str in tags_queryset:
+        if tag_str:  # 确保 tags 不为空
+            all_tags.extend([t.strip() for t in tag_str.split(',')])
+
+    # 去重
+    unique_tags = list(set(all_tags))  # 预期返回 ["明代建筑", "宗教建筑"]
+
+    return Response({
+        "code": 200,
+        "data": unique_tags
+    })
+
+@api_view(['GET'])
+def search_buildings_models(request):
+    """搜索包含模型地址的建筑物（排除空字符串和 NULL）"""
+    category = request.query_params.get('category', None)
+    tag = request.query_params.get('tag', None)
+
+    # 基础查询：model 不为 NULL 且不为空字符串
+    queryset = Builder.objects.filter(~Q(model__isnull=True) & ~Q(model=""))
+
+    # 根据 category 过滤（可选）
+    if category:
+        queryset = queryset.filter(category=category)
+
+    # 根据 tag 过滤（可选，模糊匹配）
+    if tag:
+        queryset = queryset.filter(tags__icontains=tag)
+
+    # 去重
+    queryset = queryset.distinct()
+
+    # 序列化返回结果
+    from .serializers import BuilderSerializer
+    serializer = BuilderSerializer(queryset, many=True)
+    return Response({
+        "code": 200,
+        "data": serializer.data  # 预期只返回天坛相关数据
+    })

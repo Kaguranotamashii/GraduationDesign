@@ -13,6 +13,12 @@ urlpatterns = [
     path('tags/', views.get_building_tags, name='get_building_tags'),
 
 
+    path('categories_models/', views.get_building_categories_models, name='get_building_categories'),
+    path('tags_models/', views.get_building_tags_models, name='get_building_tags'),
+    # 搜索
+    path('searchModels/', views.search_buildings_models, name='search_buildings'),
+
+
 
     path('delete-model/<int:pk>/', views.delete_model_file, name='delete_model_file'),
     path('update-json/<int:pk>/', views.update_model_json, name='update_model_json'),
