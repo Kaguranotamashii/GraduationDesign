@@ -77,3 +77,80 @@ Press CTRL+C to quit
 10.157.69.198 - - [06/Apr/2025 22:46:36] "GET /app/article/articles/top-articles/ HTTP/1.1" 200 -
 10.157.69.198 - - [06/Apr/2025 22:46:36] "GET /app/article/articles/featured/list/ HTTP/1.1" 200 -
 10.157.69.198 - - [06/Apr/2025 22:46:36] "GET /app/builder/all/ HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 22:47:31] "GET /app/builder/details/367/ HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 22:47:31] "HEAD /media/models/2025/02/3e4bbccc-378d-4f55-a872-ae0be56e122f.glb HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 22:49:28] "GET /app/builder/categories_models/ HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 22:49:28] "GET /app/builder/tags_models/ HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 22:49:28] "GET /app/builder/models-with-3d/?has_model=1&page=1&page_size=12 HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 22:49:29] "GET /media/models/2025/02/3e4bbccc-378d-4f55-a872-ae0be56e122f.glb HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 22:49:30] "GET /media/models/2025/02/3e4bbccc-378d-4f55-a872-ae0be56e122f.glb HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 22:49:31] "GET /app/builder/details/367/ HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 22:49:31] "GET /media/models/2025/02/3e4bbccc-378d-4f55-a872-ae0be56e122f.glb HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 22:53:12] "GET /app/builder/details/367/ HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 22:53:12] "GET /media/models/2025/02/3e4bbccc-378d-4f55-a872-ae0be56e122f.glb HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 22:53:17] "GET /app/builder/details/367/ HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 22:53:18] "GET /media/models/2025/02/3e4bbccc-378d-4f55-a872-ae0be56e122f.glb HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 22:59:25] "GET /app/article/articles/top-articles/ HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 22:59:26] "GET /app/article/articles/featured/list/ HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 22:59:27] "GET /app/builder/all/ HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 22:59:27] "GET /media/articles/covers/4d473808-2744-4749-9719-c8410f05318d.png HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 22:59:27] "GET /media/articles/covers/5f79b52e-f74e-4174-b08c-21337fee9103.jpg HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 22:59:27] "GET /media/articles/covers/da4b9919-f37b-452f-b49e-8f5c9df9d2f3.webp HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 22:59:27] "GET /media/buildings/2025/02/5555f8dd-272c-4c31-8f8c-a877096ff1b0.jpg HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 22:59:28] "GET /media/buildings/2025/02/7aa3671b-bc1f-468e-87fb-91ea9559e6a2.png HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 22:59:28] "GET /media/buildings/2025/02/ff32ad22-4d5e-4b54-beb1-0fcf3dd16e5e.png HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 22:59:28] "GET /media/buildings/2025/02/67918401-1c17-4242-abc2-4c9be424f32d.png HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 22:59:33] "GET /app/article/articles/detail/24/ HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 22:59:33] "GET /app/comment/comments/article/24/list/?page=1 HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 22:59:45] "POST /app/comment/comments/ HTTP/1.1" 201 -
+10.157.69.198 - - [06/Apr/2025 22:59:45] "GET /app/comment/comments/article/24/list/?page=1 HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 22:59:45] "GET /media/avatars/2025/02/d1883907-f098-48d3-8da6-2b1c83883adf.png HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 22:59:45] "GET /app/user/current-user/ HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 22:59:48] "POST /app/comment/comments/20/like/ HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 22:59:48] "GET /app/comment/comments/article/24/list/?page=1 HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 23:00:05] "GET /app/article/articles/top-articles/ HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 23:00:05] "GET /app/article/articles/featured/list/ HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 23:00:05] "GET /app/builder/all/ HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 23:00:37] "GET /app/article/articles/top-articles/ HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 23:00:38] "GET /app/article/articles/featured/list/ HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 23:00:38] "GET /app/builder/all/ HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 23:00:38] "GET /media/articles/covers/da4b9919-f37b-452f-b49e-8f5c9df9d2f3.webp HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 23:00:38] "GET /media/articles/covers/4d473808-2744-4749-9719-c8410f05318d.png HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 23:00:38] "GET /media/buildings/2025/02/5555f8dd-272c-4c31-8f8c-a877096ff1b0.jpg HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 23:00:38] "GET /media/buildings/2025/02/7aa3671b-bc1f-468e-87fb-91ea9559e6a2.png HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 23:00:38] "GET /media/buildings/2025/02/ff32ad22-4d5e-4b54-beb1-0fcf3dd16e5e.png HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 23:00:38] "GET /media/buildings/2025/02/67918401-1c17-4242-abc2-4c9be424f32d.png HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 23:01:26] "GET /app/article/articles/top-articles/ HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 23:01:26] "GET /app/article/articles/featured/list/ HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 23:01:26] "GET /app/builder/all/ HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 23:01:42] "GET /app/user/current-user/ HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 23:01:42] "GET /media/avatars/2025/02/d1883907-f098-48d3-8da6-2b1c83883adf.png HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 23:01:42] "GET /app/builder/categories/ HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 23:01:42] "GET /app/builder/tags/ HTTP/1.1" 200 -
+10.157.69.198 - - [06/Apr/2025 23:01:42] "GET /app/builder/my/?page=1&page_size=10 HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 23:01:43] "GET /media/buildings/2025/02/5555f8dd-272c-4c31-8f8c-a877096ff1b0.jpg HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 23:01:43] "GET /media/buildings/2025/02/7aa3671b-bc1f-468e-87fb-91ea9559e6a2.png HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 23:01:43] "GET /media/buildings/2025/02/ff32ad22-4d5e-4b54-beb1-0fcf3dd16e5e.png HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 23:01:43] "GET /media/buildings/2025/02/67918401-1c17-4242-abc2-4c9be424f32d.png HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 23:01:43] "GET /media/buildings/2025/02/39277292-d1dd-4951-912d-762e23a12ee5.png HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 23:01:43] "GET /media/buildings/2025/02/96fb4726-0552-45ad-a7c3-b19c7afdb269.png HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 23:01:44] "GET /media/buildings/2025/02/7d46443c-1a1a-4c55-977e-0abb13c7a651.png HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 23:01:44] "GET /media/buildings/2025/02/07b9c3db-0d6e-4d1d-b76a-8e8a7f43398d.png HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 23:01:45] "GET /media/buildings/2025/02/8ead289f-2e29-4638-912d-3bb60a4dcb0e.png HTTP/1.1" 200 -
+10.157.6.5 - - [06/Apr/2025 23:01:47] "GET /media/buildings/2025/02/6d98db22-4bdb-4e91-8f12-06b5e8b4f990.png HTTP/1.1" 200 -
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:8005
+ * Running on https://10.157.69.198:8005
+Press CTRL+C to quit
+ * Restarting with stat
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:8005
+ * Running on https://10.157.69.198:8005
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 335-383-409
+ * Debugger is active!
+ * Debugger PIN: 335-383-409
