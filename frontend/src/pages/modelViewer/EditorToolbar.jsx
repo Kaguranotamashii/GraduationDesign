@@ -1,4 +1,3 @@
-// EditorToolbar.jsx
 import React from 'react';
 import { Button, Tooltip, Space, Divider, Dropdown, Select, TimePicker } from 'antd';
 import {
@@ -17,32 +16,33 @@ import {
     DownOutlined
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import './EditorToolbar.css'; // 新增 CSS 文件用于响应式样式
 
 const viewModeIcons = {
     normal: <GlobalOutlined />,
-    ar: <MobileOutlined />,
+    ar1: <MobileOutlined />,
+    ar2: <MobileOutlined />,
     anaglyph: <ExperimentOutlined />
 };
 
 const viewModeLabels = {
     normal: '普通视图',
-    ar: 'AR模式',
+    ar1: 'AR 兼容模式',
+    ar2: 'AR 谷歌模式',
     anaglyph: '3D眼镜模式'
 };
 
 const weatherOptions = [
-
     { value: 'clear', label: '晴天' },
     { value: 'cloudy', label: '多云' },
     { value: 'rainy', label: '雨天' }
 ];
 
 const groundTypes = [
-    { value: 'none', label: '无地面' },    // 添加无地面选项
+    { value: 'none', label: '无地面' },
     { value: 'grid', label: '网格' },
     { value: 'grass', label: '草地' },
     { value: 'concrete', label: '混凝土' },
-
 ];
 
 const EditorToolbar = ({
@@ -63,45 +63,29 @@ const EditorToolbar = ({
                            isRealtimeEnabled = false
                        }) => {
     const viewModeItems = [
-        {
-            key: 'normal',
-            icon: viewModeIcons.normal,
-            label: viewModeLabels.normal
-        },
-        {
-            key: 'ar',
-            icon: viewModeIcons.ar,
-            label: `${viewModeLabels.ar}`
-        },
-        {
-            key: 'anaglyph',
-            icon: viewModeIcons.anaglyph,
-            label: `${viewModeLabels.anaglyph}`
-        }
+        { key: 'normal', icon: viewModeIcons.normal, label: viewModeLabels.normal },
+        { key: 'ar1', icon: viewModeIcons.ar1, label: viewModeLabels.ar1 },
+        { key: 'ar2', icon: viewModeIcons.ar2, label: viewModeLabels.ar2 },
+        { key: 'anaglyph', icon: viewModeIcons.anaglyph, label: viewModeLabels.anaglyph }
     ];
 
     return (
-        <div style={{
-            position: 'absolute',
-            top: 16,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 1000,
-            background: 'white',
-            padding: '8px 16px',
-            borderRadius: '8px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
-        }}>
-            <Space split={<Divider type="vertical" />}>
-                {/* 视图模式切换下拉菜单 */}
+        <div className="editor-toolbar">
+            <Space
+                split={<Divider type="vertical" />}
+                size={['small', 'small']} // 调整间距，适配小屏幕
+                wrap // 允许换行
+            >
+                {/* 视图模式切换 */}
                 <Dropdown
                     menu={{
                         items: viewModeItems,
                         selectedKeys: [viewMode],
                         onClick: ({ key }) => onToggleViewMode(key)
                     }}
+                    trigger={['click']} // 安卓上使用点击触发
                 >
-                    <Button type="text">
+                    <Button type="text" className="toolbar-button">
                         {viewModeIcons[viewMode]}
                         <span style={{ marginLeft: 8 }}>{viewModeLabels[viewMode]}</span>
                         <DownOutlined style={{ marginLeft: 4 }} />
@@ -115,8 +99,9 @@ const EditorToolbar = ({
                         value={weather}
                         onChange={onWeatherChange}
                         options={weatherOptions}
-                        style={{ width: 100 }}
+                        style={{ width: 80 }} // 缩小宽度
                         placeholder="天气"
+                        size="small" // 小尺寸适配手机
                     />
                 </Space>
 
@@ -132,12 +117,16 @@ const EditorToolbar = ({
                             }
                         }}
                         disabled={isRealtimeEnabled}
+                        size="small"
+                        style={{ width: 80 }} // 缩小宽度
                     />
                     <Tooltip title={isRealtimeEnabled ? '关闭实时模式' : '开启实时模式'}>
                         <Button
                             type={isRealtimeEnabled ? 'primary' : 'default'}
                             icon={<SyncOutlined spin={isRealtimeEnabled} />}
                             onClick={onToggleRealtime}
+                            size="small"
+                            className="toolbar-button"
                         />
                     </Tooltip>
                 </Space>
@@ -149,8 +138,9 @@ const EditorToolbar = ({
                         value={groundType}
                         onChange={onGroundTypeChange}
                         options={groundTypes}
-                        style={{ width: 100 }}
+                        style={{ width: 80 }}
                         placeholder="地面类型"
+                        size="small"
                     />
                 </Space>
 
@@ -164,6 +154,8 @@ const EditorToolbar = ({
                             onResetView();
                         }}
                         title="重置视图"
+                        size="small"
+                        className="toolbar-button"
                     />
                     <Button
                         type="text"
@@ -173,6 +165,8 @@ const EditorToolbar = ({
                             onRotateLeft();
                         }}
                         title="向左旋转 (15°)"
+                        size="small"
+                        className="toolbar-button"
                     />
                     <Button
                         type="text"
@@ -182,6 +176,8 @@ const EditorToolbar = ({
                             onRotateRight();
                         }}
                         title="向右旋转 (15°)"
+                        size="small"
+                        className="toolbar-button"
                     />
                     <Button
                         type="text"
@@ -191,6 +187,8 @@ const EditorToolbar = ({
                             onZoomIn();
                         }}
                         title="放大 (25%)"
+                        size="small"
+                        className="toolbar-button"
                     />
                     <Button
                         type="text"
@@ -200,6 +198,8 @@ const EditorToolbar = ({
                             onZoomOut();
                         }}
                         title="缩小 (25%)"
+                        size="small"
+                        className="toolbar-button"
                     />
                 </Space>
             </Space>

@@ -29,6 +29,9 @@ import MyModelsUploads from "@/components/admin/model/MyModelsUploads.jsx";
 import ModelsPage from "@/pages/models/ModelsPage.jsx";
 import PrivacyPolicy from "@/pages/PrivacyPolicy/PrivacyPolicy.jsx";
 import TermsOfUse from "@/pages/TermsOfUse/TermsOfUse.jsx";
+import ARViewer from "@/pages/ARModelEditor/arV1.jsx";
+import ARCompatViewer from "@/pages/ARModelEditor/ARCompatViewer.jsx";
+import ARGoogleViewer from "@/pages/ARModelEditor/ARGoogleViewer.jsx";
 
 
 // 页面组件导入...
@@ -46,6 +49,10 @@ const router = createBrowserRouter([
             },
             {
                 path: 'auth',
+                element: <Auth />,
+            },
+            {
+                path: 'login',
                 element: <Auth />,
             },
             {
@@ -105,6 +112,15 @@ const router = createBrowserRouter([
                 path: 'terms',
                 element: <TermsOfUse />
             },
+            {
+                path: '/AR/compat/:builderId',
+                element: <ARCompatViewer  />
+            },
+            {
+                path: '/AR/google/:builderId',
+                element: <ARGoogleViewer   />
+            },
+
 
 
             // 后台管理路由

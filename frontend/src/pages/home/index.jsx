@@ -56,52 +56,7 @@ const HomePage = () => {
         fetchData();
     }, []);
 
-    useEffect(() => {
-        gsap.fromTo(
-            heroRef.current.querySelector('.hero-content'),
-            { opacity: 0, y: 50 },
-            { opacity: 1, y: 0, duration: 1.2, ease: 'power4.out' }
-        );
-
-        gsap.from(featureRef.current.querySelectorAll('.feature-card'), {
-            opacity: 0,
-            y: 60,
-            stagger: 0.2,
-            duration: 1,
-            ease: 'power3.out',
-            scrollTrigger: { trigger: featureRef.current, start: 'top 85%' },
-        });
-
-        gsap.from(articleRef.current.querySelectorAll('.article-card'), {
-            opacity: 0,
-            y: 40,
-            stagger: 0.15,
-            duration: 0.8,
-            ease: 'power2.out',
-            scrollTrigger: { trigger: articleRef.current, start: 'top 80%' },
-        });
-
-        gsap.from(modelRef.current.querySelectorAll('.model-item'), {
-            opacity: 0,
-            scale: 0.9,
-            stagger: 0.2,
-            duration: 1.2,
-            ease: 'elastic.out(1, 0.5)',
-            scrollTrigger: { trigger: modelRef.current, start: 'top 75%' },
-        });
-
-        gsap.fromTo(
-            quoteRef.current,
-            { opacity: 0, y: 20 },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 1,
-                ease: 'power3.out',
-                scrollTrigger: { trigger: quoteRef.current, start: 'top 85%' },
-            }
-        );
-    }, []);
+    // 移除了包含 GSAP 代码的 useEffect
 
     return (
         <MainLayout>

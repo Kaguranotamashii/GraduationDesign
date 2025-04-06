@@ -84,6 +84,7 @@ export const FeatureSection = ({ featureRef }) => (
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <FeatureCard
+                    key="互动地图" // 添加 key prop
                     title="互动地图"
                     description="通过交互式地图探索中国各地区标志性古代建筑，了解它们的历史与文化价值。"
                     icon={
@@ -97,6 +98,7 @@ export const FeatureSection = ({ featureRef }) => (
                     imageUrl="/images/hudongditu.png"
                 />
                 <FeatureCard
+                    key="3D模型库" // 添加 key prop
                     title="3D模型库"
                     description="浏览高精度3D模型，从不同角度欣赏传统建筑的工艺与美学，感受古人智慧。"
                     icon={
@@ -110,6 +112,7 @@ export const FeatureSection = ({ featureRef }) => (
                     imageUrl="/images/3dmoxingku.png"
                 />
                 <FeatureCard
+                    key="AR体验" // 添加 key prop
                     title="AR体验"
                     description="通过增强现实技术，将古建筑带入现代生活空间，创造沉浸式数字文化体验。"
                     icon={
@@ -153,6 +156,11 @@ const FeatureCard = ({ title, description, icon, imageUrl }) => (
     </div>
 );
 
+// 请注意：
+// 1. 我已经在 FeatureCard 组件被渲染时添加了 key prop。虽然这通常用于列表渲染，但在某些情况下可以帮助 React 更好地追踪组件。
+// 2. 你仍然需要使用浏览器开发者工具检查 CSS 样式，特别是当卡片消失时，查看是否有任何样式导致它们隐藏或移出屏幕。
+// 3. 检查 FeatureSection 组件中视差效果的实现 (通过 featureRef)。不正确的视差逻辑可能会导致元素定位问题。
+// 4. 如果问题仍然存在，请检查渲染 FeatureSection 的父组件，看是否有任何条件渲染或状态管理影响了 FeatureSection 的显示。
 export const ArticleSection = ({ articleRef, topArticles, loading, error }) => (
     <section ref={articleRef} className="py-20 bg-white">
         <div className="container mx-auto px-6">

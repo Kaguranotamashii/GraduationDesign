@@ -1,0 +1,44 @@
+.editor-toolbar {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    zIndex: 1000;
+    background: white;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    max-width: 90vw; /* 限制最大宽度，适配小屏幕 */
+    overflow-x: auto; /* 横向滚动 */
+    white-space: nowrap; /* 防止换行 */
+}
+
+/* 增大按钮点击区域 */
+.toolbar-button {
+    padding: 8px !important; /* 增加内边距 */
+    min-width: 36px; /* 最小宽度，符合触摸区域标准 */
+    height: 36px;
+}
+
+/* 小屏幕调整 */
+@media (max-width: 768px) {
+    .editor-toolbar {
+        top: 8px;
+        padding: 4px;
+    }
+
+    .toolbar-button {
+        padding: 6px !important;
+        min-width: 32px;
+        height: 32px;
+    }
+
+    .ant-space-item {
+        margin-right: 4px !important; /* 减小间距 */
+    }
+
+    .ant-select,
+    .ant-picker {
+        font-size: 12px; /* 减小字体 */
+    }
+}

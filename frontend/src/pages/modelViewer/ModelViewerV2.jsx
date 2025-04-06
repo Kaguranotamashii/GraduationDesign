@@ -1,6 +1,6 @@
 // ModelViewerV2.jsx
 import React, {useEffect, useRef, useState} from 'react';
-import {useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {Button} from "@/components/ui/button";
 import {ChevronRight, ChevronLeft, Edit2, Trash2, Download} from "lucide-react";
 import {
@@ -25,6 +25,7 @@ import {getBuilderModelUrl, updateBuilderJson} from '@/api/builderApi';
 
 const ModelViewerV2 = () => {
     const {builderId} = useParams();
+    const navigate = useNavigate(); // 添加导航钩子
     const containerRef = useRef(null);
     const sceneManagerRef = useRef(null);
     const modelManagerRef = useRef(null);
@@ -182,17 +183,25 @@ const ModelViewerV2 = () => {
             sceneManagerRef.current.toggleRealtime();
         }
     };
-
     const handleToggleViewMode = (mode) => {
         console.log('Toggling view mode to:', mode);
-
         setViewMode(mode);
 
-        if (sceneManagerRef.current) {
+        if (mode === 'ar1') {
+            // AR 模式跳转到 /AR/:builderId
+            message.info('正在跳转到 AR 模式...');
+            navigate(`/AR/compat/${builderId}`);
+
+        }else if (mode === 'ar2') {
+            // AR 模式跳转到 /AR/:builderId
+            message.info('正在跳转到 AR 模式...');
+            navigate(`/AR/google/${builderId}`);
+        }
+        else if (sceneManagerRef.current) {
+            // 其他模式仍使用原有逻辑
             setTimeout(() => {
                 sceneManagerRef.current.setRenderMode(mode);
             }, 0);
-
             if (mode === 'anaglyph') {
                 message.info('请戴上红蓝3D眼镜以获得最佳观看效果');
             }
