@@ -16,7 +16,7 @@ import {
     DownOutlined
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import './EditorToolbar.css'; // 新增 CSS 文件用于响应式样式
+import './EditorToolbar.css'; // 更新 CSS 文件
 
 const viewModeIcons = {
     normal: <GlobalOutlined />,
@@ -73,8 +73,8 @@ const EditorToolbar = ({
         <div className="editor-toolbar">
             <Space
                 split={<Divider type="vertical" />}
-                size={['small', 'small']} // 调整间距，适配小屏幕
-                wrap // 允许换行
+                size="small" // 统一小间距
+                className="toolbar-content" // 添加类名控制滚动
             >
                 {/* 视图模式切换 */}
                 <Dropdown
@@ -83,42 +83,37 @@ const EditorToolbar = ({
                         selectedKeys: [viewMode],
                         onClick: ({ key }) => onToggleViewMode(key)
                     }}
-                    trigger={['click']} // 安卓上使用点击触发
+                    trigger={['click']}
                 >
                     <Button type="text" className="toolbar-button">
                         {viewModeIcons[viewMode]}
-                        <span style={{ marginLeft: 8 }}>{viewModeLabels[viewMode]}</span>
                         <DownOutlined style={{ marginLeft: 4 }} />
                     </Button>
                 </Dropdown>
 
                 {/* 天气控制 */}
-                <Space>
+                <Space size="small">
                     <CloudOutlined />
                     <Select
                         value={weather}
                         onChange={onWeatherChange}
                         options={weatherOptions}
-                        style={{ width: 80 }} // 缩小宽度
+                        style={{ width: 80 }}
                         placeholder="天气"
-                        size="small" // 小尺寸适配手机
+                        size="small"
                     />
                 </Space>
 
                 {/* 时间控制 */}
-                <Space>
+                <Space size="small">
                     <ClockCircleOutlined />
                     <TimePicker
                         format="HH:mm"
                         value={dayjs().hour(Math.floor(timeOfDay)).minute((timeOfDay % 1) * 60)}
-                        onChange={(time) => {
-                            if (time) {
-                                onTimeChange(time.hour() + time.minute() / 60);
-                            }
-                        }}
+                        onChange={(time) => time && onTimeChange(time.hour() + time.minute() / 60)}
                         disabled={isRealtimeEnabled}
                         size="small"
-                        style={{ width: 80 }} // 缩小宽度
+                        style={{ width: 80 }}
                     />
                     <Tooltip title={isRealtimeEnabled ? '关闭实时模式' : '开启实时模式'}>
                         <Button
@@ -132,7 +127,7 @@ const EditorToolbar = ({
                 </Space>
 
                 {/* 地面类型控制 */}
-                <Space>
+                <Space size="small">
                     <BorderOutlined />
                     <Select
                         value={groundType}
@@ -145,62 +140,67 @@ const EditorToolbar = ({
                 </Space>
 
                 {/* 基础操作 */}
-                <Space>
-                    <Button
-                        type="text"
-                        icon={<HomeOutlined />}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onResetView();
-                        }}
-                        title="重置视图"
-                        size="small"
-                        className="toolbar-button"
-                    />
-                    <Button
-                        type="text"
-                        icon={<RotateLeftOutlined />}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onRotateLeft();
-                        }}
-                        title="向左旋转 (15°)"
-                        size="small"
-                        className="toolbar-button"
-                    />
-                    <Button
-                        type="text"
-                        icon={<RotateRightOutlined />}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onRotateRight();
-                        }}
-                        title="向右旋转 (15°)"
-                        size="small"
-                        className="toolbar-button"
-                    />
-                    <Button
-                        type="text"
-                        icon={<ZoomInOutlined />}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onZoomIn();
-                        }}
-                        title="放大 (25%)"
-                        size="small"
-                        className="toolbar-button"
-                    />
-                    <Button
-                        type="text"
-                        icon={<ZoomOutOutlined />}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onZoomOut();
-                        }}
-                        title="缩小 (25%)"
-                        size="small"
-                        className="toolbar-button"
-                    />
+                <Space size="small">
+                    <Tooltip title="重置视图">
+                        <Button
+                            type="text"
+                            icon={<HomeOutlined />}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onResetView();
+                            }}
+                            size="small"
+                            className="toolbar-button"
+                        />
+                    </Tooltip>
+                    <Tooltip title="向左旋转 (15°)">
+                        <Button
+                            type="text"
+                            icon={<RotateLeftOutlined />}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onRotateLeft();
+                            }}
+                            size="small"
+                            className="toolbar-button"
+                        />
+                    </Tooltip>
+                    <Tooltip title="向右旋转 (15°)">
+                        <Button
+                            type="text"
+                            icon={<RotateRightOutlined />}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onRotateRight();
+                            }}
+                            size="small"
+                            className="toolbar-button"
+                        />
+                    </Tooltip>
+                    <Tooltip title="放大 (25%)">
+                        <Button
+                            type="text"
+                            icon={<ZoomInOutlined />}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onZoomIn();
+                            }}
+                            size="small"
+                            className="toolbar-button"
+                        />
+                    </Tooltip>
+                    <Tooltip title="缩小 (25%)">
+                        <Button
+                            type="text"
+                            icon={<ZoomOutOutlined />}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onZoomOut();
+                            }}
+                            size="small"
+                            className="toolbar-button"
+                        />
+                    </Tooltip>
                 </Space>
             </Space>
         </div>

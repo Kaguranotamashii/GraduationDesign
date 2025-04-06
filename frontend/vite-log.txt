@@ -1645,3 +1645,36 @@ Error: read ECONNRESET
   ➜  Network: https://10.157.69.198:5173/
 22:45:11 [vite] vite.config.js changed, restarting server...
 22:45:11 [vite] server restarted.
+22:49:00 [vite] (client) hmr update /src/components/home/Navbar.jsx
+22:49:01 [vite] Internal server error: Failed to resolve import "./Navbar.css" from "src/components/home/Navbar.jsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: G:/GraduationDesign/probject/frontend/src/components/home/Navbar.jsx:7:7
+  22 |  import { LogOut, User } from "lucide-react";
+  23 |  import { clearAuth } from "../../store/authSlice";
+  24 |  import "./Navbar.css";
+     |          ^
+  25 |  const Navbar = () => {
+  26 |    _s();
+      at TransformPluginContext._formatError (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:47574:41)
+      at TransformPluginContext.error (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:47569:16)
+      at normalizeUrl (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:45818:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:45937:39
+      at async Promise.all (index 9)
+      at async TransformPluginContext.transform (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:45864:7)
+      at async EnvironmentPluginContainer.transform (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:47400:18)
+      at async loadAndTransform (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:41198:27)
+      at async viteTransformMiddleware (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:42642:24)
+22:49:10 [vite] (client) hmr update /src/layout/AdminLayout/index.jsx, /src/pages/about/AboutPage.jsx, /src/pages/models/ModelsPage.jsx, /src/pages/articles/list/ArticleList.jsx, /src/layout/MainLayout.jsx
+22:49:15 [vite] (client) hmr update /src/components/home/Navbar.css
+22:52:59 [vite] (client) hmr update /src/pages/modelViewer/EditorToolbar.css
+22:53:02 [vite] (client) hmr update /src/pages/modelViewer/EditorToolbar.jsx
+
+  VITE v6.0.11  ready in 676 ms
+
+  ➜  Local:   https://localhost:5173/
+  ➜  Network: https://169.254.154.113:5173/
+  ➜  Network: https://169.254.233.85:5173/
+  ➜  Network: https://10.157.69.198:5173/
+23:29:14 [vite] vite.config.js changed, restarting server...
+23:29:14 [vite] server restarted.

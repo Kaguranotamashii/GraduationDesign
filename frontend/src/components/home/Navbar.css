@@ -1,0 +1,58 @@
+/* 基本样式 */
+nav {
+    width: 100%;
+}
+
+/* 移动端调整 */
+@media (max-width: 768px) {
+    nav {
+        padding: 0 8px; /* 减少内边距 */
+    }
+
+    .container {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .h-16 {
+        height: 56px; /* 减小高度 */
+    }
+
+    .text-xl {
+        font-size: 1rem; /* 缩小 Logo 文字 */
+    }
+
+    .w-10,
+    .h-10 {
+        width: 32px; /* 缩小 Logo 图片 */
+        height: 32px;
+    }
+
+    .absolute.top-16 {
+        top: 56px; /* 调整移动端菜单位置 */
+    }
+
+    /* 增大点击区域 */
+    button {
+        padding: 8px !important;
+        min-width: 36px;
+        min-height: 36px;
+    }
+
+    /* 用户下拉菜单 */
+    .w-64 {
+        width: 90vw; /* 自适应宽度 */
+        max-width: 280px;
+    }
+}
+
+/* 高像素比设备（安卓常见） */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .text-sm {
+        font-size: 14px; /* 增大字体以提高可读性 */
+    }
+
+    .text-xs {
+        font-size: 12px;
+    }
+}
