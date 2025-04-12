@@ -154,3 +154,976 @@ Press CTRL+C to quit
  * Debugger PIN: 335-383-409
  * Debugger is active!
  * Debugger PIN: 335-383-409
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:8005
+ * Running on https://10.153.22.151:8005
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 335-383-409
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:8005
+ * Running on https://10.153.22.151:8005
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 335-383-409
+10.153.22.151 - - [07/Apr/2025 10:06:09] "GET /app/article/articles/top-articles/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:06:09] "GET /app/article/articles/featured/list/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:06:09] "GET /app/builder/all/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:06:30] "GET /media/articles/covers/4d473808-2744-4749-9719-c8410f05318d.png HTTP/1.1" 200 -
+Not Found: /favicon.ico
+10.153.22.151 - - [07/Apr/2025 10:06:31] "GET /favicon.ico HTTP/1.1" 404 -
+10.153.22.151 - - [07/Apr/2025 10:06:35] "GET /app/article/articles/top-articles/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:06:35] "GET /app/article/articles/featured/list/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:06:35] "GET /media/articles/covers/da4b9919-f37b-452f-b49e-8f5c9df9d2f3.webp HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:06:35] "GET /media/articles/covers/4d473808-2744-4749-9719-c8410f05318d.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:06:35] "GET /media/articles/covers/5f79b52e-f74e-4174-b08c-21337fee9103.jpg HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:06:35] "GET /app/builder/all/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:06:35] "GET /media/buildings/2025/02/5555f8dd-272c-4c31-8f8c-a877096ff1b0.jpg HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:06:35] "GET /media/buildings/2025/02/7aa3671b-bc1f-468e-87fb-91ea9559e6a2.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:06:35] "GET /media/buildings/2025/02/ff32ad22-4d5e-4b54-beb1-0fcf3dd16e5e.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:06:35] "GET /media/buildings/2025/02/67918401-1c17-4242-abc2-4c9be424f32d.png HTTP/1.1" 200 -
+Not Found: /
+10.153.22.151 - - [07/Apr/2025 10:07:49] "GET / HTTP/1.1" 404 -
+Not Found: /favicon.ico
+10.153.22.151 - - [07/Apr/2025 10:07:50] "GET /favicon.ico HTTP/1.1" 404 -
+Not Found: /app
+10.153.22.151 - - [07/Apr/2025 10:07:56] "GET /app HTTP/1.1" 404 -
+10.153.22.151 - - [07/Apr/2025 10:08:00] "GET /admin HTTP/1.1" 301 -
+10.153.22.151 - - [07/Apr/2025 10:08:00] "GET /admin/ HTTP/1.1" 302 -
+10.153.22.151 - - [07/Apr/2025 10:08:00] "GET /admin/login/?next=/admin/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:00] "GET /static/jazzmin/css/main.css HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:00] "GET /static/vendor/fontawesome-free/css/all.min.css HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:00] "GET /static/vendor/adminlte/css/adminlte.min.css HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:00] "GET /static/vendor/adminlte/img/AdminLTELogo.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:00] "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:00] "GET /static/vendor/adminlte/js/adminlte.min.js HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:00] "GET /static/vendor/bootstrap/js/bootstrap.min.js HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:00] "GET /static/vendor/fontawesome-free/webfonts/fa-solid-900.woff2 HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:00] "GET /static/vendor/adminlte/img/AdminLTELogo.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:00] "GET /static/vendor/adminlte/img/AdminLTELogo.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:06] "POST /admin/login/?next=/admin/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:06] "GET /static/vendor/adminlte/img/AdminLTELogo.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:14] "POST /admin/login/?next=/admin/ HTTP/1.1" 302 -
+10.153.22.151 - - [07/Apr/2025 10:08:14] "GET /admin/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:14] "GET /static/jazzmin/js/main.js HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:15] "GET /static/vendor/fontawesome-free/webfonts/fa-regular-400.woff2 HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:17] "GET /admin/django_celery_beat/periodictask/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:17] "GET /static/admin/js/urlify.js HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:17] "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:17] "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:17] "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:17] "GET /static/admin/js/core.js HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:17] "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:17] "GET /static/admin/js/actions.js HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:17] "GET /admin/jsi18n/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:17] "GET /static/jazzmin/js/change_list.js HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:17] "GET /static/vendor/select2/js/select2.min.js HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:19] "GET /admin/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /admin/builder/builder/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /static/vendor/select2/css/select2.min.css HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /admin/jsi18n/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/5555f8dd-272c-4c31-8f8c-a877096ff1b0.jpg HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/7aa3671b-bc1f-468e-87fb-91ea9559e6a2.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/ff32ad22-4d5e-4b54-beb1-0fcf3dd16e5e.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/67918401-1c17-4242-abc2-4c9be424f32d.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/39277292-d1dd-4951-912d-762e23a12ee5.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/96fb4726-0552-45ad-a7c3-b19c7afdb269.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/6d98db22-4bdb-4e91-8f12-06b5e8b4f990.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/7d46443c-1a1a-4c55-977e-0abb13c7a651.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/f6278eaf-d639-484c-8243-4fa17e2d4611.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/f2f57205-3bfe-4f4d-8cb2-bab0836bb00f.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/cfa3b98b-8d2f-45e9-8396-459644d35552.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/47b938ef-fa64-45a0-bc14-59d1c7c1938a.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/07b9c3db-0d6e-4d1d-b76a-8e8a7f43398d.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/fc733718-3458-44d9-bba3-adc005a2b5ee.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/b555473e-5e78-468d-b846-d09ab5bc5fe5.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/2e6edb20-a99a-4cbc-9de1-64f990ed809f.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/694ad26b-40fd-4ea5-a99e-efc4acacefbe.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/2faea409-fa99-4345-8316-0b11c691eb54.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/90d21177-3ae5-4f69-9848-41b2d6176a22.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/0cef2fff-af86-4871-b0d6-f3cfc9ce4460.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/10a2fb76-db2b-48d5-b93b-ba1761922315.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/f55bb03f-daa1-4bda-bdb7-0c9650b788af.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/8ead289f-2e29-4638-912d-3bb60a4dcb0e.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/4c927b68-774d-447f-b077-8791da364373.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/7c353302-8912-4385-87ba-3cbe7247ce48.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/f15398a6-e4e0-4b1c-8ec1-684d315ca9c2.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/cfd3d488-22c2-4932-a07a-98163ab8c04d.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/0e835c7f-f78d-4850-ad37-15ba512f8f1f.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/071c0d18-7276-4047-9df8-a1b37f902cb8.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/016111f3-0e9f-4a12-834f-ae577ff388e0.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/e8add717-9593-4a32-8208-29f3a8ebc63e.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/2552cef5-85a8-4739-8314-53bd9fe41ea1.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/610d19a8-7742-4c87-bd9b-98c1ded3132d.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/f9b86687-78a3-4585-8296-d204c94393cd.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/bb4d6104-7dac-4815-a130-4ca27b2e0ed9.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/704a47d0-a6d9-4027-b5b6-d20a164fe7d4.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/788bff36-327a-4f5c-a530-0f5fa9679118.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/684fb32b-3f69-47b7-8add-ff7bc67a7c0b.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/f4f47375-1810-4d81-892e-cacd7fdd6902.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/15bd870f-ff37-4c42-bcb1-5cbac5582420.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/fbb22517-261a-4e19-9092-a7ce75fa8091.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/1f75afb6-f0e6-4f95-92ef-3fb358ecab79.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/e569b2f0-a3fc-4d07-89c6-0686724d21cf.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/e969b643-26fd-4d24-8209-4634eca7e02e.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/1c8e83d2-a79e-4840-b820-31f1dbee9877.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:22] "GET /media/buildings/2025/02/bf848bf8-ede3-4483-8c41-281425432c02.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/47ba1873-174f-4266-b24d-d6a8c4d01065.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/ec77bd16-120b-4025-adaa-6c0553bd31cf.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/cd9faad0-e39f-4c8b-9b19-c17fb951b24d.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/096560fe-dd17-481a-af4c-87cc5d2c8597.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/335bfbdc-67ef-4658-8d5f-18ecaa41c07d.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/cc0b0b77-d4a2-40fc-b43f-3864853a0bc1.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/bcbed556-000b-4c70-b0d5-b543f2dbe86e.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/6bb4db1a-e6d0-4efa-9b3a-9256b473739b.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/04578793-a681-4ecb-9713-1e96cd1dbd43.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/c81a4980-e4f6-4031-90e7-92bb3964339a.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/0e5e4bcb-324e-4f1f-9f44-414726b86ed6.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/ae35391f-4f15-4583-9148-facda5c0ece9.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/4c41c85d-c635-402e-a115-042234de02dd.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/156e6e2f-1795-4ac8-86f2-50ee057e9dc7.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/d831ef88-acc0-4fe7-aa33-ce1ef0545454.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/f724b8a7-2cdc-4487-9d5a-047c668f1b94.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/433c534e-c86f-4600-9dc1-72d3972f8c24.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/d56efba6-0e67-4b79-b6ca-4ec7f519f03a.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/9867a4a2-493c-44c6-ad8f-805531dbdc8b.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/edbabfc1-cea7-4a97-a166-24e43a3ad9e1.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/59ba7f64-30bb-44c1-b35a-b76be8f3f4bb.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/4349aa1f-7c97-45e4-8fa2-ec49ff11701d.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/b290553a-f0cc-4f04-8298-b4811f5c2545.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/9bbf9b85-ed5a-4502-a633-b70dae534fca.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/fa6820a8-8e79-494e-96cb-f4085fbda2fd.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/8265b150-da5d-4f9b-aac2-69fa3223ae25.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/952c1114-f4ba-4731-b749-ce8aa502a4da.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/a391a85c-f101-4b41-9e4e-f1b74d327d0e.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/33a54f7c-ea88-4605-8248-1d5855640df5.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/3a396831-982a-4369-972d-55a74d224947.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/3e44f1c9-405e-45e6-88ca-a3145d78cf97.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/3b183038-cba7-4f9a-b3e2-76f5bdbcf299.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/b5af4cba-46b6-4a1e-92b1-59547a1fc13b.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/34b4aa22-1f9e-4a09-9d8f-9b715e09e742.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/01f6886c-1343-4f12-814d-71cfc49f3ad5.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/b96ac336-2ea2-4621-85bc-625fa311cb11.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/70f33444-7188-4caa-aa52-3e9982ce378d.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/d65fc597-f201-4131-b153-4b846ad90cab.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/1f9e7d78-48d4-4a1a-a628-da5b85ec4994.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/6ca4c619-0d7e-4732-9f56-7cac6b656aa8.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/a1372b76-6425-4036-9a5b-f36ff7ccb251.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/6e9c041e-75fd-4ae0-a619-037a7de9cfd0.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/b3af1653-561c-4b8d-a9f5-d65149e4192c.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/d7634565-68f3-497c-9b67-1ed810da9eda.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/39c75744-cb87-4c2e-ba6c-ee031f29dcf4.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/99d87cdf-5679-407d-b01b-6497b0656882.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/776d72b7-f09b-44e0-853b-97408a45de0e.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/8c5bd8c6-0cfd-423d-bf8f-a1adf774f9e2.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/4703801d-a538-4fb7-a5d3-cc9358d7ac5a.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/fe75cc75-384d-40f9-8dac-a5fd56d465da.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/78e271ac-6412-4be4-adaa-d9efa25188c7.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/608b54b7-6054-417d-bb33-d90127f0fcea.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/77b0c104-2f14-4afd-b6c5-e67b5f92b53a.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:23] "GET /media/buildings/2025/02/9ee1741e-e22b-4274-be97-58cc22b5e6b3.png HTTP/1.1" 200 -
+
+================================================================================
+Error occurred during processing the request:
+URL: /admin/article/article/
+Method: GET
+Error Type: FieldError
+Error Message: Non-relational field given in select_related: 'cover_image'. Choices are: builder, author
+
+Traceback:
+Traceback (most recent call last):
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\admin\options.py", line 716, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 188, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 186, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\admin\sites.py", line 240, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 188, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 186, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\admin\options.py", line 2124, in changelist_view
+    "selection_note": _("0 of %(cnt)s selected") % {"cnt": len(cl.result_list)},
+                                                           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 382, in __len__
+    self._fetch_all()
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 279, in get_select
+    related_klass_infos = self.get_related_selections(select, select_mask)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 1200, in get_related_selections
+    raise FieldError(
+django.core.exceptions.FieldError: Non-relational field given in select_related: 'cover_image'. Choices are: builder, author
+================================================================================
+
+Path: /admin/article/article/
+Method: GET
+Error: Non-relational field given in select_related: 'cover_image'. Choices are: builder, author
+Traceback: Traceback (most recent call last):
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\admin\options.py", line 716, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 188, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 186, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\admin\sites.py", line 240, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 188, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 186, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\admin\options.py", line 2124, in changelist_view
+    "selection_note": _("0 of %(cnt)s selected") % {"cnt": len(cl.result_list)},
+                                                           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 382, in __len__
+    self._fetch_all()
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 279, in get_select
+    related_klass_infos = self.get_related_selections(select, select_mask)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 1200, in get_related_selections
+    raise FieldError(
+django.core.exceptions.FieldError: Non-relational field given in select_related: 'cover_image'. Choices are: builder, author
+
+10.153.22.151 - - [07/Apr/2025 10:08:27] "GET /admin/article/article/ HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\staticfiles\handlers.py", line 80, in __call__
+    return self.application(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\wsgi.py", line 124, in __call__
+    response = self.get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 140, in get_response
+    response = self._middleware_chain(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 57, in inner
+    response = response_for_exception(request, exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 140, in response_for_exception
+    response = handle_uncaught_exception(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 181, in handle_uncaught_exception
+    return debug.technical_500_response(request, *exc_info)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django_extensions\management\technical_response.py", line 40, in null_technical_500_response
+    raise exc_value.with_traceback(tb)
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\admin\options.py", line 716, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 188, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 186, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\admin\sites.py", line 240, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 188, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 186, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\admin\options.py", line 2124, in changelist_view
+    "selection_note": _("0 of %(cnt)s selected") % {"cnt": len(cl.result_list)},
+                                                           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 382, in __len__
+    self._fetch_all()
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 279, in get_select
+    related_klass_infos = self.get_related_selections(select, select_mask)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 1200, in get_related_selections
+    raise FieldError(
+django.core.exceptions.FieldError: Non-relational field given in select_related: 'cover_image'. Choices are: builder, author
+10.153.22.151 - - [07/Apr/2025 10:08:27] "GET /admin/article/article/?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:27] "GET /admin/article/article/?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:27] "GET /admin/article/article/?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:29] "GET /admin/builder/builder/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:30] "GET /admin/user/customuser/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:30] "GET /admin/jsi18n/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:30] "GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:33] "GET /admin/auth/group/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:33] "GET /admin/jsi18n/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:35] "GET /admin/comment/comment/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:35] "GET /admin/jsi18n/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:35] "GET /static/admin/img/icon-no.svg HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:38] "GET /admin/django_celery_beat/intervalschedule/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:38] "GET /admin/jsi18n/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:39] "GET /admin/django_celery_beat/crontabschedule/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:39] "GET /admin/jsi18n/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:40] "GET /admin/django_celery_beat/solarschedule/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:40] "GET /admin/jsi18n/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:40] "GET /admin/django_celery_beat/clockedschedule/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:40] "GET /admin/jsi18n/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:41] "GET /admin/django_celery_beat/periodictask/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:41] "GET /admin/jsi18n/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:42] "GET /admin/ HTTP/1.1" 200 -
+
+================================================================================
+Error occurred during processing the request:
+URL: /admin/article/article/
+Method: GET
+Error Type: FieldError
+Error Message: Non-relational field given in select_related: 'cover_image'. Choices are: builder, author
+
+Traceback:
+Traceback (most recent call last):
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\admin\options.py", line 716, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 188, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 186, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\admin\sites.py", line 240, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 188, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 186, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\admin\options.py", line 2124, in changelist_view
+    "selection_note": _("0 of %(cnt)s selected") % {"cnt": len(cl.result_list)},
+                                                           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 382, in __len__
+    self._fetch_all()
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 279, in get_select
+    related_klass_infos = self.get_related_selections(select, select_mask)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 1200, in get_related_selections
+    raise FieldError(
+django.core.exceptions.FieldError: Non-relational field given in select_related: 'cover_image'. Choices are: builder, author
+================================================================================
+
+Path: /admin/article/article/
+Method: GET
+Error: Non-relational field given in select_related: 'cover_image'. Choices are: builder, author
+Traceback: Traceback (most recent call last):
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\admin\options.py", line 716, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 188, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 186, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\admin\sites.py", line 240, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 188, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 186, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\admin\options.py", line 2124, in changelist_view
+    "selection_note": _("0 of %(cnt)s selected") % {"cnt": len(cl.result_list)},
+                                                           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 382, in __len__
+    self._fetch_all()
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 279, in get_select
+    related_klass_infos = self.get_related_selections(select, select_mask)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 1200, in get_related_selections
+    raise FieldError(
+django.core.exceptions.FieldError: Non-relational field given in select_related: 'cover_image'. Choices are: builder, author
+
+10.153.22.151 - - [07/Apr/2025 10:08:44] "GET /admin/article/article/ HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\staticfiles\handlers.py", line 80, in __call__
+    return self.application(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\wsgi.py", line 124, in __call__
+    response = self.get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 140, in get_response
+    response = self._middleware_chain(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 57, in inner
+    response = response_for_exception(request, exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 140, in response_for_exception
+    response = handle_uncaught_exception(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 181, in handle_uncaught_exception
+    return debug.technical_500_response(request, *exc_info)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django_extensions\management\technical_response.py", line 40, in null_technical_500_response
+    raise exc_value.with_traceback(tb)
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\admin\options.py", line 716, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 188, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 186, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\admin\sites.py", line 240, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 188, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\utils\decorators.py", line 186, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\admin\options.py", line 2124, in changelist_view
+    "selection_note": _("0 of %(cnt)s selected") % {"cnt": len(cl.result_list)},
+                                                           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 382, in __len__
+    self._fetch_all()
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 279, in get_select
+    related_klass_infos = self.get_related_selections(select, select_mask)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\compiler.py", line 1200, in get_related_selections
+    raise FieldError(
+django.core.exceptions.FieldError: Non-relational field given in select_related: 'cover_image'. Choices are: builder, author
+10.153.22.151 - - [07/Apr/2025 10:08:44] "GET /admin/article/article/?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:44] "GET /admin/article/article/?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:47] "GET /admin/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:53] "GET /admin/builder/builder/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:53] "GET /admin/jsi18n/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:53] "GET /media/buildings/2025/02/5555f8dd-272c-4c31-8f8c-a877096ff1b0.jpg HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:53] "GET /media/buildings/2025/02/7aa3671b-bc1f-468e-87fb-91ea9559e6a2.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:53] "GET /media/buildings/2025/02/ff32ad22-4d5e-4b54-beb1-0fcf3dd16e5e.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:53] "GET /media/buildings/2025/02/67918401-1c17-4242-abc2-4c9be424f32d.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:53] "GET /media/buildings/2025/02/39277292-d1dd-4951-912d-762e23a12ee5.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:53] "GET /media/buildings/2025/02/07b9c3db-0d6e-4d1d-b76a-8e8a7f43398d.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:53] "GET /media/buildings/2025/02/8ead289f-2e29-4638-912d-3bb60a4dcb0e.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/7d46443c-1a1a-4c55-977e-0abb13c7a651.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/f2f57205-3bfe-4f4d-8cb2-bab0836bb00f.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/6d98db22-4bdb-4e91-8f12-06b5e8b4f990.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/f6278eaf-d639-484c-8243-4fa17e2d4611.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/47b938ef-fa64-45a0-bc14-59d1c7c1938a.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/071c0d18-7276-4047-9df8-a1b37f902cb8.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/b555473e-5e78-468d-b846-d09ab5bc5fe5.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/694ad26b-40fd-4ea5-a99e-efc4acacefbe.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/cfa3b98b-8d2f-45e9-8396-459644d35552.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/bb4d6104-7dac-4815-a130-4ca27b2e0ed9.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/90d21177-3ae5-4f69-9848-41b2d6176a22.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/0cef2fff-af86-4871-b0d6-f3cfc9ce4460.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/fc733718-3458-44d9-bba3-adc005a2b5ee.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/f9b86687-78a3-4585-8296-d204c94393cd.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/2e6edb20-a99a-4cbc-9de1-64f990ed809f.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/f55bb03f-daa1-4bda-bdb7-0c9650b788af.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/4c927b68-774d-447f-b077-8791da364373.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/10a2fb76-db2b-48d5-b93b-ba1761922315.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/e8add717-9593-4a32-8208-29f3a8ebc63e.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/7c353302-8912-4385-87ba-3cbe7247ce48.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/f15398a6-e4e0-4b1c-8ec1-684d315ca9c2.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/016111f3-0e9f-4a12-834f-ae577ff388e0.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/fbb22517-261a-4e19-9092-a7ce75fa8091.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/2552cef5-85a8-4739-8314-53bd9fe41ea1.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/f4f47375-1810-4d81-892e-cacd7fdd6902.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/cfd3d488-22c2-4932-a07a-98163ab8c04d.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/bf848bf8-ede3-4483-8c41-281425432c02.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/2faea409-fa99-4345-8316-0b11c691eb54.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/0e835c7f-f78d-4850-ad37-15ba512f8f1f.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/04578793-a681-4ecb-9713-1e96cd1dbd43.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/610d19a8-7742-4c87-bd9b-98c1ded3132d.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/704a47d0-a6d9-4027-b5b6-d20a164fe7d4.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/e969b643-26fd-4d24-8209-4634eca7e02e.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/788bff36-327a-4f5c-a530-0f5fa9679118.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/bcbed556-000b-4c70-b0d5-b543f2dbe86e.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/cd9faad0-e39f-4c8b-9b19-c17fb951b24d.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/1f75afb6-f0e6-4f95-92ef-3fb358ecab79.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/e569b2f0-a3fc-4d07-89c6-0686724d21cf.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/96fb4726-0552-45ad-a7c3-b19c7afdb269.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/47ba1873-174f-4266-b24d-d6a8c4d01065.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/ec77bd16-120b-4025-adaa-6c0553bd31cf.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/608b54b7-6054-417d-bb33-d90127f0fcea.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/15bd870f-ff37-4c42-bcb1-5cbac5582420.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/cc0b0b77-d4a2-40fc-b43f-3864853a0bc1.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/0e5e4bcb-324e-4f1f-9f44-414726b86ed6.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/684fb32b-3f69-47b7-8add-ff7bc67a7c0b.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/6bb4db1a-e6d0-4efa-9b3a-9256b473739b.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/d831ef88-acc0-4fe7-aa33-ce1ef0545454.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/096560fe-dd17-481a-af4c-87cc5d2c8597.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/ae35391f-4f15-4583-9148-facda5c0ece9.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/c81a4980-e4f6-4031-90e7-92bb3964339a.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/edbabfc1-cea7-4a97-a166-24e43a3ad9e1.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/433c534e-c86f-4600-9dc1-72d3972f8c24.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/4c41c85d-c635-402e-a115-042234de02dd.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/335bfbdc-67ef-4658-8d5f-18ecaa41c07d.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/f724b8a7-2cdc-4487-9d5a-047c668f1b94.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/156e6e2f-1795-4ac8-86f2-50ee057e9dc7.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/d56efba6-0e67-4b79-b6ca-4ec7f519f03a.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/9867a4a2-493c-44c6-ad8f-805531dbdc8b.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/59ba7f64-30bb-44c1-b35a-b76be8f3f4bb.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/b290553a-f0cc-4f04-8298-b4811f5c2545.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/3a396831-982a-4369-972d-55a74d224947.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/a391a85c-f101-4b41-9e4e-f1b74d327d0e.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/fa6820a8-8e79-494e-96cb-f4085fbda2fd.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/9bbf9b85-ed5a-4502-a633-b70dae534fca.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/4349aa1f-7c97-45e4-8fa2-ec49ff11701d.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/952c1114-f4ba-4731-b749-ce8aa502a4da.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/8265b150-da5d-4f9b-aac2-69fa3223ae25.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/3e44f1c9-405e-45e6-88ca-a3145d78cf97.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/1f9e7d78-48d4-4a1a-a628-da5b85ec4994.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/01f6886c-1343-4f12-814d-71cfc49f3ad5.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/33a54f7c-ea88-4605-8248-1d5855640df5.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/34b4aa22-1f9e-4a09-9d8f-9b715e09e742.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/70f33444-7188-4caa-aa52-3e9982ce378d.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/3b183038-cba7-4f9a-b3e2-76f5bdbcf299.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/b96ac336-2ea2-4621-85bc-625fa311cb11.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/a1372b76-6425-4036-9a5b-f36ff7ccb251.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/d7634565-68f3-497c-9b67-1ed810da9eda.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/b5af4cba-46b6-4a1e-92b1-59547a1fc13b.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/78e271ac-6412-4be4-adaa-d9efa25188c7.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:54] "GET /media/buildings/2025/02/b3af1653-561c-4b8d-a9f5-d65149e4192c.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:55] "GET /media/buildings/2025/02/99d87cdf-5679-407d-b01b-6497b0656882.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:55] "GET /media/buildings/2025/02/77b0c104-2f14-4afd-b6c5-e67b5f92b53a.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:55] "GET /media/buildings/2025/02/9ee1741e-e22b-4274-be97-58cc22b5e6b3.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:55] "GET /media/buildings/2025/02/39c75744-cb87-4c2e-ba6c-ee031f29dcf4.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:55] "GET /media/buildings/2025/02/6e9c041e-75fd-4ae0-a619-037a7de9cfd0.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:55] "GET /media/buildings/2025/02/776d72b7-f09b-44e0-853b-97408a45de0e.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:55] "GET /media/buildings/2025/02/d65fc597-f201-4131-b153-4b846ad90cab.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:55] "GET /media/buildings/2025/02/8c5bd8c6-0cfd-423d-bf8f-a1adf774f9e2.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:55] "GET /media/buildings/2025/02/6ca4c619-0d7e-4732-9f56-7cac6b656aa8.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:55] "GET /media/buildings/2025/02/4703801d-a538-4fb7-a5d3-cc9358d7ac5a.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:55] "GET /media/buildings/2025/02/fe75cc75-384d-40f9-8dac-a5fd56d465da.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:08:55] "GET /media/buildings/2025/02/1c8e83d2-a79e-4840-b820-31f1dbee9877.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:09:03] "GET /admin/builder/builder/add/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:09:03] "GET /admin/jsi18n/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:09:03] "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:09:03] "GET /static/admin/js/change_form.js HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:09:03] "GET /static/jazzmin/js/change_form.js HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:09:03] "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:09:03] "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:09:03] "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:09:10] "GET /admin/builder/builder/ HTTP/1.1" 200 -
+Not Found: /
+10.153.22.151 - - [07/Apr/2025 10:09:20] "GET / HTTP/1.1" 404 -
+10.153.22.151 - - [07/Apr/2025 10:09:24] "GET /app/article/articles/top-articles/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:09:24] "GET /app/article/articles/featured/list/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:09:24] "GET /media/articles/covers/da4b9919-f37b-452f-b49e-8f5c9df9d2f3.webp HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:09:24] "GET /media/articles/covers/5f79b52e-f74e-4174-b08c-21337fee9103.jpg HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:09:24] "GET /media/articles/covers/4d473808-2744-4749-9719-c8410f05318d.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:09:24] "GET /app/builder/all/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:09:24] "GET /media/buildings/2025/02/5555f8dd-272c-4c31-8f8c-a877096ff1b0.jpg HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:09:24] "GET /media/buildings/2025/02/7aa3671b-bc1f-468e-87fb-91ea9559e6a2.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:09:24] "GET /media/buildings/2025/02/67918401-1c17-4242-abc2-4c9be424f32d.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:09:24] "GET /media/buildings/2025/02/ff32ad22-4d5e-4b54-beb1-0fcf3dd16e5e.png HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:09:46] "GET /app/builder/categories_models/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:09:46] "GET /app/builder/tags_models/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:09:46] "GET /app/builder/models-with-3d/?has_model=1&page=1&page_size=12 HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:09:46] "GET /media/buildings/2025/02/5555f8dd-272c-4c31-8f8c-a877096ff1b0.jpg HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:09:52] "GET /media/models/2025/02/3e4bbccc-378d-4f55-a872-ae0be56e122f.glb HTTP/1.1" 200 -
+Unauthorized: /app/builder/details/367/
+10.153.22.151 - - [07/Apr/2025 10:09:52] "GET /app/builder/details/367/ HTTP/1.1" 401 -
+Unauthorized: /app/builder/details/367/
+10.153.22.151 - - [07/Apr/2025 10:16:12] "GET /app/builder/details/367/ HTTP/1.1" 401 -
+Forbidden: /app/user/login/
+10.153.22.151 - - [07/Apr/2025 10:16:16] "POST /app/user/login/ HTTP/1.1" 403 -
+Forbidden: /app/user/login/
+10.153.22.151 - - [07/Apr/2025 10:16:20] "POST /app/user/login/ HTTP/1.1" 403 -
+Forbidden: /app/user/login/
+10.153.22.151 - - [07/Apr/2025 10:16:37] "POST /app/user/login/ HTTP/1.1" 403 -
+Forbidden: /app/user/login/
+10.153.22.151 - - [07/Apr/2025 10:16:54] "POST /app/user/login/ HTTP/1.1" 403 -
+Forbidden: /app/user/send-verification-email/
+10.153.22.151 - - [07/Apr/2025 10:17:19] "POST /app/user/send-verification-email/ HTTP/1.1" 403 -
+ * Detected change in 'G:\\GraduationDesign\\probject\\backend\\probject\\settings.py', reloading
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+Django version 5.0.7, using settings 'probject.settings'
+Development server is running at https://0.0.0.0:8005/
+Using the Werkzeug debugger (https://werkzeug.palletsprojects.com/)
+Quit the server with CTRL-BREAK.
+ * Detected change in 'G:\\GraduationDesign\\probject\\backend\\probject\\settings.py', reloading
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+Django version 5.0.7, using settings 'probject.settings'
+Development server is running at https://0.0.0.0:8005/
+Using the Werkzeug debugger (https://werkzeug.palletsprojects.com/)
+Quit the server with CTRL-BREAK.
+ * Restarting with stat
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger is active!
+ * Debugger PIN: 335-383-409
+ * Debugger PIN: 335-383-409
+Forbidden: /app/user/login/
+10.153.22.151 - - [07/Apr/2025 10:18:31] "POST /app/user/login/ HTTP/1.1" 403 -
+ * Detected change in 'G:\\GraduationDesign\\probject\\backend\\probject\\settings.py', reloading
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+Django version 5.0.7, using settings 'probject.settings'
+Development server is running at https://0.0.0.0:8005/
+Using the Werkzeug debugger (https://werkzeug.palletsprojects.com/)
+Quit the server with CTRL-BREAK.
+ * Detected change in 'G:\\GraduationDesign\\probject\\backend\\probject\\settings.py', reloading
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+Django version 5.0.7, using settings 'probject.settings'
+Development server is running at https://0.0.0.0:8005/
+Using the Werkzeug debugger (https://werkzeug.palletsprojects.com/)
+Quit the server with CTRL-BREAK.
+ * Restarting with stat
+ * Restarting with stat
+Error occurred during checks: SystemCheckError("SystemCheckError: System check identified some issues:\n\nERRORS:\n?: (corsheaders.E013) Origin '*' in CORS_ALLOWED_ORIGINS is missing scheme or netloc\n\tHINT: Add a scheme (e.g. https://) or netloc (e.g. example.com).\n\nSystem check identified 1 issue (0 silenced).")
+
+Error occurred during checks: SystemCheckError("SystemCheckError: System check identified some issues:\n\nERRORS:\n?: (corsheaders.E013) Origin '*' in CORS_ALLOWED_ORIGINS is missing scheme or netloc\n\tHINT: Add a scheme (e.g. https://) or netloc (e.g. example.com).\n\nSystem check identified 1 issue (0 silenced).")
+
+ * Debugger is active!
+ * Debugger is active!
+ * Debugger PIN: 335-383-409
+ * Debugger PIN: 335-383-409
+10.153.22.151 - - [07/Apr/2025 10:19:14] "POST /app/user/login/ HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\staticfiles\handlers.py", line 80, in __call__
+    return self.application(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django_extensions\management\commands\runserver_plus.py", line 348, in application
+    raise SystemCheckError(error_message)
+django.core.management.base.SystemCheckError: SystemCheckError: System check identified some issues:
+
+ERRORS:
+?: (corsheaders.E013) Origin '*' in CORS_ALLOWED_ORIGINS is missing scheme or netloc
+	HINT: Add a scheme (e.g. https://) or netloc (e.g. example.com).
+
+System check identified 1 issue (0 silenced).
+10.153.22.151 - - [07/Apr/2025 10:19:17] "POST /app/user/login/ HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\staticfiles\handlers.py", line 80, in __call__
+    return self.application(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\10929\AppData\Local\Programs\Python\Python312\Lib\site-packages\django_extensions\management\commands\runserver_plus.py", line 348, in application
+    raise SystemCheckError(error_message)
+django.core.management.base.SystemCheckError: SystemCheckError: System check identified some issues:
+
+ERRORS:
+?: (corsheaders.E013) Origin '*' in CORS_ALLOWED_ORIGINS is missing scheme or netloc
+	HINT: Add a scheme (e.g. https://) or netloc (e.g. example.com).
+
+System check identified 1 issue (0 silenced).
+ * Detected change in 'G:\\GraduationDesign\\probject\\backend\\probject\\settings.py', reloading
+Performing system checks...
+
+
+Django version 5.0.7, using settings 'probject.settings'
+Development server is running at https://0.0.0.0:8005/
+Using the Werkzeug debugger (https://werkzeug.palletsprojects.com/)
+Quit the server with CTRL-BREAK.
+ * Detected change in 'G:\\GraduationDesign\\probject\\backend\\probject\\settings.py', reloading
+Performing system checks...
+
+
+Django version 5.0.7, using settings 'probject.settings'
+Development server is running at https://0.0.0.0:8005/
+Using the Werkzeug debugger (https://werkzeug.palletsprojects.com/)
+Quit the server with CTRL-BREAK.
+ * Restarting with stat
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger is active!
+ * Debugger PIN: 335-383-409
+ * Debugger PIN: 335-383-409
+Forbidden: /app/user/login/
+10.153.22.151 - - [07/Apr/2025 10:20:03] "POST /app/user/login/ HTTP/1.1" 403 -
+Forbidden: /app/user/login/
+10.153.22.151 - - [07/Apr/2025 10:20:05] "POST /app/user/login/ HTTP/1.1" 403 -
+Forbidden: /app/user/login/
+10.153.22.151 - - [07/Apr/2025 10:20:09] "POST /app/user/login/ HTTP/1.1" 403 -
+Forbidden: /app/user/login/
+10.153.22.151 - - [07/Apr/2025 10:23:02] "POST /app/user/login/ HTTP/1.1" 403 -
+ * Detected change in 'G:\\GraduationDesign\\probject\\backend\\app\\user\\views.py', reloading
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+Django version 5.0.7, using settings 'probject.settings'
+Development server is running at https://0.0.0.0:8005/
+Using the Werkzeug debugger (https://werkzeug.palletsprojects.com/)
+Quit the server with CTRL-BREAK.
+ * Detected change in 'G:\\GraduationDesign\\probject\\backend\\app\\user\\views.py', reloading
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+Django version 5.0.7, using settings 'probject.settings'
+Development server is running at https://0.0.0.0:8005/
+Using the Werkzeug debugger (https://werkzeug.palletsprojects.com/)
+Quit the server with CTRL-BREAK.
+ * Restarting with stat
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger is active!
+ * Debugger PIN: 335-383-409
+ * Debugger PIN: 335-383-409
+Forbidden: /app/user/login/
+10.153.22.151 - - [07/Apr/2025 10:25:16] "POST /app/user/login/ HTTP/1.1" 403 -
+Forbidden: /app/user/login/
+10.153.22.151 - - [07/Apr/2025 10:25:18] "POST /app/user/login/ HTTP/1.1" 403 -
+Forbidden: /app/user/login/
+10.153.22.151 - - [07/Apr/2025 10:25:20] "POST /app/user/login/ HTTP/1.1" 403 -
+ * Detected change in 'G:\\GraduationDesign\\probject\\backend\\app\\user\\views.py', reloading
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+Django version 5.0.7, using settings 'probject.settings'
+Development server is running at https://0.0.0.0:8005/
+Using the Werkzeug debugger (https://werkzeug.palletsprojects.com/)
+Quit the server with CTRL-BREAK.
+ * Detected change in 'G:\\GraduationDesign\\probject\\backend\\app\\user\\views.py', reloading
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+Django version 5.0.7, using settings 'probject.settings'
+Development server is running at https://0.0.0.0:8005/
+Using the Werkzeug debugger (https://werkzeug.palletsprojects.com/)
+Quit the server with CTRL-BREAK.
+ * Restarting with stat
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger is active!
+ * Debugger PIN: 335-383-409
+ * Debugger PIN: 335-383-409
+ * Detected change in 'G:\\GraduationDesign\\probject\\backend\\app\\user\\views.py', reloading
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+Django version 5.0.7, using settings 'probject.settings'
+Development server is running at https://0.0.0.0:8005/
+Using the Werkzeug debugger (https://werkzeug.palletsprojects.com/)
+Quit the server with CTRL-BREAK.
+ * Detected change in 'G:\\GraduationDesign\\probject\\backend\\app\\user\\views.py', reloading
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+Django version 5.0.7, using settings 'probject.settings'
+Development server is running at https://0.0.0.0:8005/
+Using the Werkzeug debugger (https://werkzeug.palletsprojects.com/)
+Quit the server with CTRL-BREAK.
+ * Restarting with stat
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 335-383-409
+ * Debugger is active!
+ * Debugger PIN: 335-383-409
+Forbidden: /app/user/login/
+10.153.22.151 - - [07/Apr/2025 10:29:22] "POST /app/user/login/ HTTP/1.1" 403 -
+Forbidden: /app/user/login/
+10.153.22.151 - - [07/Apr/2025 10:29:23] "POST /app/user/login/ HTTP/1.1" 403 -
+10.153.22.151 - - [07/Apr/2025 10:29:25] "GET /app/builder/categories_models/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:29:25] "GET /app/builder/tags_models/ HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:29:25] "GET /app/builder/models-with-3d/?has_model=1&page=1&page_size=12 HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:29:26] "GET /media/buildings/2025/02/5555f8dd-272c-4c31-8f8c-a877096ff1b0.jpg HTTP/1.1" 200 -
+10.153.22.151 - - [07/Apr/2025 10:29:28] "GET /app/builder/all/ HTTP/1.1" 200 -
+Forbidden: /app/user/login/
+10.153.22.151 - - [07/Apr/2025 10:29:51] "POST /app/user/login/ HTTP/1.1" 403 -
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:8005
+ * Running on https://10.153.22.151:8005
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 335-383-409
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:8005
+ * Running on https://10.153.22.151:8005
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 335-383-409
+Forbidden: /app/user/login/
+10.153.22.151 - - [07/Apr/2025 10:43:22] "POST /app/user/login/ HTTP/1.1" 403 -

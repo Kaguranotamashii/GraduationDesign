@@ -35,10 +35,13 @@ urlpatterns = [
 
     path('articles/tags/', views.get_all_tags, name='get_tags'),
 
-    path('articles/searchV2/', views.get_article_list_v2, name='search_articles')
+    path('articles/searchV2/', views.get_article_list_v2, name='search_articles'),
 
 
-
+    path('admin/articles/create/', views.admin_create_article, name='admin_create_article'),
+    path('admin/articles/list/', views.admin_get_all_articles, name='admin_get_all_articles'),
+    path('admin/articles/update/<int:article_id>/', views.admin_update_article, name='admin_update_article'),
+    path('admin/articles/delete/<int:article_id>/', views.admin_delete_article, name='admin_delete_article'),
 
 
 

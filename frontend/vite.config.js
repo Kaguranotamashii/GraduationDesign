@@ -4,9 +4,14 @@ import fs from 'fs';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 
-var url = 'https://10.157.69.198:8005';
-// 去掉https://
-var url1  = url.replace(/^https?:\/\//, '');
+var url = 'https://10.153.96.53:8005';
+// 将上面的url 8005变成5173
+if (url.includes('8005')) {
+    var url2 = url.replace('8005', '5173');
+}
+
+
+var url1 = url.replace(/^https?:\/\//, '');
 
 export default defineConfig({
     plugins: [
@@ -28,11 +33,10 @@ export default defineConfig({
             '/media': {
                 target: url,
                 changeOrigin: true,
-                secure: false,  // 忽略证书验证
-                // 添加 HTTPS 请求配置
+                secure: false,
                 configure: (proxy, options) => {
                     proxy.on('proxyReq', (proxyReq, req, res) => {
-                        proxyReq.setHeader('Host', 'urls1');
+                        proxyReq.setHeader('Host', url1);
                     });
                 },
             },
@@ -40,6 +44,16 @@ export default defineConfig({
                 target: url,
                 changeOrigin: true,
                 secure: false,
+                configure: (proxy, options) => {
+                    proxy.on('proxyReq', (proxyReq, req, res) => {
+                        proxyReq.setHeader('Origin',  url2);
+                    });
+                    proxy.on('proxyRes', (proxyRes, req, res) => {
+                        proxyRes.headers['Access-Control-Allow-Origin'] =  url2;
+                        proxyRes.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS';
+                        proxyRes.headers['Access-Control-Allow-Headers'] = 'authorization, content-type, x-csrftoken, x-requested-with';
+                    });
+                },
             },
         },
     },

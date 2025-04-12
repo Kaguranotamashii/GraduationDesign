@@ -1,13 +1,9 @@
-
 from rest_framework import serializers
 from rest_framework_simplejwt.authentication import JWTAuthentication
-
 from probject import settings
-from .models import Article
-from .models import ArticleLike
+from .models import Article, ArticleLike
 from ..builder.models import Builder
 from ..builder.serializers import BuilderSerializer
-
 
 class ArticleSerializer(serializers.ModelSerializer):
     """文章序列化器"""
@@ -19,12 +15,13 @@ class ArticleSerializer(serializers.ModelSerializer):
         allow_null=True
     )  # 用于写入的 ID 字段
     is_liked = serializers.SerializerMethodField()
-
+    author_name = serializers.CharField(source='author.username', read_only=True)  # 新增 author_name 字段
 
     class Meta:
         model = Article
         fields = [
             'id', 'title', 'content', 'builder', 'builder_name', 'author',
+            'author_name',  # 添加到字段列表
             'cover_image', 'cover_image_url', 'created_at', 'updated_at',
             'draft_saved_at', 'published_at', 'status', 'is_featured',
             'views', 'likes', 'tags', 'is_liked'
@@ -40,8 +37,6 @@ class ArticleSerializer(serializers.ModelSerializer):
             return f"{settings.URL_BASE}/{settings.MEDIA_URL.strip('/')}/{obj.cover_image}"
         return None
 
-
-
     def get_is_liked(self, obj):
         """获取当前用户是否点赞过此文章"""
         request = self.context.get('request')
@@ -56,7 +51,6 @@ class ArticleSerializer(serializers.ModelSerializer):
         token = auth_header.split(' ')[1]
         try:
             # 解码 token 获取用户信息
-            # JWT验证
             auth = JWTAuthentication()
             validated_token = auth.get_validated_token(token)
             user_id = auth.get_user(validated_token)
@@ -71,10 +65,5 @@ class ArticleSerializer(serializers.ModelSerializer):
         return False
 
     def get_builder_name(self, obj):
-
         """获取关联建筑名称"""
-
         return obj.builder.name if obj.builder else '无'
-
-
-

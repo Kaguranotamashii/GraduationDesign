@@ -7,14 +7,22 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// 控制是否启动 Django 后端
+const START_DJANGO = false; // 设置为 true 同时启动 Django 和 Vite，设置为 false 只启动 Vite
+
 // 启动 Vite 的命令
 const viteCommand = 'vite --host';
 // 启动 Django 后端的命令
 const djangoCommand = 'python manage.py runserver_plus 0.0.0.0:8005 --cert-file cert.pem --key-file key.pem';
 
-// 启动 Vite 和 Django 服务器
+// 启动 Vite 服务器
 const viteProcess = exec(viteCommand, { cwd: path.resolve(__dirname) }); // 前端目录
-const djangoProcess = exec(djangoCommand, { cwd: path.resolve('G:/GraduationDesign/probject/backend') }); // 后端目录
+
+// 根据 START_DJANGO 决定是否启动 Django 服务器
+let djangoProcess;
+if (START_DJANGO) {
+    djangoProcess = exec(djangoCommand, { cwd: path.resolve('G:/GraduationDesign/probject/backend') }); // 后端目录
+}
 
 // 清除 ANSI 转义序列的正则表达式
 const removeAnsiCodes = (text) => {
@@ -41,7 +49,7 @@ viteProcess.stdout.on('data', (data) => {
         viteConfigContent = viteConfigContent.replace(/var url = '.*?'/, `var url = '${newUrl}'`);
         fs.writeFileSync(viteConfigFilePath, viteConfigContent, 'utf-8');
 
-        // 2. 更新 Django settings.py
+        // 2. 更新 Django settings.py（无论 START_DJANGO 是 true 还是 false 都执行）
         const settingsFilePath = path.resolve('G:/GraduationDesign/probject/backend/probject/settings.py');
         if (fs.existsSync(settingsFilePath)) {
             let settingsContent = fs.readFileSync(settingsFilePath, 'utf-8');
@@ -51,12 +59,14 @@ viteProcess.stdout.on('data', (data) => {
                 fs.writeFileSync(settingsFilePath, settingsContent, 'utf-8');
                 console.log(`已更新 settings.py 中的 URL_BASE 为：${newUrl}`);
 
-                // 重启 Django 服务
-                djangoProcess.kill();
-                setTimeout(() => {
-                    const newDjangoProcess = exec(djangoCommand, { cwd: path.resolve('G:/GraduationDesign/probject/backend') });
-                    handleDjangoOutput(newDjangoProcess);
-                }, 1000);
+                // 如果 START_DJANGO 为 true，重启 Django 服务
+                if (START_DJANGO && djangoProcess) {
+                    djangoProcess.kill();
+                    setTimeout(() => {
+                        djangoProcess = exec(djangoCommand, { cwd: path.resolve('G:/GraduationDesign/probject/backend') });
+                        handleDjangoOutput(djangoProcess);
+                    }, 1000);
+                }
             } else {
                 console.warn('settings.py 中未找到 URL_BASE 配置，未进行更新');
             }
@@ -88,8 +98,10 @@ function handleDjangoOutput(process) {
     });
 }
 
-// 初始绑定 Django 输出
-handleDjangoOutput(djangoProcess);
+// 如果 START_DJANGO 为 true，则绑定 Django 输出
+if (START_DJANGO && djangoProcess) {
+    handleDjangoOutput(djangoProcess);
+}
 
 // Vite 错误输出处理
 viteProcess.stderr.on('data', (data) => {
@@ -110,7 +122,11 @@ viteProcess.on('close', (code) => {
 // 捕获脚本退出信号
 process.on('SIGINT', () => {
     viteProcess.kill();
-    djangoProcess.kill();
-    console.log('脚本退出，关闭 Vite 和 Django 进程');
+    if (START_DJANGO && djangoProcess) {
+        djangoProcess.kill();
+        console.log('脚本退出，关闭 Vite 和 Django 进程');
+    } else {
+        console.log('脚本退出，关闭 Vite 进程');
+    }
     process.exit();
 });

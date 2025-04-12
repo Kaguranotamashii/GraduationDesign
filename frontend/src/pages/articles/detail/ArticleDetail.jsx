@@ -8,8 +8,8 @@ import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import {
     Clock, Calendar, Book, Eye, Bookmark, Share2,
-    ThumbsUp, ArrowUpCircle, Home, ChevronLeft, ListFilter,
-    Tag, Heart
+    Heart, ArrowUpCircle, Home, ChevronLeft, ListFilter,
+    Tag, Menu
 } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { message } from 'antd';
@@ -28,6 +28,7 @@ const ArticleDetail = () => {
     const [readingProgress, setReadingProgress] = useState(0);
     const [estimatedReadTime, setEstimatedReadTime] = useState(0);
     const [isLiked, setIsLiked] = useState(false);
+    const [isTocOpen, setIsTocOpen] = useState(false); // 控制移动端目录显示
 
     const fadeIn = useSpring({
         from: { opacity: 0, transform: 'translateY(20px)' },
@@ -78,7 +79,6 @@ const ArticleDetail = () => {
         }
     }, [id]);
 
-     // 修改前端的 handleLike 函数
     const handleLike = async () => {
         try {
             const response = await (isLiked ? unlikeArticle : likeArticle)(id);
@@ -87,9 +87,9 @@ const ArticleDetail = () => {
                 setArticle(prev => ({
                     ...prev,
                     likes: response.data.likes,
-                    is_liked: response.data.is_liked  // 使用后端返回的点赞状态
+                    is_liked: response.data.is_liked
                 }));
-                setIsLiked(response.data.is_liked);  // 更新本地状态
+                setIsLiked(response.data.is_liked);
                 message.success(response.message);
             }
         } catch (error) {
@@ -126,7 +126,6 @@ const ArticleDetail = () => {
     };
 
     const handleBookmark = () => {
-        // 预留收藏功能
         message.info('收藏功能开发中');
     };
 
@@ -156,7 +155,6 @@ const ArticleDetail = () => {
     }
 
     return (
-
         <div className="min-h-screen bg-gray-50">
             {/* Reading Progress Bar */}
             <div
@@ -168,21 +166,28 @@ const ArticleDetail = () => {
             <div className="bg-white border-b shadow-sm sticky top-0 z-40">
                 <div className="container mx-auto px-4">
                     <div className="flex items-center justify-between h-16">
-                        <div className="flex items-center space-x-6">
-                            <div className="flex items-center space-x-3 border-r pr-6">
+                        <div className="flex items-center space-x-3 md:space-x-6">
+                            <button
+                                onClick={() => navigate(-1)}
+                                className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors flex items-center gap-1"
+                            >
+                                <ChevronLeft className="w-5 h-5" />
+                                <span className="text-sm hidden md:inline">返回</span>
+                            </button>
+                            <button
+                                onClick={() => setIsTocOpen(!isTocOpen)}
+                                className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors flex items-center gap-1 md:hidden"
+                            >
+                                <Menu className="w-5 h-5" />
+                                <span className="text-sm">目录</span>
+                            </button>
+                            <div className="hidden md:flex items-center space-x-3">
                                 <button
                                     onClick={() => navigate('/')}
                                     className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors flex items-center gap-1"
                                 >
                                     <Home className="w-4 h-4" />
                                     <span className="text-sm">首页</span>
-                                </button>
-                                <button
-                                    onClick={() => navigate(-1)}
-                                    className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors flex items-center gap-1"
-                                >
-                                    <ChevronLeft className="w-4 h-4" />
-                                    <span className="text-sm">返回</span>
                                 </button>
                                 <button
                                     onClick={() => navigate('/articles')}
@@ -196,18 +201,6 @@ const ArticleDetail = () => {
                                 <Book className="w-4 h-4" />
                                 <span>{article.category || '文章'}</span>
                             </Badge>
-                            <div className="flex items-center text-gray-600 text-sm">
-                                <Clock className="w-4 h-4 mr-2" />
-                                {estimatedReadTime} 分钟阅读
-                            </div>
-                            <div className="flex items-center text-gray-600 text-sm">
-                                <Calendar className="w-4 h-4 mr-2" />
-                                {formatDate(article.published_at)}
-                            </div>
-                            <div className="flex items-center text-gray-600 text-sm">
-                                <Eye className="w-4 h-4 mr-2" />
-                                {article.views} 次浏览
-                            </div>
                         </div>
                         <div className="flex items-center space-x-2">
                             <button
@@ -218,7 +211,7 @@ const ArticleDetail = () => {
                                     : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'}`}
                             >
                                 <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
-                                <span className="text-sm">{article.likes}</span>
+                                <span className="text-sm hidden md:inline">{article.likes}</span>
                             </button>
                             <button
                                 onClick={handleBookmark}
@@ -239,8 +232,7 @@ const ArticleDetail = () => {
 
             {/* Title Section with Cover Image */}
             <div className="relative">
-                <div className={`bg-gradient-to-r from-blue-600 to-indigo-600 py-16 relative overflow-hidden`}>
-                    {/* Background Image */}
+                <div className={`bg-gradient-to-r from-blue-600 to-indigo-600 py-12 md:py-16 relative overflow-hidden`}>
                     {article?.cover_image_url && (
                         <div className="absolute inset-0">
                             <img
@@ -251,35 +243,31 @@ const ArticleDetail = () => {
                             <div className="absolute inset-0 bg-gradient-to-r from-blue-600/80 to-indigo-600/80" />
                         </div>
                     )}
-
-                    {/* Content */}
                     <div className="container mx-auto px-4 relative z-10">
                         <animated.div style={fadeIn} className="max-w-4xl mx-auto text-center text-white">
-                            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                            <h1 className="text-3xl md:text-5xl font-bold mb-4">
                                 {article.title}
                             </h1>
-
-                            {/* Tags */}
-                            {article.tags && (
-                                <div className="flex flex-wrap justify-center gap-2 mt-4">
-                                    {formatTags(article.tags).map((tag, index) => (
-                                        <Badge
-                                            key={index}
-                                            variant="secondary"
-                                            className="bg-white/20 hover:bg-white/30 transition-colors"
-                                        >
-                                            <Tag className="w-3 h-3 mr-1" />
-                                            {tag}
-                                        </Badge>
-                                    ))}
-                                </div>
-                            )}
-
-                            {/* Meta Info */}
-                            <div className="flex flex-wrap justify-center gap-4 mt-6 text-white/80">
+                            <div className="flex flex-wrap justify-center gap-2 mt-4">
+                                {formatTags(article.tags).map((tag, index) => (
+                                    <Badge
+                                        key={index}
+                                        variant="secondary"
+                                        className="bg-white/20 hover:bg-white/30 transition-colors"
+                                    >
+                                        <Tag className="w-3 h-3 mr-1" />
+                                        {tag}
+                                    </Badge>
+                                ))}
+                            </div>
+                            <div className="flex flex-wrap justify-center gap-3 md:gap-4 mt-6 text-white/80 text-sm md:text-base">
                                 <div className="flex items-center">
                                     <Calendar className="w-4 h-4 mr-2" />
                                     {formatDate(article.published_at)}
+                                </div>
+                                <div className="flex items-center">
+                                    <Clock className="w-4 h-4 mr-2" />
+                                    {estimatedReadTime} 分钟阅读
                                 </div>
                                 <div className="flex items-center">
                                     <Eye className="w-4 h-4 mr-2" />
@@ -296,12 +284,12 @@ const ArticleDetail = () => {
             </div>
 
             {/* Main Content */}
-            <main className="container mx-auto px-4 py-8">
-                <div className="flex flex-col lg:flex-row gap-8">
+            <main className="container mx-auto px-4 py-6 md:py-8">
+                <div className="flex flex-col lg:flex-row gap-6 md:gap-8">
                     {/* Content Area */}
                     <animated.div style={fadeIn} className="flex-1">
                         <div className="bg-white rounded-lg shadow-sm">
-                            <div className="p-8 prose max-w-none">
+                            <div className="p-4 md:p-8 prose max-w-none">
                                 <ReactMarkdown
                                     remarkPlugins={[remarkGfm]}
                                     rehypePlugins={[
@@ -315,17 +303,26 @@ const ArticleDetail = () => {
                         </div>
 
                         {/* Comments */}
-                        <div className="mt-8">
+                        <div className="mt-6 md:mt-8">
                             <CommentSection articleId={id} />
                         </div>
                     </animated.div>
 
-                    {/* Table of Contents */}
-                    <animated.div style={fadeIn} className="lg:w-72">
-                        <div className="sticky top-20">
+                    {/* Table of Contents (Hidden on Mobile by Default) */}
+                    <animated.div
+                        style={fadeIn}
+                        className={`lg:w-72 ${isTocOpen ? 'block' : 'hidden'} lg:block fixed lg:static top-16 left-0 w-full lg:w-72 bg-white lg:bg-transparent z-30 lg:z-0 transition-all duration-300`}
+                    >
+                        <div className="sticky top-16 p-4 lg:p-0">
                             <div className="bg-white rounded-lg shadow-sm">
-                                <div className="p-4 border-b">
+                                <div className="p-4 border-b flex justify-between items-center">
                                     <h3 className="font-medium">目录</h3>
+                                    <button
+                                        onClick={() => setIsTocOpen(false)}
+                                        className="p-2 text-gray-600 hover:text-blue-600 lg:hidden"
+                                    >
+                                        <ChevronLeft className="w-5 h-5" />
+                                    </button>
                                 </div>
                                 <div className="p-4 max-h-[calc(100vh-12rem)] overflow-y-auto">
                                     <MarkdownNavbar
@@ -346,7 +343,7 @@ const ArticleDetail = () => {
             {showBackToTop && (
                 <button
                     onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                    className="fixed bottom-8 right-8 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors z-50"
+                    className="fixed bottom-8 right-4 md:right-8 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors z-50"
                 >
                     <ArrowUpCircle className="w-6 h-6" />
                 </button>

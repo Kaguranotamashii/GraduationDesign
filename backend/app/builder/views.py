@@ -687,6 +687,60 @@ def update_builder_info(request, pk):
 
 
 
+@api_view(['POST'])
+@jwt_required
+def upload_building_model_user(request, pk):
+    """上传建筑的模型文件（面向登录用户）"""
+    try:
+        builder = Builder.objects.get(pk=pk)
+
+        # 权限检查：仅允许建筑的创建者上传模型
+        if builder.creator.id != request.auth_user.id:
+            return Response({
+                "code": 403,
+                "message": "无权限修改此建筑，只有创建者可以上传模型文件"
+            }, status=status.HTTP_403_FORBIDDEN)
+
+        if 'model' not in request.FILES:
+            return Response({
+                "code": 400,
+                "message": "请选择要上传的建筑模型文件"
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # 删除旧模型文件（如果存在）
+            if builder.model:
+                delete_model_file(builder.model.name)
+
+            # 保存新模型文件
+            model_path = save_model_file(
+                request.FILES['model'],
+                name=f"建筑模型-{builder.name}"
+            )
+            builder.model = model_path
+            builder.save()
+
+            return Response({
+                "code": 200,
+                "message": "建筑模型文件上传成功",
+                "data": BuilderSerializer(builder).data
+            })
+        except ValueError as e:
+            return Response({
+                "code": 400,
+                "message": str(e)
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+    except Builder.DoesNotExist:
+        return Response({
+            "code": 404,
+            "message": "建筑不存在"
+        }, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({
+            "code": 500,
+            "message": f"上传失败: {str(e)}"
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 

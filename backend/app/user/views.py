@@ -14,11 +14,12 @@ from django.core.mail import EmailMessage
 from django.db.models import Q
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.hashers import make_password
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 
 from app.user.decorators import jwt_required, admin_required
@@ -182,7 +183,9 @@ def register_user(request):
     )
 
 
+@csrf_exempt
 @api_view(['POST'])
+@permission_classes([AllowAny])  # 允许未认证用户访问
 def login_user(request):
     """
     用户登录接口（支持用户名/邮箱+密码）
@@ -447,6 +450,7 @@ def update_user_profile(request):
             "message": f"更新失败: {str(e)}"
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
 @api_view(['POST'])
 @jwt_required
 def change_password(request):
@@ -480,6 +484,7 @@ def change_password(request):
         "code": 200,
         "message": "密码修改成功，请重新登录"
     })
+
 
 @api_view(['POST'])
 @jwt_required
@@ -532,6 +537,7 @@ def upload_avatar(request):
             "message": f"头像上传失败: {str(e)}"
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
 @api_view(['DELETE'])
 @jwt_required
 def delete_avatar(request):
@@ -563,6 +569,7 @@ def delete_avatar(request):
             "code": 500,
             "message": f"操作失败: {str(e)}"
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 @api_view(['POST'])
 @jwt_required
@@ -805,8 +812,7 @@ def get_current_user(request):
                 "is_active": user.is_active,
                 "is_staff": user.is_staff,
                 "signature": user.signature,
-                "register_time" : user.date_joined.strftime("%Y-%m-%d %H:%M:%S"),
-
+                "register_time": user.date_joined.strftime("%Y-%m-%d %H:%M:%S"),
 
             }
         })
@@ -816,7 +822,6 @@ def get_current_user(request):
             "message": "获取失败",
             "error": str(e)
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 
 
 @api_view(['GET'])
@@ -882,6 +887,7 @@ def admin_user_list(request):
             "code": 500,
             "message": f"获取用户列表失败: {str(e)}"
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 @api_view(['DELETE'])
 @jwt_required
@@ -975,6 +981,7 @@ def admin_update_user(request, user_id):
             "code": 500,
             "message": f"更新用户信息失败: {str(e)}"
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 @api_view(['POST'])
 @jwt_required

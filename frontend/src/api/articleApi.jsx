@@ -208,3 +208,60 @@ export const searchArticlesV2 = async (params) => {
         throw error;
     }
 }
+
+
+// 管理员 - 创建文章
+export const adminCreateArticle = async (articleData) => {
+    try {
+        const response = await apiClient.post('article/admin/articles/create/', articleData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error creating article (admin):', error);
+        throw error;
+    }
+};
+
+// 管理员 - 获取所有文章列表（包括草稿）
+export const adminGetAllArticles = async (params = {}) => {
+    try {
+        const response = await apiClient.get(`article/admin/articles/list/?${new URLSearchParams(params)}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching all articles (admin):', error);
+        throw error;
+    }
+};
+
+// 管理员 - 更新文章
+export const adminUpdateArticle = async (articleId, updatedData) => {
+    try {
+        const response = await apiClient.put(
+            `article/admin/articles/update/${articleId}/`,
+            updatedData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error updating article (admin):', error);
+        throw error;
+    }
+};
+
+// 管理员 - 删除文章
+export const adminDeleteArticle = async (articleId) => {
+    try {
+        const response = await apiClient.delete(`article/admin/articles/delete/${articleId}/`);
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting article (admin):', error);
+        throw error;
+    }
+};

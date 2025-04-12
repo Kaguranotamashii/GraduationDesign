@@ -10,7 +10,7 @@ from django.utils import timezone
 from probject import settings
 from .models import Article, ArticleLike
 from .serializers import ArticleSerializer
-from app.user.decorators import jwt_required
+from app.user.decorators import jwt_required, admin_required
 from .utils import handle_uploaded_file, delete_file
 from ..builder.models import Builder
 
@@ -771,3 +771,187 @@ def get_all_tags(request):
             'message': f'获取标签失败: {str(e)}'
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+
+
+
+@api_view(['POST'])
+@jwt_required
+@admin_required
+@parser_classes([MultiPartParser, FormParser, JSONParser])
+def admin_create_article(request):
+    """管理员创建文章"""
+    try:
+        data = request.data.copy()
+        data['author'] = request.auth_user.id  # 默认使用管理员作为作者
+
+        # 处理封面图片
+        if 'cover_image_file' in request.FILES:
+            cover_image_path = handle_uploaded_file(
+                request.FILES['cover_image_file'],
+                'articles/covers'
+            )
+            data['cover_image'] = cover_image_path
+
+        # 设置默认值
+        if 'status' not in data:
+            data['status'] = 'draft'
+
+        serializer = ArticleSerializer(data=data)
+        if serializer.is_valid():
+            article = serializer.save()
+
+            # 处理时间字段
+            current_time = timezone.now()
+            if article.status == 'published':
+                article.published_at = current_time
+            else:
+                article.draft_saved_at = current_time
+
+            article.save()
+
+            return Response({
+                'code': 200,
+                'message': '文章创建成功',
+                'data': ArticleSerializer(article).data
+            })
+
+        return Response({
+            'code': 400,
+            'message': '数据验证失败',
+            'errors': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    except Exception as e:
+        return Response({
+            'code': 500,
+            'message': f'创建失败: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+@api_view(['GET'])
+@jwt_required
+@admin_required
+def admin_get_all_articles(request):
+    try:
+        paginator = StandardResultsSetPagination()
+
+        # 获取过滤参数
+        status_filter = request.GET.get('status')
+        search_query = request.GET.get('search')
+
+        queryset = Article.objects.all().order_by('-created_at')
+
+
+        # 应用过滤
+        if status_filter and status_filter not in ['all', 'undefined', None]:
+            queryset = queryset.filter(status=status_filter)
+
+        if search_query and search_query != 'undefined':
+            queryset = queryset.filter(
+                Q(title__icontains=search_query) |
+                Q(content__icontains=search_query)
+            )
+        page = paginator.paginate_queryset(queryset, request)
+        serializer = ArticleSerializer(page, many=True, context={'request': request})
+
+        # 返回标准分页响应
+        return paginator.get_paginated_response(serializer.data)
+
+    except Exception as e:
+        return Response({
+            'code': 500,
+            'message': f'获取失败: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+@api_view(['PUT', 'PATCH'])
+@jwt_required
+@admin_required
+@parser_classes([MultiPartParser, FormParser, JSONParser])
+def admin_update_article(request, article_id):
+    """管理员更新文章"""
+    try:
+        article = get_object_or_404(Article, id=article_id)
+        data = request.data.copy()
+
+        # 处理封面图片
+        if 'cover_image_file' in request.FILES:
+            if article.cover_image:
+                delete_file(article.cover_image)
+            cover_image_path = handle_uploaded_file(
+                request.FILES['cover_image_file'],
+                'articles/covers'
+            )
+            data['cover_image'] = cover_image_path
+
+        serializer = ArticleSerializer(article, data=data, partial=True)
+
+        if serializer.is_valid():
+            updated_article = serializer.save()
+
+            # 处理状态变更
+            if 'status' in data:
+                current_time = timezone.now()
+                if data['status'] == 'published' and article.status != 'published':
+                    updated_article.published_at = current_time
+                    updated_article.draft_saved_at = None
+                elif data['status'] == 'draft':
+                    updated_article.draft_saved_at = current_time
+
+            updated_article.save()
+
+            return Response({
+                'code': 200,
+                'message': '文章更新成功',
+                'data': ArticleSerializer(updated_article).data
+            })
+
+        return Response({
+            'code': 400,
+            'message': '数据验证失败',
+            'errors': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    except Exception as e:
+        return Response({
+            'code': 500,
+            'message': f'更新失败: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['DELETE'])
+@jwt_required
+@admin_required
+def admin_delete_article(request, article_id):
+    """管理员删除文章"""
+    try:
+        article = get_object_or_404(Article, id=article_id)
+
+        # 删除关联的点赞记录
+        ArticleLike.objects.filter(article=article).delete()
+
+        # 删除封面图片
+        if article.cover_image:
+            delete_file(article.cover_image)
+
+        article.delete()
+
+        return Response({
+            'code': 200,
+            'message': '文章删除成功'
+        })
+
+    except Article.DoesNotExist:
+        return Response({
+            'code': 404,
+            'message': '文章不存在'
+        }, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({
+            'code': 500,
+            'message': f'删除失败: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

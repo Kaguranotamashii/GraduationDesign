@@ -1,0 +1,86 @@
+/* AdminLayout.css */
+
+/* 全局容器 */
+.min-h-screen {
+    min-height: 100vh;
+}
+
+/* 顶部导航 */
+.top-nav {
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* 侧边栏和抽屉 */
+.ant-menu {
+    font-size: 0.9rem;
+}
+
+@media (min-width: 768px) {
+    .ant-menu {
+        font-size: 1rem;
+    }
+}
+
+.ant-menu-item,
+.ant-menu-submenu-title {
+    padding: 0 16px !important;
+    margin: 4px 0 !important;
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+.ant-menu-item:hover,
+.ant-menu-submenu-title:hover {
+    background-color: #f0f5ff !important;
+    color: #1890ff !important;
+}
+
+.ant-menu-item-selected {
+    background-color: #e6f7ff !important;
+    color: #1890ff !important;
+}
+
+/* 抽屉样式 */
+.ant-drawer-body {
+    padding: 0 !important;
+}
+
+.ant-drawer-header {
+    padding: 16px !important;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* 主内容区域 */
+.main-content {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* 按钮样式 */
+.ant-btn {
+    border-radius: 6px;
+}
+
+.ant-btn-primary.danger {
+    background-color: #ff4d4f;
+    border-color: #ff4d4f;
+}
+
+.ant-btn-primary.danger:hover {
+    background-color: #ff7875;
+    border-color: #ff7875;
+}
+
+/* 移动端调整 */
+@media (max-width: 767px) {
+    .container {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+
+    .main-content {
+        padding: 12px !important;
+    }
+}

@@ -34,6 +34,8 @@ urlpatterns = [
     # urls.py 中添加
     path('upload-building-model/<int:pk>/', views.upload_building_model, name='upload_building_model'),
 
+    path('upload-building-model-user/<int:pk>/', views.upload_building_model_user, name='upload_building_model'),
+
     # urls.py 中添加
     path('update-builder-info/<int:pk>/', views.update_builder_info, name='update_builder_info'),
 

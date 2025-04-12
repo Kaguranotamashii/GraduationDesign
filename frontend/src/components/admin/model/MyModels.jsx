@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Card, Button, Space, Tag, Modal, message, Input, Select, DatePicker, Switch } from 'antd';
-import { EyeOutlined, FileTextOutlined, EditOutlined, DeleteOutlined, DownloadOutlined } from '@ant-design/icons';
+import { Table, Card, Button, Space, Tag, Modal, message, Input, Select, DatePicker, Switch, Upload, Tooltip } from 'antd';
+import { EyeOutlined, FileTextOutlined, EditOutlined, DeleteOutlined, DownloadOutlined, UploadOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import {
     getMyModelsPaginated,
@@ -8,7 +8,8 @@ import {
     getBuildingCategories,
     getBuildingTags,
     updateBuilderJson,
-    getModelDetails
+    getModelDetails,
+    uploadBuildingModelUser  // 新增导入
 } from '@/api/builderApi';
 
 const { Search } = Input;
@@ -62,17 +63,15 @@ const MyModels = () => {
     const fetchModels = async () => {
         setLoading(true);
         try {
-            // 构建查询参数
             const params = {
                 page: currentPage,
                 page_size: pageSize,
                 search: searchText,
                 category: categoryFilter,
                 tags: tagFilter,
-                has_model: onlyWithModel ? 1 : undefined, // 添加有模型筛选
+                has_model: onlyWithModel ? 1 : undefined,
             };
 
-            // 添加日期范围参数（如果有）
             if (dateRange && dateRange.length === 2) {
                 params.date_range = [
                     dateRange[0].format('YYYY-MM-DD'),
@@ -113,8 +112,6 @@ const MyModels = () => {
                     const response = await deleteMyModel(id);
                     if (response.code === 200) {
                         message.success('删除成功');
-
-                        // 如果当前页只有一条数据且不是第一页，则返回上一页
                         if (models.length === 1 && currentPage > 1) {
                             setCurrentPage(currentPage - 1);
                         } else {
@@ -144,11 +141,8 @@ const MyModels = () => {
     // 下载模型文件
     const handleDownloadModel = async (modelId) => {
         try {
-            // 先获取模型详情信息
             const response = await getModelDetails(modelId);
-
             if (response.code === 200 && response.data.model_url) {
-                // 创建一个临时链接并点击它来下载文件
                 const link = document.createElement('a');
                 link.href = response.data.model_url;
                 link.download = response.data.model_url.split('/').pop();
@@ -178,7 +172,6 @@ const MyModels = () => {
         if (!currentJsonModel) return;
 
         try {
-            // 验证 JSON 格式
             try {
                 JSON.parse(currentJsonModel.jsonEditorContent);
             } catch (error) {
@@ -200,6 +193,22 @@ const MyModels = () => {
         } catch (error) {
             console.error('保存 JSON 数据失败:', error);
             message.error('保存失败: ' + (error.message || '未知错误'));
+        }
+    };
+
+    // 处理模型上传
+    const handleModelUpload = async (builderId, file) => {
+        try {
+            const response = await uploadBuildingModelUser(builderId, file);
+            if (response.code === 200) {
+                message.success('模型文件上传成功');
+                fetchModels(); // 刷新列表
+            } else {
+                throw new Error(response.message || '模型文件上传失败');
+            }
+        } catch (error) {
+            console.error('模型文件上传失败:', error);
+            message.error(error.message || '模型文件上传失败');
         }
     };
 
@@ -300,52 +309,69 @@ const MyModels = () => {
         {
             title: '操作',
             key: 'action',
-            width: 250,
+            width: 300, // 增加宽度以容纳新按钮
             fixed: 'right',
             render: (_, record) => (
                 <Space size="middle">
                     {record.model_url && (
+                        <Tooltip title="查看模型">
+                            <Button
+                                type="text"
+                                icon={<EyeOutlined />}
+                                onClick={() => handleViewModel(record.id)}
+                                className="text-blue-600 hover:text-blue-500"
+                            />
+                        </Tooltip>
+                    )}
+                    <Tooltip title="查看/编辑JSON">
                         <Button
                             type="text"
-                            icon={<EyeOutlined />}
-                            onClick={() => handleViewModel(record.id)}
-                            title="查看模型"
-                            className="text-blue-600 hover:text-blue-500"
+                            icon={<FileTextOutlined />}
+                            onClick={() => handleJsonEdit(record)}
+                            className="text-purple-600 hover:text-purple-500"
                         />
-                    )}
-
-                    <Button
-                        type="text"
-                        icon={<FileTextOutlined />}
-                        onClick={() => handleJsonEdit(record)}
-                        title="查看/编辑JSON"
-                        className="text-purple-600 hover:text-purple-500"
-                    />
-
+                    </Tooltip>
                     {record.model_url && (
+                        <Tooltip title="下载模型">
+                            <Button
+                                type="text"
+                                icon={<DownloadOutlined />}
+                                onClick={() => handleDownloadModel(record.id)}
+                                className="text-green-600 hover:text-green-500"
+                            />
+                        </Tooltip>
+                    )}
+                    <Tooltip title="编辑">
                         <Button
                             type="text"
-                            icon={<DownloadOutlined />}
-                            onClick={() => handleDownloadModel(record.id)}
-                            title="下载模型"
-                            className="text-green-600 hover:text-green-500"
+                            icon={<EditOutlined />}
+                            onClick={() => handleEdit(record)}
                         />
-                    )}
-
-                    <Button
-                        type="text"
-                        icon={<EditOutlined />}
-                        onClick={() => handleEdit(record)}
-                        title="修改"
-                    />
-
-                    <Button
-                        type="text"
-                        danger
-                        icon={<DeleteOutlined />}
-                        onClick={() => handleDelete(record.id)}
-                        title="删除"
-                    />
+                    </Tooltip>
+                    <Upload
+                        showUploadList={false}
+                        accept=".glb,.gltf" // 限制上传文件类型
+                        beforeUpload={(file) => {
+                            handleModelUpload(record.id, file);
+                            return false; // 阻止默认上传行为
+                        }}
+                    >
+                        <Tooltip title="上传模型">
+                            <Button
+                                type="text"
+                                icon={<UploadOutlined />}
+                                className="text-gray-600 hover:text-gray-500"
+                            />
+                        </Tooltip>
+                    </Upload>
+                    <Tooltip title="删除">
+                        <Button
+                            type="text"
+                            danger
+                            icon={<DeleteOutlined />}
+                            onClick={() => handleDelete(record.id)}
+                        />
+                    </Tooltip>
                 </Space>
             ),
         },
@@ -377,7 +403,6 @@ const MyModels = () => {
                                 <Option key={category} value={category}>{category}</Option>
                             ))}
                         </Select>
-
                         <Select
                             placeholder="选择标签"
                             mode="multiple"
@@ -393,7 +418,6 @@ const MyModels = () => {
                                 <Option key={tag} value={tag}>{tag}</Option>
                             ))}
                         </Select>
-
                         <RangePicker
                             placeholder={['开始日期', '结束日期']}
                             onChange={(dates) => {
@@ -401,7 +425,6 @@ const MyModels = () => {
                                 setCurrentPage(1);
                             }}
                         />
-
                         <Search
                             placeholder="搜索建筑名称"
                             allowClear
@@ -412,7 +435,6 @@ const MyModels = () => {
                             }}
                         />
                     </Space>
-
                     <div className="flex items-center">
                         <span className="mr-2">仅显示有模型的建筑:</span>
                         <Switch

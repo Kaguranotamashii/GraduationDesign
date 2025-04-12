@@ -1,42 +1,78 @@
 /* Typography Styles */
 .prose {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    font-size: 1.125rem;
+    font-size: 1rem; /* 移动端字体稍小 */
     color: #333;
-    line-height: 1.8;
-    margin-bottom: 2rem;
+    line-height: 1.7; /* 移动端行距稍紧凑 */
+    margin-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .prose {
+        font-size: 1.125rem;
+        line-height: 1.8;
+        margin-bottom: 2rem;
+    }
 }
 
 .prose h1 {
-    font-size: 2.5rem;
+    font-size: 2rem;
     line-height: 1.2;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
     color: #1a202c;
     font-weight: 700;
     text-align: center;
 }
 
+@media (min-width: 768px) {
+    .prose h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
 .prose h2 {
-    font-size: 2rem;
+    font-size: 1.5rem;
     color: #2d3748;
-    margin-top: 2.5rem;
-    margin-bottom: 1.25rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
     padding-bottom: 0.5rem;
     border-bottom: 2px solid #e2e8f0;
     font-weight: 600;
 }
 
+@media (min-width: 768px) {
+    .prose h2 {
+        font-size: 2rem;
+        margin-top: 2.5rem;
+        margin-bottom: 1.25rem;
+    }
+}
+
 .prose h3 {
-    font-size: 1.75rem;
+    font-size: 1.25rem;
     color: #4a5568;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
     font-weight: 600;
 }
 
+@media (min-width: 768px) {
+    .prose h3 {
+        font-size: 1.75rem;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+}
+
 .prose p {
-    margin-bottom: 1.25rem;
-    color: #4a5568;
+    margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+    .prose p {
+        margin-bottom: 1.25rem;
+    }
 }
 
 .prose a {
@@ -53,7 +89,13 @@
 .prose ul, .prose ol {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
-    padding-left: 1.5rem;
+    padding-left: 1.25rem;
+}
+
+@media (min-width: 768px) {
+    .prose ul, .prose ol {
+        padding-left: 1.5rem;
+    }
 }
 
 .prose li {
@@ -76,10 +118,16 @@
 
 .prose pre {
     background-color: #2d3748;
-    padding: 1rem;
+    padding: 0.75rem;
     border-radius: 0.5rem;
     overflow-x: auto;
     margin: 1rem 0;
+}
+
+@media (min-width: 768px) {
+    .prose pre {
+        padding: 1rem;
+    }
 }
 
 .prose pre code {
@@ -91,7 +139,7 @@
 /* Image Styles */
 .prose img {
     display: block;
-    margin: 1.5rem auto;
+    margin: 1rem auto;
     max-width: 100%;
     border-radius: 0.375rem;
 }
@@ -117,10 +165,16 @@
 .prose blockquote {
     border-left: 4px solid #4299e1;
     background-color: #f7fafc;
-    padding: 1rem;
+    padding: 0.75rem;
     margin: 1rem 0;
     font-style: italic;
     color: #2d3748;
+}
+
+@media (min-width: 768px) {
+    .prose blockquote {
+        padding: 1rem;
+    }
 }
 
 /* Table Styles */
@@ -138,136 +192,23 @@
     background-color: #f7fafc;
     font-weight: 600;
     text-align: left;
-    padding: 0.75rem;
+    padding: 0.5rem;
     border-bottom: 2px solid #e2e8f0;
 }
 
+@media (min-width: 768px) {
+    .prose th {
+        padding: 0.75rem;
+    }
+}
+
 .prose td {
-    padding: 0.75rem;
+    padding: 0.5rem;
     border-bottom: 1px solid #e2e8f0;
 }
 
-/* Header Info Section */
-.header-info {
-    background: linear-gradient(135deg, #3b82f6, #6366f1);
-    color: white;
-}
-
-.header-info .container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 2rem;
-}
-
-.header-info .container .left {
-    display: flex;
-    align-items: center;
-}
-
-.header-info .container .left button {
-    background: white;
-    color: #3b82f6;
-    margin-right: 1rem;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    transition: background 0.3s;
-}
-
-.header-info .container .left button:hover {
-    background: #3b82f6;
-    color: white;
-}
-
-.header-info .container .right {
-    display: flex;
-    align-items: center;
-}
-
-.header-info .container .right button {
-    background: white;
-    color: #3b82f6;
-    margin-left: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    transition: background 0.3s;
-}
-
-.header-info .container .right button:hover {
-    background: #3b82f6;
-    color: white;
-}
-
-/* Title Section with Cover Image */
-.title-section {
-    position: relative;
-    background: linear-gradient(135deg, #3b82f6, #6366f1);
-    color: white;
-    text-align: center;
-    padding: 3rem 0;
-}
-
-.title-section .container {
-    position: relative;
-    z-index: 1;
-}
-
-.title-section .container h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-}
-
-.title-section .container .tags {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-top: 1rem;
-}
-
-.title-section .container .tags .badge {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    transition: background 0.3s;
-}
-
-.title-section .container .tags .badge:hover {
-    background: rgba(255, 255, 255, 0.3);
-}
-
-.title-section .container .meta {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 1rem;
-    color: rgba(255, 255, 255, 0.8);
-}
-
-.title-section .background-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 0;
-    opacity: 0.3;
-}
-
-/* Back to Top Button */
-.back-to-top {
-    position: fixed;
-    bottom: 1rem;
-    right: 1rem;
-    background: #3b82f6;
-    color: white;
-    border-radius: 50%;
-    padding: 0.75rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    transition: background 0.3s;
-}
-
-.back-to-top:hover {
-    background: #6366f1;
+@media (min-width: 768px) {
+    .prose td {
+        padding: 0.75rem;
+    }
 }

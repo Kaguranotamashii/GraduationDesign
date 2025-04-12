@@ -33,6 +33,7 @@
     "@tailwindcss/vite": "^4.0.3",
     "@uiw/react-md-editor": "^4.0.5",
     "antd": "^5.23.2",
+    "ar.js": "^2.2.2",
     "axios": "^1.7.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

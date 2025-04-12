@@ -94,14 +94,10 @@ USE_TZ = True
 STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CORS configuration
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173',
-    'https1://10.157.69.198:3000',  # 添加前端局域网地址
-]
-URL_BASE = 'https://10.157.69.198:8005'  # 修改为局域网 IP
+
+URL_BASE = 'https://10.153.96.53:8005'  # 修改为局域网 IP
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_CREDENTIALS = False
 
 CORS_ALLOW_HEADERS = [
     'authorization',
@@ -147,7 +143,15 @@ AUTH_USER_MODEL = 'user.CustomUser'
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',  # 默认允许所有用户访问
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
 }
 
 GOOGLE_CLIENT_ID = config('GOOGLE_CLIENT_ID', default='')

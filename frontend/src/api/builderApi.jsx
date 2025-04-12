@@ -179,6 +179,23 @@ export const uploadBuildingModel = async (builderId, modelFile) => {
 };
 
 // 在 builderApi.jsx 中添加
+export const uploadBuildingModelUser = async (builderId, modelFile) => {
+    try {
+        const formData = new FormData();
+        formData.append('model', modelFile);
+
+        const response = await apiClient.post(`builder/upload-building-model-user/${builderId}/`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error uploading building model:', error);
+        throw error;
+    }
+};
+// 在 builderApi.jsx 中添加
 export const updateBuilderInfo = async (builderId, data) => {
     try {
         const response = await apiClient.put(`builder/update-builder-info/${builderId}/`, data);
