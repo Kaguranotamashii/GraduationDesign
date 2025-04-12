@@ -1,12 +1,17 @@
-import React, { useEffect, useRef } from 'react';
-import { Github, Code, Users, Heart, Star, Mail, Hexagon } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Github, Code, Users, Heart, Star, Mail, Hexagon, Database, Server } from 'lucide-react';
 import Footer from "../../components/home/Footer";
 import Navbar from "../../components/home/Navbar";
 import { motion, useScroll, useTransform, useInView, useAnimation } from 'framer-motion';
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 const AboutPage = () => {
     const controls = useAnimation();
     const { scrollYProgress } = useScroll();
+    const [showThreeCanvas, setShowThreeCanvas] = useState(false);
+    const threeCanvasRef = useRef(null);
 
     const headerRef = useRef(null);
     const featuresRef = useRef(null);
@@ -29,6 +34,132 @@ const AboutPage = () => {
             controls.start("visible");
         }
     }, [controls, headerInView]);
+
+    // Initialize Three.js scene when techStack section is in view
+    useEffect(() => {
+        if (techStackInView && threeCanvasRef.current && !showThreeCanvas) {
+            setShowThreeCanvas(true);
+            
+            // Create a basic Three.js scene
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x111111);
+            
+            const camera = new THREE.PerspectiveCamera(
+                45, 
+                threeCanvasRef.current.clientWidth / threeCanvasRef.current.clientHeight, 
+                0.1, 
+                1000
+            );
+            camera.position.set(5, 3, 5);
+            camera.lookAt(0, 0, 0);
+            
+            // Add ambient light
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            
+            // Add directional light (like sunlight)
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(5, 10, 7.5);
+            directionalLight.castShadow = true;
+            scene.add(directionalLight);
+            
+            // Setup renderer with shadows
+            const renderer = new THREE.WebGLRenderer({ 
+                antialias: true,
+                alpha: true
+            });
+            renderer.setSize(threeCanvasRef.current.clientWidth, threeCanvasRef.current.clientHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.outputEncoding = THREE.sRGBEncoding;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.25;
+            threeCanvasRef.current.appendChild(renderer.domElement);
+            
+            // Create loading manager to track progress
+            const loadingManager = new THREE.LoadingManager();
+            
+            // Create a loading progress indicator or state if needed
+            loadingManager.onProgress = (url, loaded, total) => {
+                // You could update a loading progress state here if you want
+                console.log(`Loading model: ${Math.round(loaded / total * 100)}%`);
+            };
+            
+            // Load GLB model
+            const loader = new THREE.GLTFLoader(loadingManager);
+            loader.load(
+                '/models/qiniandian123.glb', // Note: Path is relative to the public directory
+                (gltf) => {
+                    const model = gltf.scene;
+                    
+                    // Center the model
+                    const box = new THREE.Box3().setFromObject(model);
+                    const center = box.getCenter(new THREE.Vector3());
+                    model.position.sub(center);
+                    
+                    // Add model to scene
+                    scene.add(model);
+                    
+                    // Adjust camera to fit model
+                    const size = box.getSize(new THREE.Vector3());
+                    const maxDim = Math.max(size.x, size.y, size.z);
+                    const fov = camera.fov * (Math.PI / 180);
+                    const cameraDistance = maxDim / (2 * Math.tan(fov / 2));
+                    
+                    camera.position.z = cameraDistance * 1.5;
+                    camera.updateProjectionMatrix();
+                },
+                (progress) => {
+                    // Additional progress tracking if needed
+                },
+                (error) => {
+                    console.error('Error loading model:', error);
+                }
+            );
+            
+            // Add orbit controls for interaction
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.screenSpacePanning = false;
+            controls.enableZoom = true;
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 0.5;
+            
+            // Handle window resize
+            const handleResize = () => {
+                if (threeCanvasRef.current) {
+                    const width = threeCanvasRef.current.clientWidth;
+                    const height = threeCanvasRef.current.clientHeight;
+                    
+                    camera.aspect = width / height;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(width, height);
+                }
+            };
+            
+            window.addEventListener('resize', handleResize);
+            
+            // Animation loop
+            const animate = function () {
+                requestAnimationFrame(animate);
+                controls.update();
+                renderer.render(scene, camera);
+            };
+            
+            animate();
+            
+            // Handle cleanup
+            return () => {
+                window.removeEventListener('resize', handleResize);
+                controls.dispose();
+                renderer.dispose();
+                if (threeCanvasRef.current) {
+                    threeCanvasRef.current.removeChild(renderer.domElement);
+                }
+            };
+        }
+    }, [techStackInView, showThreeCanvas]);
 
     // Fancy gradient blob animation
     const blobVariants = {
@@ -134,9 +265,9 @@ const AboutPage = () => {
                     <div className="container mx-auto px-4 md:px-8 relative z-10">
                         <div className="max-w-4xl mx-auto text-center">
                             <motion.div variants={textVariants}>
-                <span className="inline-block px-3 py-1 text-sm font-medium bg-red-500/20 text-red-300 rounded-full mb-6">
-                  开源项目
-                </span>
+                                <span className="inline-block px-3 py-1 text-sm font-medium bg-red-500/20 text-red-300 rounded-full mb-6">
+                                  开源项目
+                                </span>
                             </motion.div>
 
                             <motion.h1
@@ -150,7 +281,7 @@ const AboutPage = () => {
                                 variants={textVariants}
                                 className="text-lg md:text-xl text-gray-300 mb-12 max-w-3xl mx-auto"
                             >
-                                这是一个开源的中国传统建筑文化交流平台，我们通过社区协作，探索和传承建筑文化的深层价值。
+                                这是一个开源的中国传统建筑文化交流平台,我们通过社区协作,探索和传承建筑文化的深层价值.
                             </motion.p>
 
                             <motion.div
@@ -158,7 +289,7 @@ const AboutPage = () => {
                                 className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6"
                             >
                                 <motion.a
-                                    href="https://github.com/yourusername/project"
+                                    href="https://github.com/Kaguranotamashii/GraduationDesign"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="flex items-center px-8 py-4 bg-white/10 backdrop-blur-md text-white rounded-lg border border-white/10 hover:bg-white/20 transition-all duration-300 w-full sm:w-auto"
@@ -170,7 +301,7 @@ const AboutPage = () => {
                                 </motion.a>
 
                                 <motion.a
-                                    href="https://github.com/yourusername/project/stargazers"
+                                    href="https://github.com/Kaguranotamashii/GraduationDesign/stargazers"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="flex items-center px-8 py-4 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-lg hover:from-red-500 hover:to-red-400 transition-all duration-300 w-full sm:w-auto"
@@ -197,9 +328,9 @@ const AboutPage = () => {
                             animate={featuresInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
                             transition={{ duration: 0.6 }}
                         >
-              <span className="inline-block px-3 py-1 text-sm font-medium bg-blue-500/20 text-blue-300 rounded-full mb-4">
-                核心理念
-              </span>
+                          <span className="inline-block px-3 py-1 text-sm font-medium bg-blue-500/20 text-blue-300 rounded-full mb-4">
+                            核心理念
+                          </span>
                             <h2 className="text-3xl md:text-4xl font-bold mb-4">平台特色</h2>
                             <p className="text-gray-400 max-w-2xl mx-auto">
                                 我们致力于建立一个全面、专业、开放的传统建筑文化交流平台
@@ -216,17 +347,17 @@ const AboutPage = () => {
                                 {
                                     icon: <Code className="w-10 h-10 text-red-400" />,
                                     title: "开源共建",
-                                    desc: "通过开源协作，任何人可为平台贡献代码与创意，共同完善这个传统文化数字平台。"
+                                    desc: "通过开源协作,任何人可为平台贡献代码与创意,共同完善这个传统文化数字平台."
                                 },
                                 {
                                     icon: <Users className="w-10 h-10 text-blue-400" />,
                                     title: "社区驱动",
-                                    desc: "由热爱建筑文化的人们共同推动与发展，专业人士和爱好者联动创造价值。"
+                                    desc: "由热爱建筑文化的人们共同推动与发展,专业人士和爱好者联动创造价值."
                                 },
                                 {
                                     icon: <Heart className="w-10 h-10 text-purple-400" />,
                                     title: "自由分享",
-                                    desc: "自由交流建筑见解，连接全球爱好者，促进传统建筑文化的研究与传播。"
+                                    desc: "自由交流建筑见解,连接全球爱好者,促进传统建筑文化的研究与传播."
                                 },
                             ].map((feature, index) => (
                                 <motion.div
@@ -252,6 +383,42 @@ const AboutPage = () => {
                     </div>
                 </section>
 
+                {/* Three.js 3D Model Section */}
+                <section className="py-12 relative">
+                    <div className="container mx-auto px-4 md:px-8">
+                        <motion.div
+                            className="text-center mb-8"
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={techStackInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                            transition={{ duration: 0.6 }}
+                        >
+                          <span className="inline-block px-3 py-1 text-sm font-medium bg-orange-500/20 text-orange-300 rounded-full mb-4">
+                            3D模型展示
+                          </span>
+                            <h2 className="text-2xl md:text-3xl font-bold mb-4">传统建筑互动模型</h2>
+                            <p className="text-gray-400 max-w-2xl mx-auto">
+                                使用Three.js打造沉浸式传统建筑3D体验
+                            </p>
+                        </motion.div>
+                        
+                        <motion.div
+                            className="max-w-3xl mx-auto h-96 bg-black/20 rounded-xl border border-white/10 overflow-hidden relative"
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={techStackInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                            transition={{ duration: 0.6, delay: 0.3 }}
+                            ref={threeCanvasRef}
+                        >
+                            {!showThreeCanvas && (
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <div className="bg-gray-800/50 backdrop-blur-sm py-2 px-4 rounded-lg">
+                                        <p className="text-white text-sm">加载3D模型中...</p>
+                                    </div>
+                                </div>
+                            )}
+                        </motion.div>
+                    </div>
+                </section>
+
                 {/* Contribution Section */}
                 <section
                     ref={contributionRef}
@@ -268,15 +435,15 @@ const AboutPage = () => {
                                 <div className="bg-gray-900 rounded-2xl p-8 md:p-12">
                                     <div className="flex flex-col md:flex-row gap-12">
                                         <div className="md:w-1/2">
-                      <span className="inline-block px-3 py-1 text-sm font-medium bg-purple-500/20 text-purple-300 rounded-full mb-4">
-                        加入我们
-                      </span>
+                                            <span className="inline-block px-3 py-1 text-sm font-medium bg-purple-500/20 text-purple-300 rounded-full mb-4">
+                                                加入我们
+                                            </span>
                                             <h2 className="text-3xl font-bold mb-6">参与贡献</h2>
                                             <p className="text-gray-300 mb-8">
-                                                我们欢迎各种形式的参与，无论您是开发者、设计师、研究者还是建筑爱好者，都可以在这里找到发挥才能的方式。
+                                                我们欢迎各种形式的参与,无论您是开发者、设计师、研究者还是建筑爱好者,都可以在这里找到发挥才能的方式.
                                             </p>
                                             <a
-                                                href="#"
+                                                href="https://github.com/Kaguranotamashii/GraduationDesign/blob/main/CONTRIBUTING.md"
                                                 className="inline-flex items-center px-6 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white font-medium transition-all duration-300 transform hover:translate-y-[-2px]"
                                             >
                                                 贡献指南
@@ -330,12 +497,12 @@ const AboutPage = () => {
                             animate={techStackInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
                             transition={{ duration: 0.6 }}
                         >
-              <span className="inline-block px-3 py-1 text-sm font-medium bg-green-500/20 text-green-300 rounded-full mb-4">
-                技术支持
-              </span>
+                          <span className="inline-block px-3 py-1 text-sm font-medium bg-green-500/20 text-green-300 rounded-full mb-4">
+                            技术支持
+                          </span>
                             <h2 className="text-3xl md:text-4xl font-bold mb-4">技术栈</h2>
                             <p className="text-gray-400 max-w-2xl mx-auto">
-                                我们使用现代前沿技术，为传统文化打造现代化的数字体验
+                                我们使用现代前沿技术,为传统文化打造现代化的数字体验
                             </p>
                         </motion.div>
 
@@ -346,14 +513,14 @@ const AboutPage = () => {
                             variants={containerVariants}
                         >
                             {[
-                                { name: 'React', color: 'from-blue-400 to-blue-600' },
-                                { name: 'Django', color: 'from-green-400 to-green-600' },
-                                { name: 'PostgreSQL', color: 'from-blue-500 to-blue-700' },
-                                { name: 'Redis', color: 'from-red-400 to-red-600' },
-                                { name: 'Docker', color: 'from-blue-400 to-blue-600' },
-                                { name: 'Nginx', color: 'from-green-400 to-green-600' },
-                                { name: 'TailwindCSS', color: 'from-teal-400 to-teal-600' },
-                                { name: 'JWT', color: 'from-purple-400 to-purple-600' },
+                                { name: 'React', color: 'from-blue-400 to-blue-600', icon: <Code className="w-6 h-6 text-white" /> },
+                                { name: 'Django', color: 'from-green-400 to-green-600', icon: <Code className="w-6 h-6 text-white" /> },
+                                { name: 'SQLite', color: 'from-blue-500 to-blue-700', icon: <Database className="w-6 h-6 text-white" /> },
+                                { name: 'JWT', color: 'from-yellow-400 to-yellow-600', icon: <Hexagon className="w-6 h-6 text-white" /> },
+                                { name: 'Nginx', color: 'from-green-400 to-green-600', icon: <Server className="w-6 h-6 text-white" /> },
+                                { name: 'Three.js', color: 'from-purple-400 to-purple-600', icon: <Hexagon className="w-6 h-6 text-white" /> },
+                                { name: 'TailwindCSS', color: 'from-teal-400 to-teal-600', icon: <Code className="w-6 h-6 text-white" /> },
+                                { name: 'Docker', color: 'from-blue-400 to-blue-600', icon: <Server className="w-6 h-6 text-white" /> },
                             ].map((tech, idx) => (
                                 <motion.div
                                     key={tech.name}
@@ -363,7 +530,7 @@ const AboutPage = () => {
                                     <div className="group relative p-[1px] rounded-xl bg-gradient-to-br from-white/30 via-white/20 to-white/0 hover:from-white/40 hover:via-white/30 hover:to-white/10 transition-all duration-300">
                                         <div className="p-6 rounded-xl bg-gray-900 relative z-10 h-full flex flex-col items-center">
                                             <div className={`w-12 h-12 rounded-lg flex items-center justify-center mb-4 bg-gradient-to-br ${tech.color} shadow-lg group-hover:shadow-xl transition-all duration-300`}>
-                                                <Hexagon className="w-6 h-6 text-white" />
+                                                {tech.icon}
                                             </div>
                                             <h3 className="font-medium text-gray-200 group-hover:text-white transition-colors">
                                                 {tech.name}
@@ -388,12 +555,12 @@ const AboutPage = () => {
                             animate={contactInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
                             transition={{ duration: 0.6 }}
                         >
-              <span className="inline-block px-3 py-1 text-sm font-medium bg-blue-500/20 text-blue-300 rounded-full mb-4">
-                联系我们
-              </span>
-                            <h2 className="text-3xl md:text-4xl font-bold mb-6">有问题或建议？</h2>
+                          <span className="inline-block px-3 py-1 text-sm font-medium bg-blue-500/20 text-blue-300 rounded-full mb-4">
+                            联系我们
+                          </span>
+                            <h2 className="text-3xl md:text-4xl font-bold mb-6">有问题或建议?</h2>
                             <p className="text-gray-400 mb-10">
-                                我们重视每一位社区成员的反馈，欢迎通过以下方式联系我们
+                                我们重视每一位社区成员的反馈,欢迎通过以下方式联系我们
                             </p>
 
                             <motion.div
@@ -403,7 +570,7 @@ const AboutPage = () => {
                                 variants={containerVariants}
                             >
                                 <motion.a
-                                    href="https://github.com/yourusername/project/issues"
+                                    href="https://github.com/Kaguranotamashii/GraduationDesign/issues"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="flex items-center px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/10 text-white rounded-xl hover:bg-white/20 transition-all duration-300 w-full sm:w-auto"

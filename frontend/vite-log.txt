@@ -2798,3 +2798,5 @@ vite.config.js:56:47: ERROR: Expected ")" but found end of file
       at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
       at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
 21:19:05 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
+21:22:15 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
+21:24:49 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
