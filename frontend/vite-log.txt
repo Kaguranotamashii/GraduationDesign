@@ -2800,3 +2800,11 @@ vite.config.js:56:47: ERROR: Expected ")" but found end of file
 21:19:05 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
 21:22:15 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
 21:24:49 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
+21:28:42 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
+21:29:15 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
+21:29:20 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
+21:32:40 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
+21:33:06 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
+21:33:14 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
+21:33:36 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
+21:34:24 [vite] (client) hmr update /src/pages/about/AboutPage.jsx

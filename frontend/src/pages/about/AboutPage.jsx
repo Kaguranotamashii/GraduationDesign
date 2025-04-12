@@ -1,16 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, Suspense } from 'react';
 import { Github, Code, Users, Heart, Star, Mail, Hexagon, Database, Server } from 'lucide-react';
 import Footer from "../../components/home/Footer";
 import Navbar from "../../components/home/Navbar";
 import { motion, useScroll, useTransform, useInView, useAnimation } from 'framer-motion';
+
+// Dynamically import Three.js components to ensure proper loading
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 const AboutPage = () => {
     const controls = useAnimation();
     const { scrollYProgress } = useScroll();
     const [showThreeCanvas, setShowThreeCanvas] = useState(false);
+    const [modelLoading, setModelLoading] = useState(false);
+    const [modelError, setModelError] = useState(null);
     const threeCanvasRef = useRef(null);
 
     const headerRef = useRef(null);
@@ -18,12 +20,14 @@ const AboutPage = () => {
     const contributionRef = useRef(null);
     const techStackRef = useRef(null);
     const contactRef = useRef(null);
+    const modelSectionRef = useRef(null);
 
     const headerInView = useInView(headerRef, { once: true, amount: 0.3 });
     const featuresInView = useInView(featuresRef, { once: true, amount: 0.2 });
     const contributionInView = useInView(contributionRef, { once: true, amount: 0.3 });
     const techStackInView = useInView(techStackRef, { once: true, amount: 0.3 });
     const contactInView = useInView(contactRef, { once: true, amount: 0.5 });
+    const modelSectionInView = useInView(modelSectionRef, { amount: 0.1 });
 
     // Parallax effects
     const bgY = useTransform(scrollYProgress, [0, 1], [0, -200]);
@@ -35,131 +39,276 @@ const AboutPage = () => {
         }
     }, [controls, headerInView]);
 
-    // Initialize Three.js scene when techStack section is in view
+    // Initialize Three.js scene earlier in the component lifecycle
     useEffect(() => {
-        if (techStackInView && threeCanvasRef.current && !showThreeCanvas) {
-            setShowThreeCanvas(true);
-            
-            // Create a basic Three.js scene
-            const scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x111111);
-            
-            const camera = new THREE.PerspectiveCamera(
-                45, 
-                threeCanvasRef.current.clientWidth / threeCanvasRef.current.clientHeight, 
-                0.1, 
-                1000
-            );
-            camera.position.set(5, 3, 5);
-            camera.lookAt(0, 0, 0);
-            
-            // Add ambient light
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-            scene.add(ambientLight);
-            
-            // Add directional light (like sunlight)
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-            directionalLight.position.set(5, 10, 7.5);
-            directionalLight.castShadow = true;
-            scene.add(directionalLight);
-            
-            // Setup renderer with shadows
-            const renderer = new THREE.WebGLRenderer({ 
-                antialias: true,
-                alpha: true
-            });
-            renderer.setSize(threeCanvasRef.current.clientWidth, threeCanvasRef.current.clientHeight);
-            renderer.shadowMap.enabled = true;
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-            renderer.outputEncoding = THREE.sRGBEncoding;
-            renderer.toneMapping = THREE.ACESFilmicToneMapping;
-            renderer.toneMappingExposure = 1.25;
-            threeCanvasRef.current.appendChild(renderer.domElement);
-            
-            // Create loading manager to track progress
-            const loadingManager = new THREE.LoadingManager();
-            
-            // Create a loading progress indicator or state if needed
-            loadingManager.onProgress = (url, loaded, total) => {
-                // You could update a loading progress state here if you want
-                console.log(`Loading model: ${Math.round(loaded / total * 100)}%`);
-            };
-            
-            // Load GLB model
-            const loader = new THREE.GLTFLoader(loadingManager);
-            loader.load(
-                '/models/qiniandian123.glb', // Note: Path is relative to the public directory
-                (gltf) => {
-                    const model = gltf.scene;
+        // Only initialize once
+        if (modelLoading || showThreeCanvas) return;
+        
+        // Mark as loading to prevent duplicate initialization
+        setModelLoading(true);
+        
+        // Import the required modules dynamically to avoid constructor errors
+        const loadModel = async () => {
+            try {
+                // Dynamically import the required Three.js modules
+                const OrbitControlsModule = await import('three/examples/jsm/controls/OrbitControls');
+                const GLTFLoaderModule = await import('three/examples/jsm/loaders/GLTFLoader');
+                
+                const OrbitControls = OrbitControlsModule.OrbitControls;
+                const GLTFLoader = GLTFLoaderModule.GLTFLoader;
+
+                // Wait until the canvas reference is available
+                if (!threeCanvasRef.current) {
+                    const checkCanvasInterval = setInterval(() => {
+                        if (threeCanvasRef.current) {
+                            clearInterval(checkCanvasInterval);
+                            initializeThreeJS(OrbitControls, GLTFLoader);
+                        }
+                    }, 100);
                     
-                    // Center the model
-                    const box = new THREE.Box3().setFromObject(model);
-                    const center = box.getCenter(new THREE.Vector3());
-                    model.position.sub(center);
-                    
-                    // Add model to scene
-                    scene.add(model);
-                    
-                    // Adjust camera to fit model
-                    const size = box.getSize(new THREE.Vector3());
-                    const maxDim = Math.max(size.x, size.y, size.z);
-                    const fov = camera.fov * (Math.PI / 180);
-                    const cameraDistance = maxDim / (2 * Math.tan(fov / 2));
-                    
-                    camera.position.z = cameraDistance * 1.5;
-                    camera.updateProjectionMatrix();
-                },
-                (progress) => {
-                    // Additional progress tracking if needed
-                },
-                (error) => {
-                    console.error('Error loading model:', error);
+                    // Clear interval after 10 seconds to prevent infinite checking
+                    setTimeout(() => {
+                        clearInterval(checkCanvasInterval);
+                        if (!threeCanvasRef.current) {
+                            setModelError("无法初始化3D容器,请刷新页面");
+                            setModelLoading(false);
+                        }
+                    }, 10000);
+                } else {
+                    initializeThreeJS(OrbitControls, GLTFLoader);
                 }
-            );
-            
-            // Add orbit controls for interaction
-            const controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
-            controls.screenSpacePanning = false;
-            controls.enableZoom = true;
-            controls.autoRotate = true;
-            controls.autoRotateSpeed = 0.5;
-            
-            // Handle window resize
-            const handleResize = () => {
+            } catch (error) {
+                console.error("Failed to load 3D modules:", error);
+                setModelError("加载3D模块失败,请刷新页面重试");
+                setModelLoading(false);
+            }
+        };
+        
+        // Function to initialize Three.js with the canvas element
+        const initializeThreeJS = (OrbitControls, GLTFLoader) => {
+            try {
+                // Create a basic Three.js scene
+                const scene = new THREE.Scene();
+                scene.background = new THREE.Color(0x111111);
+                
+                const camera = new THREE.PerspectiveCamera(
+                    45, 
+                    threeCanvasRef.current.clientWidth / threeCanvasRef.current.clientHeight, 
+                    0.1, 
+                    1000
+                );
+                camera.position.set(5, 3, 5);
+                camera.lookAt(0, 0, 0);
+                
+                // Add ambient light
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                scene.add(ambientLight);
+                
+                // Add directional light (like sunlight)
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+                directionalLight.position.set(5, 10, 7.5);
+                directionalLight.castShadow = true;
+                scene.add(directionalLight);
+                
+                // Setup renderer with shadows
+                const renderer = new THREE.WebGLRenderer({ 
+                    antialias: true,
+                    alpha: true
+                });
+                renderer.setSize(threeCanvasRef.current.clientWidth, threeCanvasRef.current.clientHeight);
+                renderer.shadowMap.enabled = true;
+                renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                
+                // Fix deprecated property: use outputColorSpace instead of outputEncoding
+                renderer.outputColorSpace = THREE.SRGBColorSpace;
+                renderer.toneMapping = THREE.ACESFilmicToneMapping;
+                renderer.toneMappingExposure = 1.25;
+                
+                threeCanvasRef.current.appendChild(renderer.domElement);
+                
+                // Create loading manager to track progress
+                const loadingManager = new THREE.LoadingManager();
+                
+                // Show loading progress
+                const progressContainer = document.createElement('div');
+                progressContainer.style.position = 'absolute';
+                progressContainer.style.top = '50%';
+                progressContainer.style.left = '50%';
+                progressContainer.style.transform = 'translate(-50%, -50%)';
+                progressContainer.style.background = 'rgba(0, 0, 0, 0.7)';
+                progressContainer.style.borderRadius = '8px';
+                progressContainer.style.padding = '12px 20px';
+                progressContainer.style.color = 'white';
+                progressContainer.style.fontSize = '14px';
+                progressContainer.style.zIndex = '10';
+                progressContainer.innerText = '加载3D模型 (0%)';
+                
+                threeCanvasRef.current.appendChild(progressContainer);
+                
+                // Update loading progress
+                loadingManager.onProgress = (url, loaded, total) => {
+                    const progress = Math.round(loaded / total * 100);
+                    progressContainer.innerText = `加载3D模型 (${progress}%)`;
+                };
+                
+                // Handle completion
+                loadingManager.onLoad = () => {
+                    if (progressContainer.parentNode) {
+                        progressContainer.remove();
+                    }
+                    setShowThreeCanvas(true);
+                    setModelLoading(false);
+                };
+                
+                // Handle errors
+                loadingManager.onError = (url) => {
+                    if (progressContainer.parentNode) {
+                        progressContainer.innerText = '模型加载失败,请刷新页面重试';
+                        progressContainer.style.background = 'rgba(220, 38, 38, 0.7)';
+                    }
+                    console.error('Error loading model:', url);
+                    setModelError("模型加载失败,请检查网络连接");
+                    setModelLoading(false);
+                };
+                
+                // Load GLB model with retry logic
+                const loadModelWithRetry = (retryCount = 0) => {
+                    const loader = new GLTFLoader(loadingManager);
+                    loader.load(
+                        '/models/qiniandian.glb', // Note: Path is relative to the public directory
+                        (gltf) => {
+                            const model = gltf.scene;
+                            
+                            // Center the model
+                            const box = new THREE.Box3().setFromObject(model);
+                            const center = box.getCenter(new THREE.Vector3());
+                            model.position.sub(center);
+                            
+                            // Optional: Shift model to stand on ground plane
+                            box.setFromObject(model);
+                            const size = box.getSize(new THREE.Vector3());
+                            model.position.y += size.y / 2;
+                            
+                            // Add model to scene
+                            scene.add(model);
+                            
+                            // Adjust camera to fit model
+                            const maxDim = Math.max(size.x, size.y, size.z);
+                            const fov = camera.fov * (Math.PI / 180);
+                            const cameraDistance = maxDim / (2 * Math.tan(fov / 2));
+                            
+                            camera.position.z = cameraDistance * 1.5;
+                            camera.updateProjectionMatrix();
+                        },
+                        (progress) => {
+                            // Additional progress handling if needed
+                        },
+                        (error) => {
+                            console.error('Error loading model:', error);
+                            if (retryCount < 2) {
+                                // Retry loading up to 2 times
+                                console.log(`Retrying model load, attempt ${retryCount + 1}`);
+                                if (progressContainer.parentNode) {
+                                    progressContainer.innerText = `加载失败,正在重试 (${retryCount + 1}/3)`;
+                                }
+                                setTimeout(() => loadModelWithRetry(retryCount + 1), 1000);
+                            } else {
+                                if (progressContainer.parentNode) {
+                                    progressContainer.innerText = '模型加载失败,请刷新页面重试';
+                                    progressContainer.style.background = 'rgba(220, 38, 38, 0.7)';
+                                }
+                                setModelError("多次尝试加载模型失败,请检查网络连接或模型文件");
+                                setModelLoading(false);
+                            }
+                        }
+                    );
+                };
+                
+                // Start loading with retry capability
+                loadModelWithRetry();
+                
+                // Add orbit controls for interaction
+                const controls = new OrbitControls(camera, renderer.domElement);
+                controls.enableDamping = true;
+                controls.dampingFactor = 0.05;
+                controls.screenSpacePanning = false;
+                controls.enableZoom = true;
+                controls.autoRotate = true;
+                controls.autoRotateSpeed = 0.5;
+                
+                // Handle window resize
+                const handleResize = () => {
+                    if (threeCanvasRef.current) {
+                        const width = threeCanvasRef.current.clientWidth;
+                        const height = threeCanvasRef.current.clientHeight;
+                        
+                        camera.aspect = width / height;
+                        camera.updateProjectionMatrix();
+                        renderer.setSize(width, height);
+                    }
+                };
+                
+                window.addEventListener('resize', handleResize);
+                
+                // Animation loop
+                const animate = function () {
+                    requestAnimationFrame(animate);
+                    controls.update();
+                    renderer.render(scene, camera);
+                };
+                
+                animate();
+                
+                // Store cleanup function
+                window.threeJSCleanup = () => {
+                    window.removeEventListener('resize', handleResize);
+                    if (controls && controls.dispose) {
+                        controls.dispose();
+                    }
+                    if (renderer && renderer.dispose) {
+                        renderer.dispose();
+                    }
+                    if (threeCanvasRef.current) {
+                        while (threeCanvasRef.current.firstChild) {
+                            threeCanvasRef.current.removeChild(threeCanvasRef.current.firstChild);
+                        }
+                    }
+                };
+            } catch (error) {
+                console.error("Failed to initialize 3D scene:", error);
+                setModelError("初始化3D场景失败,请刷新页面重试");
+                setModelLoading(false);
+                
+                // Show error message
                 if (threeCanvasRef.current) {
-                    const width = threeCanvasRef.current.clientWidth;
-                    const height = threeCanvasRef.current.clientHeight;
-                    
-                    camera.aspect = width / height;
-                    camera.updateProjectionMatrix();
-                    renderer.setSize(width, height);
+                    const errorMessage = document.createElement('div');
+                    errorMessage.style.position = 'absolute';
+                    errorMessage.style.top = '50%';
+                    errorMessage.style.left = '50%';
+                    errorMessage.style.transform = 'translate(-50%, -50%)';
+                    errorMessage.style.background = 'rgba(220, 38, 38, 0.7)';
+                    errorMessage.style.borderRadius = '8px';
+                    errorMessage.style.padding = '12px 20px';
+                    errorMessage.style.color = 'white';
+                    errorMessage.style.fontSize = '14px';
+                    errorMessage.style.textAlign = 'center';
+                    errorMessage.innerText = '加载3D模型失败,请刷新页面重试';
+                    threeCanvasRef.current.appendChild(errorMessage);
                 }
-            };
-            
-            window.addEventListener('resize', handleResize);
-            
-            // Animation loop
-            const animate = function () {
-                requestAnimationFrame(animate);
-                controls.update();
-                renderer.render(scene, camera);
-            };
-            
-            animate();
-            
-            // Handle cleanup
-            return () => {
-                window.removeEventListener('resize', handleResize);
-                controls.dispose();
-                renderer.dispose();
-                if (threeCanvasRef.current) {
-                    threeCanvasRef.current.removeChild(renderer.domElement);
-                }
-            };
-        }
-    }, [techStackInView, showThreeCanvas]);
+            }
+        };
+        
+        // Start loading process
+        loadModel();
+        
+        // Cleanup when component unmounts
+        return () => {
+            if (window.threeJSCleanup) {
+                window.threeJSCleanup();
+                window.threeJSCleanup = null;
+            }
+        };
+    }, []);
 
     // Fancy gradient blob animation
     const blobVariants = {
@@ -384,12 +533,15 @@ const AboutPage = () => {
                 </section>
 
                 {/* Three.js 3D Model Section */}
-                <section className="py-12 relative">
+                <section 
+                    className="py-12 relative"
+                    ref={modelSectionRef}
+                >
                     <div className="container mx-auto px-4 md:px-8">
                         <motion.div
                             className="text-center mb-8"
                             initial={{ opacity: 0, y: 30 }}
-                            animate={techStackInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6 }}
                         >
                           <span className="inline-block px-3 py-1 text-sm font-medium bg-orange-500/20 text-orange-300 rounded-full mb-4">
@@ -402,16 +554,31 @@ const AboutPage = () => {
                         </motion.div>
                         
                         <motion.div
-                            className="max-w-3xl mx-auto h-96 bg-black/20 rounded-xl border border-white/10 overflow-hidden relative"
+                            className="max-w-3xl mx-auto h-96 bg-gray-900/70 rounded-xl border border-white/10 overflow-hidden relative"
                             initial={{ opacity: 0, y: 30 }}
-                            animate={techStackInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: 0.3 }}
                             ref={threeCanvasRef}
                         >
-                            {!showThreeCanvas && (
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="bg-gray-800/50 backdrop-blur-sm py-2 px-4 rounded-lg">
-                                        <p className="text-white text-sm">加载3D模型中...</p>
+                            {(!showThreeCanvas || modelLoading) && (
+                                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                    <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+                                    <div className="bg-gray-800/70 backdrop-blur-sm py-2 px-6 rounded-lg">
+                                        <p className="text-white text-sm">正在加载3D模型,请稍后...</p>
+                                    </div>
+                                </div>
+                            )}
+                            
+                            {modelError && (
+                                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                    <div className="bg-red-800/70 backdrop-blur-sm py-3 px-6 rounded-lg">
+                                        <p className="text-white text-sm">{modelError}</p>
+                                        <button 
+                                            className="mt-2 bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-3 rounded-md transition-colors"
+                                            onClick={() => window.location.reload()}
+                                        >
+                                            刷新页面
+                                        </button>
                                     </div>
                                 </div>
                             )}
