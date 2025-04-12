@@ -1,6 +1,8 @@
 # app/analytics/middleware.py
 
 import time
+import json
+from django.conf import settings
 from .models import APIAccessLog
 
 class AnalyticsMiddleware:
@@ -23,20 +25,40 @@ class AnalyticsMiddleware:
         # 计算响应时间
         response_time = (time.time() - start_time) * 1000  # 转换为毫秒
 
-        # 不记录静态文件和admin的访问
-        if 1:
+        # 排除静态文件和媒体文件的访问记录
+        path = request.path
+        excluded_prefixes = ['/static/', '/media/', '/admin/jsi18n/']
+        is_excluded = any(path.startswith(prefix) for prefix in excluded_prefixes)
+        
+        # 只记录API访问,排除静态资源和特定路径
+        if not is_excluded and not path.startswith('/admin/') or path.startswith('/app/'):
             try:
-                # 获取请求数据
+                # 获取请求数据 (安全处理,避免记录敏感信息)
                 request_data = None
                 if request.method in ['POST', 'PUT', 'PATCH']:
-                    request_data = request.POST.dict()
+                    # 复制请求数据,排除敏感字段
+                    if hasattr(request, 'POST'):
+                        request_data = request.POST.dict()
+                    elif hasattr(request, 'data'):
+                        # 处理DRF请求
+                        try:
+                            request_data = request.data.copy()
+                        except:
+                            pass
+                    
+                    # 移除敏感信息
+                    sensitive_fields = ['password', 'token', 'secret', 'key', 'auth']
+                    if request_data:
+                        for field in sensitive_fields:
+                            if field in request_data:
+                                request_data[field] = '******'
 
                 # 创建访问日志
                 APIAccessLog.objects.create(
                     user=request.user if request.user.is_authenticated else None,
                     ip_address=ip,
                     method=request.method,
-                    path=request.path,
+                    path=path,
                     status_code=response.status_code,
                     response_time=response_time,
                     user_agent=request.META.get('HTTP_USER_AGENT', ''),

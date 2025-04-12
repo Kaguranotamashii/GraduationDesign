@@ -2109,3 +2109,692 @@ vite.config.js:56:47: ERROR: Expected ")" but found end of file
   ➜  Network: https://10.153.96.53:5173/
 19:22:12 [vite] vite.config.js changed, restarting server...
 19:22:14 [vite] server restarted.
+
+  VITE v6.0.11  ready in 2425 ms
+
+  ➜  Local:   https://localhost:5173/
+  ➜  Network: https://169.254.154.113:5173/
+  ➜  Network: https://169.254.233.85:5173/
+  ➜  Network: https://10.153.96.53:5173/
+20:37:53 [vite] vite.config.js changed, restarting server...
+20:37:54 [vite] server restarted.
+21:14:00 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
+21:14:00 [vite] Internal server error: G:\GraduationDesign\probject\frontend\src\pages\about\AboutPage.jsx: Expected corresponding JSX closing tag for <div>. (343:44)
+
+  341 |                                                     <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  342 |                                                 </svg>
+> 343 |                                             </a>
+      |                                             ^
+  344 |                                         </div>
+  345 |                                         <div className="md:w-1/2">
+  346 |                                             <ul className="space-y-4">
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/pages/about/AboutPage.jsx:343:44
+  347|                                                  {[
+  348|                                                      "提交新功能和模型",
+  349|                                                      "报告Bug与改进建议",
+     |                                       ^
+  350|                                                      "完善文档与教程",
+  351|                                                      "分享使用经验与案例",
+      at constructor (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:360:19)
+      at JSXParserMixin.raise (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3327:19)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6900:16)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6922:17)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6932:19)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12090:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11349:28)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at JSXParserMixin.parseExpressionBase (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10465:23)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12085:16)
+      at JSXParserMixin.parseExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:17)
+      at JSXParserMixin.parseReturnStatement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12776:28)
+      at JSXParserMixin.parseStatementContent (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12427:21)
+      at JSXParserMixin.parseStatementLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12396:17)
+      at JSXParserMixin.parseStatementListItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12376:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12950:61)
+      at JSXParserMixin.parseBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12943:10)
+      at JSXParserMixin.parseBlock (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12931:10)
+      at JSXParserMixin.parseFunctionBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11773:24)
+      at JSXParserMixin.parseArrowExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11748:10)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11361:12)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+21:14:00 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
+21:14:00 [vite] Internal server error: G:\GraduationDesign\probject\frontend\src\pages\about\AboutPage.jsx: Expected corresponding JSX closing tag for <div>. (343:44)
+
+  341 |                                                     <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  342 |                                                 </svg>
+> 343 |                                             </a>
+      |                                             ^
+  344 |                                         </div>
+  345 |                                         <div className="md:w-1/2">
+  346 |                                             <ul className="space-y-4">
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/pages/about/AboutPage.jsx:343:44
+  347|                                                  {[
+  348|                                                      "提交新功能和模型",
+  349|                                                      "报告Bug与改进建议",
+     |                                       ^
+  350|                                                      "完善文档与教程",
+  351|                                                      "分享使用经验与案例",
+      at constructor (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:360:19)
+      at JSXParserMixin.raise (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3327:19)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6900:16)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6922:17)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6932:19)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12090:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11349:28)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at JSXParserMixin.parseExpressionBase (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10465:23)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12085:16)
+      at JSXParserMixin.parseExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:17)
+      at JSXParserMixin.parseReturnStatement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12776:28)
+      at JSXParserMixin.parseStatementContent (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12427:21)
+      at JSXParserMixin.parseStatementLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12396:17)
+      at JSXParserMixin.parseStatementListItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12376:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12950:61)
+      at JSXParserMixin.parseBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12943:10)
+      at JSXParserMixin.parseBlock (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12931:10)
+      at JSXParserMixin.parseFunctionBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11773:24)
+      at JSXParserMixin.parseArrowExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11748:10)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11361:12)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+21:16:13 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
+21:16:13 [vite] Internal server error: G:\GraduationDesign\probject\frontend\src\pages\about\AboutPage.jsx: Expected corresponding JSX closing tag for <div>. (343:44)
+
+  341 |                                                     <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  342 |                                                 </svg>
+> 343 |                                             </a>
+      |                                             ^
+  344 |                                         </div>
+  345 |                                         <div className="md:w-1/2">
+  346 |                                             <ul className="space-y-4">
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/pages/about/AboutPage.jsx:343:44
+  347|                                                  {[
+  348|                                                      "提交新功能和模型",
+  349|                                                      "报告Bug与改进建议",
+     |                                       ^
+  350|                                                      "完善文档与教程",
+  351|                                                      "分享使用经验与案例",
+      at constructor (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:360:19)
+      at JSXParserMixin.raise (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3327:19)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6900:16)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6922:17)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6932:19)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12090:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11349:28)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at JSXParserMixin.parseExpressionBase (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10465:23)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12085:16)
+      at JSXParserMixin.parseExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:17)
+      at JSXParserMixin.parseReturnStatement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12776:28)
+      at JSXParserMixin.parseStatementContent (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12427:21)
+      at JSXParserMixin.parseStatementLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12396:17)
+      at JSXParserMixin.parseStatementListItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12376:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12950:61)
+      at JSXParserMixin.parseBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12943:10)
+      at JSXParserMixin.parseBlock (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12931:10)
+      at JSXParserMixin.parseFunctionBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11773:24)
+      at JSXParserMixin.parseArrowExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11748:10)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11361:12)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+21:16:14 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
+21:16:14 [vite] Internal server error: G:\GraduationDesign\probject\frontend\src\pages\about\AboutPage.jsx: Expected corresponding JSX closing tag for <div>. (343:44)
+
+  341 |                                                     <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  342 |                                                 </svg>
+> 343 |                                             </a>
+      |                                             ^
+  344 |                                         </div>
+  345 |                                         <div className="md:w-1/2">
+  346 |                                             <ul className="space-y-4">
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/pages/about/AboutPage.jsx:343:44
+  347|                                                  {[
+  348|                                                      "提交新功能和模型",
+  349|                                                      "报告Bug与改进建议",
+     |                                       ^
+  350|                                                      "完善文档与教程",
+  351|                                                      "分享使用经验与案例",
+      at constructor (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:360:19)
+      at JSXParserMixin.raise (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3327:19)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6900:16)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6922:17)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6932:19)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12090:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11349:28)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at JSXParserMixin.parseExpressionBase (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10465:23)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12085:16)
+      at JSXParserMixin.parseExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:17)
+      at JSXParserMixin.parseReturnStatement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12776:28)
+      at JSXParserMixin.parseStatementContent (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12427:21)
+      at JSXParserMixin.parseStatementLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12396:17)
+      at JSXParserMixin.parseStatementListItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12376:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12950:61)
+      at JSXParserMixin.parseBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12943:10)
+      at JSXParserMixin.parseBlock (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12931:10)
+      at JSXParserMixin.parseFunctionBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11773:24)
+      at JSXParserMixin.parseArrowExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11748:10)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11361:12)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+21:16:14 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
+21:16:14 [vite] Internal server error: G:\GraduationDesign\probject\frontend\src\pages\about\AboutPage.jsx: Expected corresponding JSX closing tag for <div>. (343:44)
+
+  341 |                                                     <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  342 |                                                 </svg>
+> 343 |                                             </a>
+      |                                             ^
+  344 |                                         </div>
+  345 |                                         <div className="md:w-1/2">
+  346 |                                             <ul className="space-y-4">
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/pages/about/AboutPage.jsx:343:44
+  347|                                                  {[
+  348|                                                      "提交新功能和模型",
+  349|                                                      "报告Bug与改进建议",
+     |                                       ^
+  350|                                                      "完善文档与教程",
+  351|                                                      "分享使用经验与案例",
+      at constructor (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:360:19)
+      at JSXParserMixin.raise (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3327:19)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6900:16)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6922:17)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6932:19)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12090:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11349:28)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at JSXParserMixin.parseExpressionBase (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10465:23)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12085:16)
+      at JSXParserMixin.parseExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:17)
+      at JSXParserMixin.parseReturnStatement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12776:28)
+      at JSXParserMixin.parseStatementContent (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12427:21)
+      at JSXParserMixin.parseStatementLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12396:17)
+      at JSXParserMixin.parseStatementListItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12376:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12950:61)
+      at JSXParserMixin.parseBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12943:10)
+      at JSXParserMixin.parseBlock (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12931:10)
+      at JSXParserMixin.parseFunctionBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11773:24)
+      at JSXParserMixin.parseArrowExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11748:10)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11361:12)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+21:16:17 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\pages\about\AboutPage.jsx: Expected corresponding JSX closing tag for <div>. (343:44)
+
+  341 |                                                     <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  342 |                                                 </svg>
+> 343 |                                             </a>
+      |                                             ^
+  344 |                                         </div>
+  345 |                                         <div className="md:w-1/2">
+  346 |                                             <ul className="space-y-4">
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/pages/about/AboutPage.jsx:343:44
+  347|                                                  {[
+  348|                                                      "提交新功能和模型",
+  349|                                                      "报告Bug与改进建议",
+     |                                       ^
+  350|                                                      "完善文档与教程",
+  351|                                                      "分享使用经验与案例",
+21:16:17 [vite] Internal server error: G:\GraduationDesign\probject\frontend\src\pages\about\AboutPage.jsx: Expected corresponding JSX closing tag for <div>. (343:44)
+
+  341 |                                                     <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  342 |                                                 </svg>
+> 343 |                                             </a>
+      |                                             ^
+  344 |                                         </div>
+  345 |                                         <div className="md:w-1/2">
+  346 |                                             <ul className="space-y-4">
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/pages/about/AboutPage.jsx:343:44
+  347|                                                  {[
+  348|                                                      "提交新功能和模型",
+  349|                                                      "报告Bug与改进建议",
+     |                                       ^
+  350|                                                      "完善文档与教程",
+  351|                                                      "分享使用经验与案例",
+      at constructor (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:360:19)
+      at JSXParserMixin.raise (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3327:19)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6900:16)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6922:17)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6932:19)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12090:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11349:28)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at JSXParserMixin.parseExpressionBase (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10465:23)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12085:16)
+      at JSXParserMixin.parseExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:17)
+      at JSXParserMixin.parseReturnStatement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12776:28)
+      at JSXParserMixin.parseStatementContent (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12427:21)
+      at JSXParserMixin.parseStatementLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12396:17)
+      at JSXParserMixin.parseStatementListItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12376:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12950:61)
+      at JSXParserMixin.parseBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12943:10)
+      at JSXParserMixin.parseBlock (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12931:10)
+      at JSXParserMixin.parseFunctionBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11773:24)
+      at JSXParserMixin.parseArrowExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11748:10)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11361:12)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+21:16:21 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
+21:16:21 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\pages\about\AboutPage.jsx: Expected corresponding JSX closing tag for <div>. (343:44)
+
+  341 |                                                     <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  342 |                                                 </svg>
+> 343 |                                             </a>
+      |                                             ^
+  344 |                                         </div>
+  345 |                                         <div className="md:w-1/2">
+  346 |                                             <ul className="space-y-4">
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/pages/about/AboutPage.jsx:343:44
+  347|                                                  {[
+  348|                                                      "提交新功能和模型",
+  349|                                                      "报告Bug与改进建议",
+     |                                       ^
+  350|                                                      "完善文档与教程",
+  351|                                                      "分享使用经验与案例",
+21:16:21 [vite] Internal server error: G:\GraduationDesign\probject\frontend\src\pages\about\AboutPage.jsx: Expected corresponding JSX closing tag for <div>. (343:44)
+
+  341 |                                                     <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  342 |                                                 </svg>
+> 343 |                                             </a>
+      |                                             ^
+  344 |                                         </div>
+  345 |                                         <div className="md:w-1/2">
+  346 |                                             <ul className="space-y-4">
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/pages/about/AboutPage.jsx:343:44
+  347|                                                  {[
+  348|                                                      "提交新功能和模型",
+  349|                                                      "报告Bug与改进建议",
+     |                                       ^
+  350|                                                      "完善文档与教程",
+  351|                                                      "分享使用经验与案例",
+      at constructor (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:360:19)
+      at JSXParserMixin.raise (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3327:19)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6900:16)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6922:17)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6932:19)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12090:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11349:28)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at JSXParserMixin.parseExpressionBase (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10465:23)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12085:16)
+      at JSXParserMixin.parseExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:17)
+      at JSXParserMixin.parseReturnStatement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12776:28)
+      at JSXParserMixin.parseStatementContent (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12427:21)
+      at JSXParserMixin.parseStatementLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12396:17)
+      at JSXParserMixin.parseStatementListItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12376:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12950:61)
+      at JSXParserMixin.parseBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12943:10)
+      at JSXParserMixin.parseBlock (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12931:10)
+      at JSXParserMixin.parseFunctionBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11773:24)
+      at JSXParserMixin.parseArrowExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11748:10)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11361:12)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+21:18:15 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
+21:18:15 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\pages\about\AboutPage.jsx: Expected corresponding JSX closing tag for <div>. (270:44)
+
+  268 |                                                     <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  269 |                                                 </svg>
+> 270 |                                             </a>
+      |                                             ^
+  271 |                                         </div>
+  272 |                                         
+  273 |                                         {/* 这部分是错误所在 - 重构列表部分 */}
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/pages/about/AboutPage.jsx:270:44
+  273|                                          {/* 这部分是错误所在 - 重构列表部分 */}
+  274|                                          <div className="md:w-1/2">
+  275|                                              <ul className="space-y-4">
+     |                                             ^
+  276|                                                  {[
+  277|                                                      "提交新功能和模型",
+21:18:15 [vite] Internal server error: G:\GraduationDesign\probject\frontend\src\pages\about\AboutPage.jsx: Expected corresponding JSX closing tag for <div>. (270:44)
+
+  268 |                                                     <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  269 |                                                 </svg>
+> 270 |                                             </a>
+      |                                             ^
+  271 |                                         </div>
+  272 |                                         
+  273 |                                         {/* 这部分是错误所在 - 重构列表部分 */}
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/pages/about/AboutPage.jsx:270:44
+  273|                                          {/* 这部分是错误所在 - 重构列表部分 */}
+  274|                                          <div className="md:w-1/2">
+  275|                                              <ul className="space-y-4">
+     |                                             ^
+  276|                                                  {[
+  277|                                                      "提交新功能和模型",
+      at constructor (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:360:19)
+      at JSXParserMixin.raise (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3327:19)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6900:16)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6922:17)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6932:19)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12090:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11349:28)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at JSXParserMixin.parseExpressionBase (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10465:23)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12085:16)
+      at JSXParserMixin.parseExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:17)
+      at JSXParserMixin.parseReturnStatement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12776:28)
+      at JSXParserMixin.parseStatementContent (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12427:21)
+      at JSXParserMixin.parseStatementLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12396:17)
+      at JSXParserMixin.parseStatementListItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12376:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12950:61)
+      at JSXParserMixin.parseBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12943:10)
+      at JSXParserMixin.parseBlock (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12931:10)
+      at JSXParserMixin.parseFunctionBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11773:24)
+      at JSXParserMixin.parseArrowExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11748:10)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11361:12)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+21:18:54 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
+21:18:54 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\pages\about\AboutPage.jsx: Expected corresponding JSX closing tag for <div>. (343:44)
+
+  341 |                                                     <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  342 |                                                 </svg>
+> 343 |                                             </a>
+      |                                             ^
+  344 |                                         </div>
+  345 |                                         <div className="md:w-1/2">
+  346 |                                             <ul className="space-y-4">
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/pages/about/AboutPage.jsx:343:44
+  347|                                                  {[
+  348|                                                      "提交新功能和模型",
+  349|                                                      "报告Bug与改进建议",
+     |                                       ^
+  350|                                                      "完善文档与教程",
+  351|                                                      "分享使用经验与案例",
+21:18:55 [vite] Internal server error: G:\GraduationDesign\probject\frontend\src\pages\about\AboutPage.jsx: Expected corresponding JSX closing tag for <div>. (343:44)
+
+  341 |                                                     <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  342 |                                                 </svg>
+> 343 |                                             </a>
+      |                                             ^
+  344 |                                         </div>
+  345 |                                         <div className="md:w-1/2">
+  346 |                                             <ul className="space-y-4">
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/pages/about/AboutPage.jsx:343:44
+  347|                                                  {[
+  348|                                                      "提交新功能和模型",
+  349|                                                      "报告Bug与改进建议",
+     |                                       ^
+  350|                                                      "完善文档与教程",
+  351|                                                      "分享使用经验与案例",
+      at constructor (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:360:19)
+      at JSXParserMixin.raise (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3327:19)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6900:16)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6871:32)
+      at JSXParserMixin.jsxParseElement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6922:17)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6932:19)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12090:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11349:28)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at JSXParserMixin.parseExpressionBase (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10465:23)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12085:16)
+      at JSXParserMixin.parseExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:17)
+      at JSXParserMixin.parseReturnStatement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12776:28)
+      at JSXParserMixin.parseStatementContent (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12427:21)
+      at JSXParserMixin.parseStatementLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12396:17)
+      at JSXParserMixin.parseStatementListItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12376:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12950:61)
+      at JSXParserMixin.parseBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12943:10)
+      at JSXParserMixin.parseBlock (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12931:10)
+      at JSXParserMixin.parseFunctionBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11773:24)
+      at JSXParserMixin.parseArrowExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11748:10)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11361:12)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+21:19:05 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
