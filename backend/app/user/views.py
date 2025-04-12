@@ -985,7 +985,7 @@ def admin_update_user(request, user_id):
 
 @api_view(['POST'])
 @jwt_required
-@permission_classes([IsAdminUser])
+@admin_required
 def admin_reset_user_password(request, user_id):
     """
     管理员重置用户密码
