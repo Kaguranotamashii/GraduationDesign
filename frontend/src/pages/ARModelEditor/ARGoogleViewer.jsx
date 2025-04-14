@@ -1,342 +1,693 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { getBuilderModelUrl } from '@/api/builderApi';
 import { message } from 'antd';
 
 const ARGoogleViewer = () => {
     const { builderId } = useParams();
     const navigate = useNavigate();
-    const [modelData, setModelData] = useState(null);
+    const containerRef = useRef(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [isARCoreSupported, setIsARCoreSupported] = useState(null);
     const [markersData, setMarkersData] = useState([]);
-    const viewerRef = useRef(null);
-    const containerRef = useRef(null);
+    const [activeMarker, setActiveMarker] = useState(null);
+    const [isARActive, setIsARActive] = useState(false);
+    const [modelScale, setModelScale] = useState(1.0);
 
-    // 添加加载进度指示
-    const [loadingProgress, setLoadingProgress] = useState(0);
+    // Three.js 引用
+    const rendererRef = useRef(null);
+    const sceneRef = useRef(null);
+    const cameraRef = useRef(null);
+    const modelRef = useRef(null);
+    const textSpriteRef = useRef(null);
+    const xrSessionRef = useRef(null);
+    const shadowPlaneRef = useRef(null);
+    const animationFrameRef = useRef(null);
 
-    const fetchModelData = useCallback(async () => {
-        try {
-            setLoading(true);
-            console.log(`[DEBUG] 获取模型数据, builderId: ${builderId}`);
-            const response = await getBuilderModelUrl(builderId);
-            console.log('[DEBUG] API 响应:', JSON.stringify(response, null, 2));
+    // 创建文字贴图
+    const createTextSprite = (text, position) => {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = 512;
+        canvas.height = 256;
 
-            if (response.code === 200 && response.data.model_url) {
-                const originalUrl = response.data.model_url;
-                console.log('[DEBUG] 原始模型URL:', originalUrl);
+        // 圆角背景
+        context.fillStyle = 'rgba(0, 0, 0, 0.85)';
+        context.beginPath();
+        context.roundRect(0, 0, canvas.width, canvas.height, 20);
+        context.fill();
 
-                // 这里可以根据您的实际环境调整URL
-                // 针对移动设备使用外部可访问的URL
-                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-                const fixedModelUrl = isLocalhost
-                    ? originalUrl.replace('http://localhost:8005', 'http://10.157.69.198:8005')
-                    : originalUrl;
+        // 边框
+        context.strokeStyle = '#4CAF50';
+        context.lineWidth = 6;
+        context.beginPath();
+        context.roundRect(0, 0, canvas.width, canvas.height, 20);
+        context.stroke();
 
-                console.log('[DEBUG] 修正后的模型URL:', fixedModelUrl);
+        // 文字
+        context.fillStyle = '#ffffff';
+        context.font = 'bold 48px Arial, sans-serif';
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
+        context.shadowColor = 'rgba(0, 0, 0, 0.7)';
+        context.shadowBlur = 4;
+        context.shadowOffsetX = 2;
+        context.shadowOffsetY = 2;
+        context.fillText(text, canvas.width / 2, canvas.height / 2);
 
-                // 检查模型文件是否可访问
-                try {
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 10000);
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.minFilter = THREE.LinearFilter;
+        texture.magFilter = THREE.LinearFilter;
 
-                    const res = await fetch(fixedModelUrl, {
-                        method: 'HEAD',
-                        signal: controller.signal
-                    });
-                    clearTimeout(timeoutId);
+        const spriteMaterial = new THREE.SpriteMaterial({
+            map: texture,
+            transparent: true,
+            depthTest: false,
+            depthWrite: false
+        });
 
-                    if (!res.ok) {
-                        throw new Error('模型文件不可访问');
-                    }
-                } catch (fetchErr) {
-                    console.error('[DEBUG] 模型文件访问检查失败:', fetchErr);
-                    throw new Error('模型文件不可访问: ' + fetchErr.message);
-                }
+        const sprite = new THREE.Sprite(spriteMaterial);
+        sprite.position.copy(position);
 
-                // 处理标记数据
-                if (response.data.json) {
-                    try {
-                        const parsedMarkers = JSON.parse(response.data.json);
-                        console.log('[DEBUG] 解析的标记数据:', parsedMarkers);
-                        setMarkersData(parsedMarkers);
-                    } catch (e) {
-                        console.error('[DEBUG] 标记数据解析失败:', e);
-                    }
-                }
+        // 根据与相机的距离动态调整大小
+        const distanceToCamera = position.distanceTo(cameraRef.current.position);
+        const baseScale = 0.05 * distanceToCamera;
+        sprite.scale.set(baseScale * 2, baseScale, 1);
 
-                setModelData({ ...response.data, model_url: fixedModelUrl });
-                message.success('模型数据加载成功');
-            } else {
-                throw new Error('未找到模型文件');
-            }
-        } catch (err) {
-            const errorMessage = err.message || '加载模型失败';
-            setError(errorMessage);
-            console.error('[DEBUG] 获取模型错误:', err);
-            message.error(errorMessage);
-        } finally {
-            setLoading(false);
-        }
-    }, [builderId]);
-
-    useEffect(() => {
-        let mounted = true;
-
-        // 检查ARCore和SceneViewer支持情况
-        const checkARSupport = async () => {
-            const isAndroid = /Android/i.test(navigator.userAgent);
-            const isChrome = /Chrome/i.test(navigator.userAgent);
-            console.log('[DEBUG] 设备User Agent:', navigator.userAgent);
-            console.log('[DEBUG] 是否Android设备:', isAndroid);
-            console.log('[DEBUG] 是否Chrome浏览器:', isChrome);
-
-            if (!isAndroid) {
-                if (mounted) {
-                    setIsARCoreSupported(false);
-                    message.warning('ARCore需要Android设备');
-                }
-                return;
-            }
-
-            // 检查WebXR支持（更现代的AR API）
-            if (navigator.xr) {
-                try {
-                    const supported = await navigator.xr.isSessionSupported('immersive-ar');
-                    console.log('[DEBUG] WebXR AR支持:', supported);
-                    if (mounted) setIsARCoreSupported(supported);
-                } catch (err) {
-                    console.error('[DEBUG] WebXR检查错误:', err);
-                    // 即使WebXR不支持，SceneViewer可能仍然可用
-                    if (mounted) setIsARCoreSupported(isAndroid && isChrome);
-                }
-            } else {
-                // 无WebXR API，但可能仍支持SceneViewer
-                if (mounted) setIsARCoreSupported(isAndroid && isChrome);
-            }
-        };
-
-        fetchModelData();
-        checkARSupport();
-
-        // 加载model-viewer组件脚本
-        const loadModelViewerScript = () => {
-            if (!document.querySelector('script[src*="model-viewer.min.js"]')) {
-                const script = document.createElement('script');
-                script.type = 'module';
-                script.src = 'https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js';
-                document.head.appendChild(script);
-
-                script.onload = () => {
-                    console.log('[DEBUG] model-viewer脚本加载完成');
-                };
-
-                script.onerror = (err) => {
-                    console.error('[DEBUG] model-viewer脚本加载失败:', err);
-                    if (mounted) setError('无法加载AR查看器组件');
-                };
-            }
-        };
-
-        loadModelViewerScript();
-
-        return () => {
-            mounted = false;
-        };
-    }, [fetchModelData]);
-
-    // 处理model-viewer的进度事件
-    const handleProgress = (event) => {
-        const progress = event.detail.totalProgress;
-        const progressPercent = Math.round(progress * 100);
-        setLoadingProgress(progressPercent);
-        console.log(`[DEBUG] 模型加载进度: ${progressPercent}%`);
+        return sprite;
     };
 
-    // 处理AR会话开始
-    const handleARActivate = (event) => {
-        console.log('[DEBUG] ARCore会话已启动');
-        message.success('ARCore已启动');
-    };
-
-    // 处理AR会话结束
-    const handleARDeactivate = (event) => {
-        console.log('[DEBUG] ARCore会话已结束');
-    };
-
-    // 处理模型加载完成
-    const handleModelLoad = () => {
-        console.log('[DEBUG] 模型加载完成');
-        setLoadingProgress(100);
-
-        // 如果有标记数据，可以将其添加到model-viewer的一些自定义属性中
-        if (markersData.length > 0 && viewerRef.current) {
-            console.log('[DEBUG] 应用标记数据到模型');
-            // 可以在这里实现自定义标记处理逻辑
+    // 清除文字 Sprite
+    const clearTextSprite = () => {
+        if (textSpriteRef.current && sceneRef.current) {
+            sceneRef.current.remove(textSpriteRef.current);
+            textSpriteRef.current.material.map.dispose();
+            textSpriteRef.current.material.dispose();
+            textSpriteRef.current = null;
         }
     };
 
-    // 处理模型加载错误
-    const handleModelError = () => {
-        console.error('[DEBUG] 模型加载错误');
-        setError('模型加载失败');
-        message.error('模型加载失败');
-    };
+    // 处理模型点击 - 优化逻辑确保点击同一部件会取消高亮
+    const handleModelClick = (event, isXRSelect = false) => {
+        if (!modelRef.current || !markersData.length) return;
 
-    // 当SceneViewer不可用时，手动启动AR
-    const handleManualAR = useCallback(() => {
-        if (!modelData?.model_url) {
-            console.log('[DEBUG] 没有可用的模型URL');
-            message.warning('没有可用的模型URL');
+        const canvas = rendererRef.current.domElement;
+        const rect = canvas.getBoundingClientRect();
+        const mouse = new THREE.Vector2();
+
+        if (!isXRSelect && event.clientX !== undefined && event.clientY !== undefined) {
+            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        } else {
+            // AR模式使用中心点
+            mouse.x = 0;
+            mouse.y = 0;
+        }
+
+        const raycaster = new THREE.Raycaster();
+        raycaster.setFromCamera(mouse, cameraRef.current);
+
+        const meshes = [];
+        modelRef.current.traverse((child) => {
+            if (child.isMesh && child.geometry) meshes.push(child);
+        });
+
+        const intersects = raycaster.intersectObjects(meshes, true);
+
+        // 如果点击没有命中任何物体，清除所有高亮
+        if (intersects.length === 0) {
+            clearTextSprite();
+            clearHighlight();
+            setActiveMarker(null);
             return;
         }
 
-        try {
-            // 构建SceneViewer的Intent URL
-            const intentUrl = `intent://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(
-                modelData.model_url
-            )}&mode=ar_preferred&title=${encodeURIComponent(
-                modelData.name || '3D模型'
-            )}#Intent;scheme=https;package=com.google.android.googlequicksearchbox;action=android.intent.action.VIEW;S.browser_fallback_url=${encodeURIComponent(
-                window.location.href
-            )};end;`;
+        const intersect = intersects[0];
+        const hitPosition = intersect.point;
+        let foundMarker = null;
 
-            console.log('[DEBUG] 手动Intent URL:', intentUrl);
-            message.info('正在启动AR查看器...');
-
-            // 延迟一点点再跳转，让用户看到提示
-            setTimeout(() => {
-                window.location.href = intentUrl;
-            }, 300);
-        } catch (e) {
-            console.error('[DEBUG] 启动SceneViewer失败:', e);
-            message.error('启动AR查看器失败');
+        // 通过面索引查找标记
+        if (intersect.faceIndex !== undefined) {
+            foundMarker = markersData.find(
+                marker => marker.faces && marker.faces.includes(intersect.faceIndex)
+            );
         }
-    }, [modelData]);
 
-    // 返回到模型查看器
-    const handleReturnToViewer = () => {
-        navigate(`/model/${builderId}`);
+        // 通过对象名称查找标记
+        if (!foundMarker && intersect.object.name) {
+            foundMarker = markersData.find(
+                marker => marker.objects && marker.objects.includes(intersect.object.name)
+            );
+        }
+
+        // 没找到使用默认标记
+        if (!foundMarker && markersData.length) {
+            foundMarker = markersData[0];
+        }
+
+        // 检查是否点击了已高亮的标记
+        if (foundMarker && activeMarker && activeMarker.description === foundMarker.description) {
+            // 如果点击同一个标记，取消高亮
+            clearTextSprite();
+            clearHighlight();
+            setActiveMarker(null);
+        } else if (foundMarker) {
+            // 点击了不同的标记，先清除旧的，然后高亮新的
+            clearTextSprite();
+            clearHighlight();
+
+            // 创建并添加文字标签
+            const textPosition = hitPosition.clone().add(new THREE.Vector3(0, 0.2, 0));
+            textSpriteRef.current = createTextSprite(foundMarker.description, textPosition);
+            sceneRef.current.add(textSpriteRef.current);
+
+            // 高亮部件
+            highlightPart(foundMarker, intersect.object);
+            setActiveMarker(foundMarker);
+        }
     };
 
-    // 显示加载界面
-    if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-100">
-                <div className="text-center bg-white p-8 rounded-lg shadow-md">
-                    <div className="animate-spin rounded-full h-14 w-14 border-b-2 border-blue-500 mx-auto mb-4"></div>
-                    <p className="text-gray-700 text-lg mb-2">正在加载ARCore模式...</p>
-                    <p className="text-gray-500 text-sm">请稍候，这可能需要一点时间</p>
-                </div>
-            </div>
+    // 高亮部件 - 带脉动效果
+    const highlightPart = (marker, hitObject) => {
+        if (!modelRef.current) return;
+
+        // 脉动动画参数
+        const pulseIntensity = {value: 0.7};
+
+        // 清除现有的动画帧
+        if (animationFrameRef.current) {
+            cancelAnimationFrame(animationFrameRef.current);
+            animationFrameRef.current = null;
+        }
+
+        // 脉动动画函数
+        const pulseAnimation = () => {
+            pulseIntensity.value = 0.7 + Math.sin(Date.now() * 0.005) * 0.3;
+
+            modelRef.current.traverse((child) => {
+                if (child.isMesh && child.userData.isHighlighted) {
+                    if (Array.isArray(child.material)) {
+                        child.material.forEach(mat => {
+                            if (mat.userData && mat.userData.isHighlightMaterial) {
+                                mat.opacity = pulseIntensity.value;
+                            }
+                        });
+                    } else if (child.material.userData && child.material.userData.isHighlightMaterial) {
+                        child.material.opacity = pulseIntensity.value;
+                    }
+                }
+            });
+
+            // 只有在marker仍然激活时继续动画
+            if (activeMarker) {
+                animationFrameRef.current = requestAnimationFrame(pulseAnimation);
+            }
+        };
+
+        modelRef.current.traverse((child) => {
+            if (child.isMesh && child.geometry) {
+                // 保存原始材质
+                if (!child.userData.originalMaterial) {
+                    child.userData.originalMaterial = child.material.clone();
+                }
+
+                // 通过对象名称高亮
+                if (marker.objects && marker.objects.includes(child.name)) {
+                    child.userData.isHighlighted = true;
+                    child.material = child.userData.originalMaterial.clone();
+                    child.material.userData = child.material.userData || {};
+                    child.material.userData.isHighlightMaterial = true;
+                    child.material.color.setHex(0x4CAF50);
+                    child.material.transparent = true;
+                    child.material.opacity = 0.8;
+                    child.material.emissive = new THREE.Color(0x2E7D32);
+                    child.material.emissiveIntensity = 0.3;
+                    return;
+                }
+
+                // 通过面索引高亮
+                if (marker.faces && child.geometry.index) {
+                    child.userData.isHighlighted = true;
+
+                    if (!Array.isArray(child.material)) {
+                        child.material = [child.userData.originalMaterial.clone()];
+                    }
+
+                    const highlightMaterial = child.userData.originalMaterial.clone();
+                    highlightMaterial.userData = highlightMaterial.userData || {};
+                    highlightMaterial.userData.isHighlightMaterial = true;
+                    highlightMaterial.color.setHex(0x4CAF50);
+                    highlightMaterial.transparent = true;
+                    highlightMaterial.opacity = 0.8;
+                    highlightMaterial.emissive = new THREE.Color(0x2E7D32);
+                    highlightMaterial.emissiveIntensity = 0.3;
+                    child.material.push(highlightMaterial);
+
+                    // 设置面分组
+                    child.geometry.clearGroups();
+                    child.geometry.addGroup(0, child.geometry.index.count, 0);
+
+                    if (marker.faces.length) {
+                        const sortedIndices = [...marker.faces].sort((a, b) => a - b);
+                        let start = sortedIndices[0] * 3;
+                        let count = 3;
+                        for (let i = 1; i < sortedIndices.length; i++) {
+                            if (sortedIndices[i] === sortedIndices[i - 1] + 1) {
+                                count += 3;
+                            } else {
+                                child.geometry.addGroup(start, count, 1);
+                                start = sortedIndices[i] * 3;
+                                count = 3;
+                            }
+                        }
+                        child.geometry.addGroup(start, count, 1);
+                    }
+                }
+            }
+        });
+
+        // 开始脉动动画
+        pulseAnimation();
+    };
+
+    // 清除高亮
+    const clearHighlight = () => {
+        if (!modelRef.current) return;
+
+        // 取消脉动动画
+        if (animationFrameRef.current) {
+            cancelAnimationFrame(animationFrameRef.current);
+            animationFrameRef.current = null;
+        }
+
+        modelRef.current.traverse((child) => {
+            if (child.isMesh && child.geometry && child.userData.originalMaterial) {
+                child.material = child.userData.originalMaterial.clone();
+                child.userData.isHighlighted = false;
+                child.geometry.clearGroups();
+                if (child.geometry.index) {
+                    child.geometry.addGroup(0, child.geometry.index.count, 0);
+                }
+            }
+        });
+    };
+
+    // AR环境优化
+    const optimizeForAR = () => {
+        if (!sceneRef.current) return null;
+
+        // 移除现有光源
+        sceneRef.current.children.forEach(child => {
+            if (child.isLight) sceneRef.current.remove(child);
+        });
+
+        // 添加环境光
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        sceneRef.current.add(ambientLight);
+
+        // 添加平行光
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(1, 5, 2);
+        directionalLight.castShadow = true;
+        sceneRef.current.add(directionalLight);
+
+        // 添加半球光
+        const hemisphereLight = new THREE.HemisphereLight(0xB1E1FF, 0xB97A20, 0.6);
+        sceneRef.current.add(hemisphereLight);
+
+        // 添加阴影平面
+        const shadowPlane = new THREE.Mesh(
+            new THREE.PlaneGeometry(5, 5),
+            new THREE.ShadowMaterial({
+                opacity: 0.3,
+                transparent: true,
+                side: THREE.DoubleSide
+            })
         );
-    }
+        shadowPlane.rotation.x = -Math.PI / 2;
+        shadowPlane.position.y = -0.5;
+        shadowPlane.receiveShadow = true;
+        shadowPlane.visible = false;
+        sceneRef.current.add(shadowPlane);
+        shadowPlaneRef.current = shadowPlane;
+
+        return shadowPlane;
+    };
+
+    // 初始化场景
+    useEffect(() => {
+        if (!containerRef.current || !builderId) {
+            console.error('缺少容器或 builderId');
+            return;
+        }
+
+        const initScene = async () => {
+            try {
+                setLoading(true);
+
+                // 检查WebXR支持
+                if (!navigator.xr) {
+                    throw new Error('设备不支持 WebXR');
+                }
+                const isARSupported = await navigator.xr.isSessionSupported('immersive-ar');
+                if (!isARSupported) {
+                    throw new Error('设备不支持 AR');
+                }
+
+                // 获取模型URL
+                const response = await getBuilderModelUrl(builderId);
+                if (response.code !== 200 || !response.data.model_url) {
+                    throw new Error('模型未找到');
+                }
+
+                // 解析标记数据
+                if (response.data.json) {
+                    try {
+                        const parsedMarkers = JSON.parse(response.data.json);
+                        setMarkersData(parsedMarkers);
+                    } catch (e) {
+                        setMarkersData([
+                            { description: '测试部件', faces: [0, 1, 2], objects: [''] },
+                        ]);
+                    }
+                } else {
+                    setMarkersData([
+                        { description: '默认部件', faces: [0, 1, 2], objects: [''] },
+                    ]);
+                }
+
+                // 创建场景和相机
+                const scene = new THREE.Scene();
+                sceneRef.current = scene;
+
+                const camera = new THREE.PerspectiveCamera(
+                    75,
+                    window.innerWidth / window.innerHeight,
+                    0.1,
+                    1000
+                );
+                cameraRef.current = camera;
+
+                // 创建渲染器
+                const renderer = new THREE.WebGLRenderer({
+                    antialias: true,
+                    alpha: true,
+                });
+                rendererRef.current = renderer;
+                renderer.setPixelRatio(window.devicePixelRatio > 1 ? 2 : 1);
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.xr.enabled = true;
+                containerRef.current.appendChild(renderer.domElement);
+
+                // 添加事件监听
+                renderer.domElement.addEventListener('click', handleModelClick);
+                renderer.domElement.addEventListener('touchstart', (event) => {
+                    event.preventDefault();
+                    event.clientX = event.touches[0].clientX;
+                    event.clientY = event.touches[0].clientY;
+                    handleModelClick(event);
+                });
+
+                // 添加光源
+                scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
+                directionalLight.position.set(5, 5, 5);
+                scene.add(directionalLight);
+
+                // 加载模型
+                const loader = new GLTFLoader();
+                const gltf = await new Promise((resolve, reject) => {
+                    loader.load(
+                        response.data.model_url,
+                        (gltf) => resolve(gltf),
+                        (xhr) => {},
+                        (err) => reject(new Error('模型加载失败'))
+                    );
+                });
+
+                // 设置模型
+                const model = gltf.scene;
+                modelRef.current = model;
+
+                // 计算适当的缩放
+                const box = new THREE.Box3().setFromObject(model);
+                const size = box.getSize(new THREE.Vector3());
+                const baseScale = 0.5 / Math.max(size.x, size.y, size.z);
+                const finalScale = baseScale * modelScale;
+                model.scale.set(finalScale, finalScale, finalScale);
+                model.position.set(0, 0, -1);
+                scene.add(model);
+
+                // 启动动画循环
+                const animate = () => {
+                    renderer.setAnimationLoop((time) => {
+                        renderer.render(scene, camera);
+                    });
+                };
+                animate();
+
+                // 窗口大小变化处理
+                const onResize = () => {
+                    camera.aspect = window.innerWidth / window.innerHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                };
+                window.addEventListener('resize', onResize);
+
+                setLoading(false);
+            } catch (err) {
+                setError(err.message);
+                setLoading(false);
+            }
+        };
+
+        initScene();
+
+        // 清理函数
+        return () => {
+            // 取消动画
+            if (animationFrameRef.current) {
+                cancelAnimationFrame(animationFrameRef.current);
+            }
+
+            // 移除事件监听
+            window.removeEventListener('resize', () => {});
+            if (rendererRef.current?.domElement) {
+                rendererRef.current.domElement.removeEventListener('click', handleModelClick);
+                rendererRef.current.domElement.removeEventListener('touchstart', () => {});
+            }
+
+            // 结束AR会话
+            if (xrSessionRef.current) {
+                xrSessionRef.current.end().catch(() => {});
+                xrSessionRef.current = null;
+            }
+
+            // 清理渲染器
+            if (rendererRef.current) {
+                rendererRef.current.setAnimationLoop(null);
+                rendererRef.current.dispose();
+                if (rendererRef.current.domElement && rendererRef.current.domElement.parentNode) {
+                    rendererRef.current.domElement.parentNode.removeChild(rendererRef.current.domElement);
+                }
+            }
+
+            // 清理模型资源
+            if (modelRef.current) {
+                modelRef.current.traverse((child) => {
+                    if (child.isMesh && child.geometry) {
+                        child.geometry.dispose();
+                        if (Array.isArray(child.material)) {
+                            child.material.forEach((material) => material.dispose());
+                        } else if (child.material) {
+                            child.material.dispose();
+                        }
+                    }
+                });
+            }
+
+            // 清除文字精灵
+            clearTextSprite();
+        };
+    }, [builderId]);
+
+    // 启动 AR
+    const startAR = async () => {
+        try {
+            if (!navigator.xr) throw new Error('浏览器不支持 WebXR');
+
+            const session = await navigator.xr.requestSession('immersive-ar', {
+                optionalFeatures: ['local-floor', 'bounded-floor', 'hand-tracking', 'hit-test'],
+                requiredFeatures: ['local']
+            });
+
+            xrSessionRef.current = session;
+            rendererRef.current.xr.setSession(session);
+            setIsARActive(true);
+
+            // 优化AR环境
+            optimizeForAR();
+
+            // 设置命中测试
+            let hitTestSource = null;
+            let hitTestSourceRequested = false;
+
+            // 添加选择事件监听
+            session.addEventListener('select', (event) => {
+                handleModelClick(event, true);
+            });
+
+            // XR帧处理
+            const onXRFrame = (time, frame) => {
+                const session = frame.session;
+                const referenceSpace = rendererRef.current.xr.getReferenceSpace();
+
+                // 如需要，请求命中测试源
+                if (!hitTestSourceRequested && session.requestHitTestSource) {
+                    session.requestReferenceSpace('viewer').then((referenceSpace) => {
+                        session.requestHitTestSource({ space: referenceSpace }).then((source) => {
+                            hitTestSource = source;
+                        });
+                    });
+                    hitTestSourceRequested = true;
+                }
+
+                // 执行命中测试
+                if (hitTestSource && shadowPlaneRef.current) {
+                    const hitTestResults = frame.getHitTestResults(hitTestSource);
+
+                    if (hitTestResults.length) {
+                        const hit = hitTestResults[0];
+                        const pose = hit.getPose(referenceSpace);
+
+                        if (pose) {
+                            // 移动模型到命中位置
+                            modelRef.current.position.set(
+                                pose.transform.position.x,
+                                pose.transform.position.y,
+                                pose.transform.position.z
+                            );
+
+                            // 移动阴影平面
+                            shadowPlaneRef.current.position.set(
+                                pose.transform.position.x,
+                                pose.transform.position.y - 0.01,
+                                pose.transform.position.z
+                            );
+                            shadowPlaneRef.current.visible = true;
+                        }
+                    }
+                }
+
+                // 继续帧循环
+                session.requestAnimationFrame(onXRFrame);
+            };
+
+            // 启动XR帧循环
+            session.requestAnimationFrame(onXRFrame);
+
+            // 会话结束处理
+            session.addEventListener('end', () => {
+                setIsARActive(false);
+                if (shadowPlaneRef.current) shadowPlaneRef.current.visible = false;
+                rendererRef.current.xr.setSession(null);
+                xrSessionRef.current = null;
+            });
+
+            message.success('AR 模式已启动，请移动设备寻找平面放置模型');
+        } catch (err) {
+            message.error('无法启动 AR: ' + err.message);
+        }
+    };
+
+    // 缩放模型
+    const scaleModel = (scaleFactor) => {
+        setModelScale((prevScale) => {
+            const newScale = prevScale * scaleFactor;
+            if (newScale < 0.2) return 0.2;
+            if (newScale > 5.0) return 5.0;
+            return newScale;
+        });
+    };
+
+    // 更新模型缩放
+    useEffect(() => {
+        if (modelRef.current) {
+            const box = new THREE.Box3().setFromObject(modelRef.current);
+            const size = box.getSize(new THREE.Vector3());
+            const baseScale = 0.5 / Math.max(size.x, size.y, size.z);
+            const finalScale = baseScale * modelScale;
+            modelRef.current.scale.set(finalScale, finalScale, finalScale);
+        }
+    }, [modelScale]);
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4" ref={containerRef}>
-            <h1 className="text-3xl font-bold mb-4">ARCore 查看器 - ID: {builderId}</h1>
+        <div className={`min-h-screen flex flex-col items-center justify-center ${isARActive ? 'bg-black' : ''}`}>
+            {!isARActive && <h1 className="text-3xl font-bold mb-4">AR模型查看器 - ID: {builderId}</h1>}
+
+            {loading && (
+                <div className="text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                    <p className="text-white">加载模型中...</p>
+                </div>
+            )}
 
             {error && (
-                <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-center">
-                    <p className="text-red-500 mb-2">{error}</p>
+                <p className="text-red-500 absolute top-10 left-1/2 transform -translate-x-1/2 z-30">错误：{error}</p>
+            )}
+
+            <div
+                className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20 bg-black bg-opacity-50 p-2 rounded text-white text-center"
+                style={{ display: isARActive ? 'none' : 'block' }}
+            >
+                <p>点击"启动AR"在增强现实中查看模型</p>
+                <p className="text-xs mt-1">使用+/-按钮调整模型大小</p>
+                <p className="text-xs">点击模型部件可高亮，再次点击可取消高亮</p>
+                {activeMarker && (
+                    <div className="mt-2 p-2 bg-green-900 rounded">
+                        <p><strong>当前选中:</strong> {activeMarker.description}</p>
+                    </div>
+                )}
+            </div>
+
+            <div ref={containerRef} className="relative w-full h-[70vh]" style={{ overflow: 'hidden' }} />
+
+            <div className="flex gap-2 mt-4">
+                <button
+                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                    onClick={startAR}
+                    disabled={isARActive}
+                >
+                    启动AR
+                </button>
+                <div className="flex items-center gap-1">
                     <button
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-                        onClick={fetchModelData}
+                        className="px-3 py-2 bg-yellow-500 text-white rounded-l hover:bg-yellow-600 font-bold"
+                        onClick={() => scaleModel(0.8)}
+                        title="缩小模型"
                     >
-                        重试加载
+                        -
+                    </button>
+                    <span className="bg-gray-700 text-white px-2 py-1 text-sm">
+                        {Math.round(modelScale * 100)}%
+                    </span>
+                    <button
+                        className="px-3 py-2 bg-yellow-500 text-white rounded-r hover:bg-yellow-600 font-bold"
+                        onClick={() => scaleModel(1.25)}
+                        title="放大模型"
+                    >
+                        +
                     </button>
                 </div>
-            )}
-
-            {modelData && !error && (
-                <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg overflow-hidden">
-                    {loadingProgress < 100 && (
-                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 bg-black bg-opacity-60 p-6 rounded-lg text-center">
-                            <div className="w-16 h-16 border-4 border-t-blue-500 border-b-blue-500 border-gray-200 rounded-full animate-spin mx-auto mb-4"></div>
-                            <p className="text-white text-lg mb-1">加载模型中...</p>
-                            <p className="text-white">{loadingProgress}%</p>
-                        </div>
-                    )}
-
-                    <model-viewer
-                        ref={viewerRef}
-                        src={modelData.model_url}
-                        alt={modelData.name || '3D模型'}
-                        ar
-                        ar-modes="scene-viewer webxr quick-look"
-                        ar-scale="auto"
-                        camera-controls
-                        auto-rotate
-                        shadow-intensity="1"
-                        exposure="1"
-                        environment-image="neutral"
-                        style={{ width: '100%', height: '70vh', backgroundColor: '#f5f5f5' }}
-                        onprogress={handleProgress}
-                        onar-status={handleARActivate}
-                        onload={handleModelLoad}
-                        onerror={handleModelError}
-                    >
-                        <button
-                            slot="ar-button"
-                            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-blue-600 transition-colors shadow-lg"
-                        >
-                            在AR中查看
-                        </button>
-                    </model-viewer>
-
-                    {/* 控制面板 */}
-                    <div className="p-4 bg-gray-50 border-t border-gray-200">
-                        <div className="flex flex-wrap justify-center gap-4">
-                            {isARCoreSupported === false && (
-                                <button
-                                    className="px-5 py-2.5 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors shadow-md flex items-center gap-2"
-                                    onClick={handleManualAR}
-                                >
-                                    <span className="material-icons">view_in_ar</span>
-                                    手动启动 AR
-                                </button>
-                            )}
-
-                            <button
-                                className="px-5 py-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors shadow-md flex items-center gap-2"
-                                onClick={handleReturnToViewer}
-                            >
-                                <span className="material-icons">arrow_back</span>
-                                返回常规查看器
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {isARCoreSupported === false && (
-                <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg max-w-4xl">
-                    <div className="flex items-start gap-3">
-                        <span className="material-icons text-yellow-500">warning</span>
-                        <div>
-                            <h3 className="font-semibold text-yellow-700 mb-1">AR兼容性提示</h3>
-                            <p className="text-yellow-600 text-sm">
-                                当前设备可能不支持 ARCore 或 Google Scene Viewer。
-                                请确保您使用的是 Android 设备且安装了最新版本的
-                                Google Play 服务（AR）和 Chrome 浏览器。
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* 标记数据信息面板（可选） */}
-            {markersData.length > 0 && (
-                <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg max-w-4xl">
-                    <h3 className="font-semibold text-blue-700 mb-2">模型包含标记数据</h3>
-                    <p className="text-blue-600 text-sm">
-                        此模型包含 {markersData.length} 个部位标记。在Google的AR模式中，
-                        您可以通过点击模型查看这些标记信息。
-                    </p>
-                </div>
-            )}
+                <button
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    onClick={() => navigate(`/model/${builderId}`)}
+                >
+                    返回
+                </button>
+            </div>
         </div>
     );
 };

@@ -2808,3 +2808,421 @@ vite.config.js:56:47: ERROR: Expected ")" but found end of file
 21:33:14 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
 21:33:36 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
 21:34:24 [vite] (client) hmr update /src/pages/about/AboutPage.jsx
+
+  VITE v6.0.11  ready in 650 ms
+
+  ➜  Local:   https://localhost:5173/
+  ➜  Network: https://169.254.154.113:5173/
+  ➜  Network: https://169.254.233.85:5173/
+  ➜  Network: https://10.153.240.14:5173/
+12:28:16 [vite] vite.config.js changed, restarting server...
+12:28:16 [vite] server restarted.
+
+  VITE v6.0.11  ready in 517 ms
+
+  ➜  Local:   https://localhost:5173/
+  ➜  Network: https://169.254.154.113:5173/
+  ➜  Network: https://169.254.233.85:5173/
+  ➜  Network: https://10.153.240.14:5173/
+12:31:12 [vite] vite.config.js changed, restarting server...
+12:31:12 [vite] server restarted.
+12:32:08 [vite] http proxy error: /app/article/articles/top-articles/
+Error: connect ECONNREFUSED 10.153.240.14:8005
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)
+12:32:10 [vite] http proxy error: /app/builder/all/
+Error: connect ECONNREFUSED 10.153.240.14:8005
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)
+
+  VITE v6.0.11  ready in 484 ms
+
+  ➜  Local:   https://localhost:5173/
+  ➜  Network: https://169.254.154.113:5173/
+  ➜  Network: https://169.254.233.85:5173/
+  ➜  Network: https://10.153.240.14:5173/
+12:32:17 [vite] vite.config.js changed, restarting server...
+12:32:17 [vite] server restarted.
+12:32:35 [vite] http proxy error: /app/article/articles/top-articles/
+Error: connect ECONNREFUSED 10.153.240.14:8005
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)
+12:32:37 [vite] http proxy error: /app/builder/all/
+Error: connect ECONNREFUSED 10.153.240.14:8005
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)
+
+  VITE v6.0.11  ready in 705 ms
+
+  ➜  Local:   https://localhost:5173/
+  ➜  Network: https://169.254.154.113:5173/
+  ➜  Network: https://169.254.233.85:5173/
+  ➜  Network: https://10.153.240.14:5173/
+17:05:16 [vite] vite.config.js changed, restarting server...
+17:05:16 [vite] server restarted.
+17:15:23 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+17:19:31 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+17:25:49 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+17:27:01 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+17:29:58 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+17:31:16 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+18:33:19 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+18:33:19 [vite] Internal server error: G:\GraduationDesign\probject\frontend\src\pages\ARModelEditor\ARGoogleViewer.jsx: Missing initializer in destructuring declaration. (188:43)
+
+  186 |         return () => clearTimeout(timeoutId);
+  187 |     }
+> 188 | }, [modelData, loading, error, markersData]);
+      |                                            ^
+  189 |
+  190 | // 处理AR会话开始
+  191 | const handleARActivate = (event) => {
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/pages/ARModelEditor/ARGoogleViewer.jsx:188:43
+  193|      if (status === 'session-started') {
+  194|          console.log('[DEBUG] ARCore会话已启动');
+  195|          message.success('ARCore已启动');
+     |           ^
+  196|  
+  197|          // AR会话开始后，立即应用点击处理
+      at constructor (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:360:19)
+      at JSXParserMixin.raise (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3327:19)
+      at JSXParserMixin.parseVar (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:13021:16)
+      at JSXParserMixin.parseVarStatement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12864:10)
+      at JSXParserMixin.parseStatementContent (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12479:23)
+      at JSXParserMixin.parseStatementLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12396:17)
+      at JSXParserMixin.parseModuleItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12373:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12950:36)
+      at JSXParserMixin.parseBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12943:10)
+      at JSXParserMixin.parseProgram (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12270:10)
+      at JSXParserMixin.parseTopLevel (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12260:25)
+      at JSXParserMixin.parse (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:14110:10)
+      at parse (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:14144:38)
+      at parser (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\parser\index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\transformation\normalize-file.js:64:37)
+      at normalizeFile.next (<anonymous>)
+      at run (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\transformation\index.js:22:50)
+      at run.next (<anonymous>)
+      at transform (G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\transform.js:22:33)
+      at transform.next (<anonymous>)
+      at step (G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:261:32)
+      at G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:273:13
+      at async.call.result.err.err (G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:223:11)
+      at G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:189:28
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\core\lib\gensync-utils\async.js:67:7
+      at G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:113:33
+      at step (G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:287:14)
+      at G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:273:13
+      at async.call.result.err.err (G:\GraduationDesign\probject\frontend\node_modules\gensync\index.js:223:11)
+18:35:00 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+18:37:34 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+18:42:40 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+18:46:15 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+18:48:45 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+18:51:46 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+18:52:51 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+18:53:12 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+18:55:40 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+18:57:35 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+18:59:20 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+18:59:28 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+18:59:42 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+19:03:31 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+19:11:08 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+19:12:44 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+19:12:55 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+19:31:35 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+19:31:36 [vite] Internal server error: Failed to resolve import "./ARGoogleViewer.css" from "src/pages/ARModelEditor/ARGoogleViewer.jsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: G:/GraduationDesign/probject/frontend/src/pages/ARModelEditor/ARGoogleViewer.jsx:5:7
+  20 |  import Popup from "reactjs-popup";
+  21 |  import "reactjs-popup/dist/index.css";
+  22 |  import "./ARGoogleViewer.css";
+     |          ^
+  23 |  const ARGoogleViewer = () => {
+  24 |    _s();
+      at TransformPluginContext._formatError (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:47574:41)
+      at TransformPluginContext.error (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:47569:16)
+      at normalizeUrl (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:45818:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:45937:39
+      at async Promise.all (index 7)
+      at async TransformPluginContext.transform (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:45864:7)
+      at async EnvironmentPluginContainer.transform (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:47400:18)
+      at async loadAndTransform (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:41198:27)
+      at async viteTransformMiddleware (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:42642:24)
+19:32:02 [vite] (client) hmr update /src/App.jsx
+19:32:02 [vite] (client) Pre-transform error: Failed to resolve import "@google/model-viewer" from "src/pages/ARModelEditor/ARGoogleViewer.jsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: G:/GraduationDesign/probject/frontend/src/pages/ARModelEditor/ARGoogleViewer.jsx:2:7
+  17 |  var _s = $RefreshSig$();
+  18 |  import React, { useRef, useState } from "react";
+  19 |  import "@google/model-viewer";
+     |          ^
+  20 |  import Popup from "reactjs-popup";
+  21 |  import "reactjs-popup/dist/index.css";
+19:32:02 [vite] Internal server error: Failed to resolve import "@google/model-viewer" from "src/pages/ARModelEditor/ARGoogleViewer.jsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: G:/GraduationDesign/probject/frontend/src/pages/ARModelEditor/ARGoogleViewer.jsx:2:7
+  17 |  var _s = $RefreshSig$();
+  18 |  import React, { useRef, useState } from "react";
+  19 |  import "@google/model-viewer";
+     |          ^
+  20 |  import Popup from "reactjs-popup";
+  21 |  import "reactjs-popup/dist/index.css";
+      at TransformPluginContext._formatError (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:47574:41)
+      at TransformPluginContext.error (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:47569:16)
+      at normalizeUrl (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:45818:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:45937:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:45864:7)
+      at async EnvironmentPluginContainer.transform (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:47400:18)
+      at async loadAndTransform (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:41198:27)
+      at async viteTransformMiddleware (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:42642:24)
+19:32:05 [vite] (client) ✨ new dependencies optimized: reactjs-popup
+19:32:05 [vite] (client) ✨ optimized dependencies changed. reloading
+19:32:06 [vite] (client) Pre-transform error: Failed to resolve import "@google/model-viewer" from "src/pages/ARModelEditor/ARGoogleViewer.jsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: G:/GraduationDesign/probject/frontend/src/pages/ARModelEditor/ARGoogleViewer.jsx:2:7
+  17 |  var _s = $RefreshSig$();
+  18 |  import React, { useRef, useState } from "react";
+  19 |  import "@google/model-viewer";
+     |          ^
+  20 |  import Popup from "reactjs-popup";
+  21 |  import "reactjs-popup/dist/index.css";
+19:32:08 [vite] Internal server error: Failed to resolve import "@google/model-viewer" from "src/pages/ARModelEditor/ARGoogleViewer.jsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: G:/GraduationDesign/probject/frontend/src/pages/ARModelEditor/ARGoogleViewer.jsx:2:7
+  17 |  var _s = $RefreshSig$();
+  18 |  import React, { useRef, useState } from "react";
+  19 |  import "@google/model-viewer";
+     |          ^
+  20 |  import Popup from "reactjs-popup";
+  21 |  import "reactjs-popup/dist/index.css";
+      at TransformPluginContext._formatError (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:47574:41)
+      at TransformPluginContext.error (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:47569:16)
+      at normalizeUrl (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:45818:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:45937:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:45864:7)
+      at async EnvironmentPluginContainer.transform (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:47400:18)
+      at async loadAndTransform (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:41198:27)
+      at async viteTransformMiddleware (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:42642:24)
+19:32:30 [vite] (client) hmr update /src/App.jsx
+19:32:30 [vite] (client) Pre-transform error: Failed to resolve import "@google/model-viewer" from "src/pages/ARModelEditor/ARGoogleViewer.jsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: G:/GraduationDesign/probject/frontend/src/pages/ARModelEditor/ARGoogleViewer.jsx:2:7
+  17 |  var _s = $RefreshSig$();
+  18 |  import React, { useRef, useState } from "react";
+  19 |  import "@google/model-viewer";
+     |          ^
+  20 |  import Popup from "reactjs-popup";
+  21 |  const ARGoogleViewer = () => {
+19:32:31 [vite] Internal server error: Failed to resolve import "@google/model-viewer" from "src/pages/ARModelEditor/ARGoogleViewer.jsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: G:/GraduationDesign/probject/frontend/src/pages/ARModelEditor/ARGoogleViewer.jsx:2:7
+  17 |  var _s = $RefreshSig$();
+  18 |  import React, { useRef, useState } from "react";
+  19 |  import "@google/model-viewer";
+     |          ^
+  20 |  import Popup from "reactjs-popup";
+  21 |  const ARGoogleViewer = () => {
+      at TransformPluginContext._formatError (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:47574:41)
+      at TransformPluginContext.error (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:47569:16)
+      at normalizeUrl (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:45818:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:45937:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:45864:7)
+      at async EnvironmentPluginContainer.transform (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:47400:18)
+      at async loadAndTransform (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:41198:27)
+      at async viteTransformMiddleware (file:///G:/GraduationDesign/probject/frontend/node_modules/vite/dist/node/chunks/dep-M1IYMR16.js:42642:24)
+19:32:39 [vite] (client) hmr update /src/App.jsx
+19:33:08 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+19:36:05 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+19:42:00 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+19:44:33 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+19:45:55 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+19:59:07 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+20:06:36 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+20:11:01 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+20:30:21 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+20:35:07 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+20:36:25 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+20:39:12 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+20:44:40 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+20:44:40 [vite] Internal server error: G:\GraduationDesign\probject\frontend\src\pages\ARModelEditor\ARGoogleViewer.jsx: Unexpected token, expected "," (467:8)
+
+  465 |         };
+  466 |     }, [build
+> 467 |         erId]);
+      |         ^
+  468 |
+  469 |     // 启动 AR
+  470 |     const startAR = async () => {
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/pages/ARModelEditor/ARGoogleViewer.jsx:467:8
+  479|              console.log('AR 启动');
+  480|  
+  481|              session.addEventListener('select', (event) => {
+     |               ^
+  482|                  console.log('WebXR select:', event);
+  483|                  handleModelClick(event, true);
+      at constructor (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:360:19)
+      at JSXParserMixin.raise (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3327:19)
+      at JSXParserMixin.unexpected (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3347:16)
+      at JSXParserMixin.expect (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3657:12)
+      at JSXParserMixin.parseExprList (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11814:14)
+      at JSXParserMixin.parseArrayLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11730:26)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11005:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12090:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:17)
+      at JSXParserMixin.parseExprListItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11848:18)
+      at JSXParserMixin.parseCallExpressionArguments (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10917:22)
+      at JSXParserMixin.parseCoverCallAndAsyncArrowHead (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10851:29)
+      at JSXParserMixin.parseSubscript (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10788:19)
+      at JSXParserMixin.parseSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10761:19)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10752:17)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at JSXParserMixin.parseExpressionBase (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10465:23)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12085:16)
+      at JSXParserMixin.parseExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:17)
+      at JSXParserMixin.parseStatementContent (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12529:23)
+      at JSXParserMixin.parseStatementLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12396:17)
+      at JSXParserMixin.parseStatementListItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12376:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12950:61)
+      at JSXParserMixin.parseBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12943:10)
+      at JSXParserMixin.parseBlock (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12931:10)
+      at JSXParserMixin.parseFunctionBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11773:24)
+      at JSXParserMixin.parseArrowExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11748:10)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11361:12)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+20:45:11 [vite] (client) Pre-transform error: G:\GraduationDesign\probject\frontend\src\pages\ARModelEditor\ARGoogleViewer.jsx: Unexpected token, expected "," (467:8)
+
+  465 |         };
+  466 |     }, [build
+> 467 |         erId]);
+      |         ^
+  468 |
+  469 |     // 启动 AR
+  470 |     const startAR = async () => {
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/pages/ARModelEditor/ARGoogleViewer.jsx:467:8
+  479|              console.log('AR 启动');
+  480|  
+  481|              session.addEventListener('select', (event) => {
+     |               ^
+  482|                  console.log('WebXR select:', event);
+  483|                  handleModelClick(event, true);
+20:45:12 [vite] Internal server error: G:\GraduationDesign\probject\frontend\src\pages\ARModelEditor\ARGoogleViewer.jsx: Unexpected token, expected "," (467:8)
+
+  465 |         };
+  466 |     }, [build
+> 467 |         erId]);
+      |         ^
+  468 |
+  469 |     // 启动 AR
+  470 |     const startAR = async () => {
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/pages/ARModelEditor/ARGoogleViewer.jsx:467:8
+  479|              console.log('AR 启动');
+  480|  
+  481|              session.addEventListener('select', (event) => {
+     |               ^
+  482|                  console.log('WebXR select:', event);
+  483|                  handleModelClick(event, true);
+      at constructor (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:360:19)
+      at JSXParserMixin.raise (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3327:19)
+      at JSXParserMixin.unexpected (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3347:16)
+      at JSXParserMixin.expect (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3657:12)
+      at JSXParserMixin.parseExprList (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11814:14)
+      at JSXParserMixin.parseArrayLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11730:26)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11005:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12090:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:17)
+      at JSXParserMixin.parseExprListItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11848:18)
+      at JSXParserMixin.parseCallExpressionArguments (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10917:22)
+      at JSXParserMixin.parseCoverCallAndAsyncArrowHead (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10851:29)
+      at JSXParserMixin.parseSubscript (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10788:19)
+      at JSXParserMixin.parseSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10761:19)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10752:17)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at JSXParserMixin.parseExpressionBase (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10465:23)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12085:16)
+      at JSXParserMixin.parseExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:17)
+      at JSXParserMixin.parseStatementContent (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12529:23)
+      at JSXParserMixin.parseStatementLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12396:17)
+      at JSXParserMixin.parseStatementListItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12376:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12950:61)
+      at JSXParserMixin.parseBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12943:10)
+      at JSXParserMixin.parseBlock (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12931:10)
+      at JSXParserMixin.parseFunctionBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11773:24)
+      at JSXParserMixin.parseArrowExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11748:10)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11361:12)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+20:48:11 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+20:53:34 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+20:56:57 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+20:59:26 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+21:03:27 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+21:04:57 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+21:12:31 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+
+  VITE v6.0.11  ready in 770 ms
+
+  ➜  Local:   https://localhost:5173/
+  ➜  Network: https://169.254.154.113:5173/
+  ➜  Network: https://169.254.233.85:5173/
+  ➜  Network: https://10.153.240.14:5173/
+21:12:56 [vite] vite.config.js changed, restarting server...
+21:12:57 [vite] server restarted.
+21:13:52 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+21:16:35 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+21:18:27 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+21:19:27 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+21:21:43 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+21:25:53 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+21:31:56 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+21:32:49 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+21:37:54 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx
+21:41:40 [vite] (client) hmr update /src/pages/ARModelEditor/ARGoogleViewer.jsx

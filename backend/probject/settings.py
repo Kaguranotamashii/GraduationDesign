@@ -95,7 +95,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-URL_BASE = 'https://10.153.96.53:8005'  # 修改为局域网 IP
+URL_BASE = ''  # 修改为局域网 IP
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = False
 
