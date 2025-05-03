@@ -23,10 +23,12 @@ import {
     UploadOutlined,
     SearchOutlined,
     ReloadOutlined,
+    EyeOutlined
 } from '@ant-design/icons';
 import { MapContainer, TileLayer, useMapEvent, Marker } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { useNavigate } from 'react-router-dom';
 
 import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
 import iconUrl from 'leaflet/dist/images/marker-icon.png';
@@ -37,9 +39,9 @@ import {
     addBuilder,
     getBuildingCategories,
     getBuildingTags,
-
     uploadBuildingModel,
-    updateBuilderInfo
+    updateBuilderInfo,
+
 } from '@/api/builderApi';
 
 const { Option } = Select;
@@ -64,6 +66,9 @@ function MapClickHandler({ onLocationSelect }) {
 }
 
 const BuilderManagement = () => {
+    // 添加导航钩子
+    const navigate = useNavigate();
+
     // 状态定义
     const [loading, setLoading] = useState(false);
     const [builders, setBuilders] = useState([]);
@@ -156,6 +161,11 @@ const BuilderManagement = () => {
         searchForm.resetFields();
         setCurrentPage(1);
         fetchBuilders(1, pageSize);
+    };
+
+    // 导航到模型编辑页面
+    const handleNavigateToModelEdit = (builderId) => {
+        navigate(`/modelEdit/${builderId}`);
     };
 
     // 编辑建筑
@@ -340,6 +350,19 @@ const BuilderManagement = () => {
             )
         },
         {
+            title: '模型状态',
+            dataIndex: 'model_url',
+            key: 'model_status',
+            width: 120,
+            render: (model_url) => (
+                model_url ? (
+                    <Tag color="green">已上传</Tag>
+                ) : (
+                    <Tag color="red">未上传</Tag>
+                )
+            )
+        },
+        {
             title: '创建时间',
             dataIndex: 'created_at',
             key: 'created_at',
@@ -349,7 +372,7 @@ const BuilderManagement = () => {
         {
             title: '操作',
             key: 'action',
-            width: 200,
+            width: 250,
             fixed: 'right',
             render: (_, record) => (
                 <Space size="middle">
@@ -360,21 +383,31 @@ const BuilderManagement = () => {
                     >
                         编辑
                     </Button>
-                    <Upload
-                        showUploadList={false}
-                        accept=".glb,.gltf"
-                        beforeUpload={(file) => {
-                            handleModelUpload(record.id, file);
-                            return false;
-                        }}
-                    >
+                    {record.model_url ? (
                         <Button
                             type="link"
-                            icon={<UploadOutlined />}
+                            icon={<EyeOutlined />}
+                            onClick={() => handleNavigateToModelEdit(record.id)}
                         >
-                            上传模型
+                            编辑模型
                         </Button>
-                    </Upload>
+                    ) : (
+                        <Upload
+                            showUploadList={false}
+                            accept=".glb,.gltf"
+                            beforeUpload={(file) => {
+                                handleModelUpload(record.id, file);
+                                return false;
+                            }}
+                        >
+                            <Button
+                                type="link"
+                                icon={<UploadOutlined />}
+                            >
+                                上传模型
+                            </Button>
+                        </Upload>
+                    )}
                     <Popconfirm
                         title="确定要删除这个建筑吗？"
                         description="删除后无法恢复，请谨慎操作。"
@@ -504,7 +537,7 @@ const BuilderManagement = () => {
                     showTotal: (total) => `共 ${total} 条`,
                 }}
                 onChange={handleTableChange}
-                scroll={{ x: 1200 }}
+                scroll={{ x: 1300 }}
             />
 
             {/* 添加/编辑模态框 */}

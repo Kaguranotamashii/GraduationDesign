@@ -1,673 +1,630 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { ARButton } from 'three/examples/jsm/webxr/ARButton';
+import { THREEx } from '@ar-js-org/ar.js-threejs';
 import { getBuilderModelUrl } from '@/api/builderApi';
-import * as ARThreex from '../../lib/ar-threex.mjs';
-import { message } from 'antd';
+import { useParams } from 'react-router-dom';
 
 const ARCompatViewer = () => {
-    const { builderId } = useParams();
-    const navigate = useNavigate();
     const containerRef = useRef(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [markersData, setMarkersData] = useState([]);
-    const [activeMarker, setActiveMarker] = useState(null);
-    const [isFullscreen, setIsFullscreen] = useState(false);
-    const [modelScale, setModelScale] = useState(1.0);
-
-    // 创建引用来保存Three.js对象
-    const rendererRef = useRef(null);
     const sceneRef = useRef(null);
+    const rendererRef = useRef(null);
     const cameraRef = useRef(null);
     const arToolkitSourceRef = useRef(null);
     const arToolkitContextRef = useRef(null);
-    const markerRootRef = useRef(null);
     const modelRef = useRef(null);
+    const markerRootRef = useRef(null);
+    const meshRef = useRef(null);
+    const [modelUrl, setModelUrl] = useState(null);
+    const [error, setError] = useState(null);
+    const [scale, setScale] = useState(0.8);
+    const [loadingProgress, setLoadingProgress] = useState(0);
+    const [markerNotDetected, setMarkerNotDetected] = useState(false);
+    const [markersData, setMarkersData] = useState([]);
     const tooltipRef = useRef(null);
+    const raycasterRef = useRef(new THREE.Raycaster());
+    const mouseRef = useRef(new THREE.Vector2());
+    const mounted = useRef(true);
+    const { builderId } = useParams();
+    const [isMarkerVisible, setIsMarkerVisible] = useState(false);
+    const [highlightColor, setHighlightColor] = useState('#ff0000'); // Default highlight color
+    const [highlightedPart, setHighlightedPart] = useState(null); // Track single highlighted part
 
-    // 创建提示容器用于显示部位信息
+    // Fetch model and marker data
     useEffect(() => {
-        tooltipRef.current = document.createElement('div');
-        tooltipRef.current.style.cssText = `
-            position: absolute;
-            padding: 8px 12px;
-            background: rgba(0, 0, 0, 0.75);
-            color: white;
-            border-radius: 4px;
-            font-size: 14px;
-            pointer-events: none;
-            display: none;
-            z-index: 1000;
-            max-width: 300px;
-            word-wrap: break-word;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        `;
-        document.body.appendChild(tooltipRef.current);
-
-        return () => {
-            if (tooltipRef.current && tooltipRef.current.parentNode) {
-                tooltipRef.current.parentNode.removeChild(tooltipRef.current);
-            }
-        };
-    }, []);
-
-    const onResize = () => {
-        if (arToolkitSourceRef.current) {
-            arToolkitSourceRef.current.onResizeElement();
-            if (rendererRef.current) {
-                arToolkitSourceRef.current.copyElementSizeTo(rendererRef.current.domElement);
-            }
-            if (arToolkitContextRef.current && arToolkitContextRef.current.arController !== null) {
-                arToolkitSourceRef.current.copyElementSizeTo(arToolkitContextRef.current.arController.canvas);
-            }
-        }
-        if (cameraRef.current) {
-            cameraRef.current.aspect = window.innerWidth / window.innerHeight;
-            cameraRef.current.updateProjectionMatrix();
-        }
-        if (rendererRef.current) {
-            rendererRef.current.setSize(window.innerWidth, window.innerHeight);
-        }
-        console.log('解析的标记数据:', markersData);
-    };
-
-    // 处理模型点击事件，显示部位信息
-    const handleModelClick = (event) => {
-        if (!modelRef.current || !markersData.length) return;
-
-        // 计算鼠标在归一化设备坐标中的位置
-        const rect = rendererRef.current.domElement.getBoundingClientRect();
-        const mouse = new THREE.Vector2();
-        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-
-        // 使用射线检测与模型的交叉
-        const raycaster = new THREE.Raycaster();
-        raycaster.setFromCamera(mouse, cameraRef.current);
-
-        // 收集模型中的所有网格
-        const meshes = [];
-        modelRef.current.traverse((child) => {
-            if (child.isMesh) {
-                meshes.push(child);
-            }
-        });
-
-        const intersects = raycaster.intersectObjects(meshes, true);
-
-        if (intersects.length > 0) {
-            const intersect = intersects[0];
-            const faceIndex = intersect.faceIndex;
-
-            // 查找包含此面的标记
-            const foundMarker = markersData.find(marker =>
-                marker.faces && marker.faces.includes(faceIndex)
-            );
-
-            if (foundMarker) {
-                showPartInfo(foundMarker, event);
-                highlightPart(foundMarker);
-                setActiveMarker(foundMarker);
-            } else {
-                hidePartInfo();
-                clearHighlight();
-                setActiveMarker(null);
-            }
-        } else {
-            hidePartInfo();
-            clearHighlight();
-            setActiveMarker(null);
-        }
-
-
-
-    };
-
-    // 显示部位信息提示框
-    const showPartInfo = (marker, event) => {
-        if (!tooltipRef.current) return;
-
-        tooltipRef.current.style.display = 'block';
-        tooltipRef.current.innerHTML = `
-            <div style="margin-bottom: 8px;"><strong>位置信息：</strong></div>
-            <div>${marker.description}</div>
-        `;
-
-        // 计算提示框位置
-        const tooltipRect = tooltipRef.current.getBoundingClientRect();
-        let left = event.clientX + 10;
-        let top = event.clientY + 10;
-
-        // 边界检查
-        if (left + tooltipRect.width > window.innerWidth) {
-            left = event.clientX - tooltipRect.width - 10;
-        }
-        if (top + tooltipRect.height > window.innerHeight) {
-            top = event.clientY - tooltipRect.height - 10;
-        }
-
-        tooltipRef.current.style.left = `${left}px`;
-        tooltipRef.current.style.top = `${top}px`;
-    };
-
-    // 隐藏提示框
-    const hidePartInfo = () => {
-        if (tooltipRef.current) {
-            tooltipRef.current.style.display = 'none';
-        }
-    };
-
-    // 高亮显示选中的部位
-    const highlightPart = (marker) => {
-        if (!modelRef.current) return;
-
-        // 先重置所有材质
-        clearHighlight();
-
-        // 查找需要高亮的所有网格
-        modelRef.current.traverse((child) => {
-            if (child.isMesh) {
-                const geometry = child.geometry;
-                if (!geometry.index) return;
-
-                // 存储原始材质以便后续恢复
-                if (!child.userData.originalMaterial) {
-                    child.userData.originalMaterial = child.material;
-                }
-
-                // 如果需要，创建材质数组
-                if (!Array.isArray(child.material)) {
-                    child.material = [child.userData.originalMaterial.clone()];
-                    child.material[0] = child.userData.originalMaterial.clone();
-                }
-
-                // 添加高亮材质
-                const highlightMaterial = child.userData.originalMaterial.clone();
-                highlightMaterial.color.setHex(0x00ff00);
-                highlightMaterial.transparent = true;
-                highlightMaterial.opacity = 0.8;
-                child.material.push(highlightMaterial);
-
-                // 为原始和高亮部分设置组
-                geometry.clearGroups();
-                geometry.addGroup(0, geometry.index.count, 0); // 默认材质
-
-                // 为高亮面添加组
-                if (marker.faces && marker.faces.length) {
-                    const sortedIndices = [...marker.faces].sort((a, b) => a - b);
-                    let start = sortedIndices[0] * 3;
-                    let count = 3;
-
-                    for (let i = 1; i < sortedIndices.length; i++) {
-                        if (sortedIndices[i] === sortedIndices[i - 1] + 1) {
-                            count += 3;
-                        } else {
-                            geometry.addGroup(start, count, 1); // 高亮材质
-                            start = sortedIndices[i] * 3;
-                            count = 3;
-                        }
-                    }
-                    geometry.addGroup(start, count, 1); // 添加最后一组
-                }
-            }
-        });
-    };
-
-    // 清除所有高亮显示
-    const clearHighlight = () => {
-        if (!modelRef.current) return;
-
-        modelRef.current.traverse((child) => {
-            if (child.isMesh && child.userData.originalMaterial) {
-                child.material = child.userData.originalMaterial;
-                if (child.geometry) {
-                    child.geometry.clearGroups();
-                    if (child.geometry.index) {
-                        child.geometry.addGroup(0, child.geometry.index.count, 0);
-                    }
-                }
-            }
-        });
-    };
-
-    useEffect(() => {
-        if (!containerRef.current || !builderId) return;
-
-        const initScene = async () => {
+        const fetchModelData = async () => {
             try {
-                setLoading(true);
-
-                // 获取模型URL和标记数据
                 const response = await getBuilderModelUrl(builderId);
+                if (!mounted.current) return;
                 if (response.code !== 200 || !response.data.model_url) {
                     throw new Error('未找到模型文件');
                 }
+                console.log('API Response:', response.data);
+                setModelUrl(response.data.model_url);
 
-                // 尝试解析标记数据
                 if (response.data.json) {
+                    console.log('原始 JSON 数据:', response.data.json);
                     try {
-                        const parsedMarkers = JSON.parse(response.data.json);
-                        setMarkersData(parsedMarkers);
+                        const markers = JSON.parse(response.data.json);
+                        console.log('解析后的标记数据:', markers);
+                        setMarkersData(markers);
                     } catch (e) {
-                        console.error('标记数据解析失败:', e);
+                        console.error('JSON 解析错误:', e.message);
+                        setError('标记数据解析失败: ' + e.message);
                     }
+                } else {
+                    console.log('API 响应中未找到 JSON 数据');
                 }
-
-                // 创建场景、相机和渲染器
-                const scene = new THREE.Scene();
-                sceneRef.current = scene;
-
-                const camera = new THREE.PerspectiveCamera(
-                    75,
-                    window.innerWidth / window.innerHeight,
-                    0.1,
-                    1000
-                );
-                cameraRef.current = camera;
-
-                const renderer = new THREE.WebGLRenderer({
-                    antialias: true,
-                    alpha: true,
-                    preserveDrawingBuffer: true
-                });
-                rendererRef.current = renderer;
-
-                renderer.setClearColor(0x000000, 0);
-                renderer.setSize(window.innerWidth, window.innerHeight);
-                renderer.domElement.style.position = 'absolute';
-                renderer.domElement.style.top = '0';
-                renderer.domElement.style.left = '0';
-                renderer.domElement.style.width = '100%';
-                renderer.domElement.style.height = '100%';
-                renderer.domElement.style.zIndex = '2';
-                containerRef.current.appendChild(renderer.domElement);
-
-                // 添加点击事件监听器到渲染器
-                renderer.domElement.addEventListener('click', handleModelClick);
-
-                // 添加光照
-                scene.add(new THREE.AmbientLight(0xffffff, 0.7));
-                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
-                directionalLight.position.set(5, 5, 5);
-                scene.add(directionalLight);
-
-                // 初始化AR工具包源
-                const arToolkitSource = new ARThreex.ArToolkitSource({
-                    sourceType: 'webcam',
-                    sourceWidth: window.innerWidth,
-                    sourceHeight: window.innerHeight,
-                    displayWidth: window.innerWidth,
-                    displayHeight: window.innerHeight,
-                });
-                arToolkitSourceRef.current = arToolkitSource;
-
-                await new Promise((resolve, reject) => {
-                    arToolkitSource.init(() => {
-                        try {
-                            // 设置视频元素
-                            const videoElement = arToolkitSource.domElement;
-                            videoElement.setAttribute('playsinline', '');
-                            videoElement.setAttribute('autoplay', '');
-                            videoElement.setAttribute('webkit-playsinline', '');
-                            videoElement.muted = true;
-
-                            // 确保视频元素在渲染器下方
-                            containerRef.current.appendChild(videoElement);
-                            videoElement.style.position = 'absolute';
-                            videoElement.style.top = '0';
-                            videoElement.style.left = '0';
-                            videoElement.style.width = '100%';
-                            videoElement.style.height = '100%';
-                            videoElement.style.zIndex = '1';
-                            videoElement.style.objectFit = 'cover';
-
-                            console.log('AR Toolkit Source 初始化成功');
-
-                            // 尝试播放视频
-                            videoElement.play().then(() => {
-                                console.log('视频开始播放');
-                                onResize();
-                                resolve();
-                            }).catch((err) => {
-                                console.error('视频播放失败:', err);
-                                // 尝试再次播放
-                                setTimeout(() => {
-                                    videoElement.play().then(() => {
-                                        console.log('视频延迟播放成功');
-                                        onResize();
-                                        resolve();
-                                    }).catch(e => {
-                                        reject(new Error('视频播放失败: ' + e.message));
-                                    });
-                                }, 1000);
-                            });
-                        } catch (err) {
-                            reject(new Error('视频源初始化失败: ' + err.message));
-                        }
-                    });
-                });
-
-                // 初始化AR上下文
-                const arToolkitContext = new ARThreex.ArToolkitContext({
-                    cameraParametersUrl: '/camera_para.dat',
-                    detectionMode: 'mono',
-                    maxDetectionRate: 60,
-                    canvasWidth: window.innerWidth,
-                    canvasHeight: window.innerHeight,
-                });
-                arToolkitContextRef.current = arToolkitContext;
-
-                // 添加全屏变化监听器
-                const handleResize = () => {
-                    if (document.fullscreenElement) {
-                        // 全屏状态下调整尺寸
-                        if (arToolkitSource) {
-                            arToolkitSource.onResizeElement();
-                            arToolkitSource.copyElementSizeTo(renderer.domElement);
-                            if (arToolkitSource.domElement) {
-                                arToolkitSource.domElement.style.width = '100%';
-                                arToolkitSource.domElement.style.height = '100%';
-                            }
-                        }
-                        if (renderer) {
-                            renderer.setSize(window.innerWidth, window.innerHeight);
-                        }
-                        if (camera) {
-                            camera.aspect = window.innerWidth / window.innerHeight;
-                            camera.updateProjectionMatrix();
-                        }
-                    }
-                };
-
-                document.addEventListener('fullscreenchange', handleResize);
-
-                await new Promise((resolve, reject) => {
-                    arToolkitContext.init(() => {
-                        try {
-                            camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
-                            console.log('AR Toolkit Context 初始化成功');
-                            resolve();
-                        } catch (err) {
-                            reject(new Error('AR 上下文初始化失败: ' + err.message));
-                        }
-                    });
-                });
-
-                // 创建标记根节点
-                const markerRoot = new THREE.Group();
-                markerRootRef.current = markerRoot;
-                scene.add(markerRoot);
-
-                // 设置标记控制器
-                const markerControls = new ARThreex.ArMarkerControls(arToolkitContext, markerRoot, {
-                    type: 'pattern',
-                    patternUrl: '/patt.hiro',
-                    changeMatrixMode: 'modelViewMatrix'
-                });
-
-                markerControls.addEventListener('markerFound', () => {
-                    console.log('标记被检测到！');
-                    // message.success('AR标记检测成功！');
-                });
-
-                markerControls.addEventListener('markerLost', () => {
-                    console.log('标记丢失');
-                    hidePartInfo();
-                });
-
-                // 加载3D模型
-                const loader = new GLTFLoader();
-                await new Promise((resolve, reject) => {
-                    loader.load(
-                        response.data.model_url,
-                        (gltf) => {
-                            const model = gltf.scene;
-                            modelRef.current = model;
-
-                            // 调整模型到合适大小
-                            const box = new THREE.Box3().setFromObject(model);
-                            const size = box.getSize(new THREE.Vector3());
-                            const baseScale = 0.5 / Math.max(size.x, size.y, size.z);
-                            // 应用当前缩放比例
-                            const finalScale = baseScale * modelScale;
-                            model.scale.set(finalScale, finalScale, finalScale);
-                            model.position.y = 0;
-
-                            // 将模型添加到标记根节点
-                            markerRoot.add(model);
-                            console.log('模型加载成功');
-                            resolve();
-                        },
-                        (xhr) => {
-
-                        },
-                        (err) => {
-                            reject(new Error('模型加载失败: ' + err.message));
-                        }
-                    );
-                });
-
-                // 动画循环
-                const animate = () => {
-                    requestAnimationFrame(animate);
-
-                    if (arToolkitSource.ready !== false) {
-                        arToolkitContext.update(arToolkitSource.domElement);
-                    }
-
-                    renderer.render(scene, camera);
-                };
-
-                animate();
-                window.addEventListener('resize', onResize);
-
-                // 添加点击事件用于iOS设备触发
-                document.addEventListener('click', () => {
-                    if (arToolkitSource.domElement && arToolkitSource.domElement.play) {
-                        arToolkitSource.domElement.play();
-                    }
-                }, { once: true });
-
-                setLoading(false);
             } catch (err) {
-                setError(err.message);
-                console.error('初始化错误:', err);
-                setLoading(false);
+                console.error('API 错误:', err.message);
+                setError(`API 错误: ${err.message}`);
             }
         };
-
-        initScene();
-
+        fetchModelData();
         return () => {
-            // 清理事件监听器
-            window.removeEventListener('resize', onResize);
-            if (rendererRef.current?.domElement) {
-                rendererRef.current.domElement.removeEventListener('click', handleModelClick);
-            }
-
-            // 清理Three.js资源
-            if (arToolkitSourceRef.current && arToolkitSourceRef.current.domElement) {
-                arToolkitSourceRef.current.domElement.remove();
-            }
-
-            if (rendererRef.current) {
-                rendererRef.current.dispose();
-                if (rendererRef.current.domElement && rendererRef.current.domElement.parentNode) {
-                    rendererRef.current.domElement.parentNode.removeChild(rendererRef.current.domElement);
-                }
-            }
-
-            // 清理模型资源
-            if (modelRef.current) {
-                modelRef.current.traverse((child) => {
-                    if (child.isMesh) {
-                        if (child.geometry) {
-                            child.geometry.dispose();
-                        }
-                        if (Array.isArray(child.material)) {
-                            child.material.forEach(material => material.dispose());
-                        } else if (child.material) {
-                            child.material.dispose();
-                        }
-                    }
-                });
-            }
-
-            // 确保退出全屏
-            if (document.fullscreenElement) {
-                document.exitFullscreen().catch(err => {
-                    console.error(`退出全屏错误: ${err.message}`);
-                });
-            }
+            mounted.current = false;
         };
     }, [builderId]);
 
-    // 处理全屏切换
-    const toggleFullscreen = () => {
-        if (!document.fullscreenElement) {
-            // 进入全屏模式
-            containerRef.current.requestFullscreen().then(() => {
-                setIsFullscreen(true);
-            }).catch(err => {
-                console.error(`全屏错误: ${err.message}`);
-            });
-        } else {
-            // 退出全屏模式
-            document.exitFullscreen().then(() => {
-                setIsFullscreen(false);
-            }).catch(err => {
-                console.error(`退出全屏错误: ${err.message}`);
-            });
-        }
-    };
-
-    // 缩放模型大小
-    const scaleModel = (scaleFactor) => {
-        // 更新状态以保持当前缩放值
-        setModelScale(prevScale => {
-            const newScale = prevScale * scaleFactor;
-            // 限制缩放范围，防止模型过大或过小
-            if (newScale < 0.2) return 0.2;
-            if (newScale > 5.0) return 5.0;
-            return newScale;
-        });
-
-        // 直接应用到当前模型
-        if (modelRef.current) {
-            const currentScale = modelRef.current.scale.x;
-            const newScale = currentScale * scaleFactor;
-
-            // 限制缩放范围
-            if (newScale < 0.1 || newScale > 10.0) return;
-
-            modelRef.current.scale.multiplyScalar(scaleFactor);
-        }
-    };
-
-    // 监听全屏状态变化
+    // Create tooltip
     useEffect(() => {
-        const handleFullscreenChange = () => {
-            setIsFullscreen(!!document.fullscreenElement);
-        };
+        const tooltip = document.createElement('div');
+        tooltip.style.cssText = `
+      position: absolute;
+      padding: 8px 12px;
+      background: rgba(0, 0, 0, 0.75);
+      color: white;
+      border-radius: 4px;
+      font-size: 14px;
+      pointer-events: none;
+      display: none;
+      z-index: 1000;
+      max-width: 300px;
+      word-wrap: break-word;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    `;
+        document.body.appendChild(tooltip);
+        tooltipRef.current = tooltip;
 
-        document.addEventListener('fullscreenchange', handleFullscreenChange);
         return () => {
-            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+            if (tooltipRef.current && document.body.contains(tooltipRef.current)) {
+                document.body.removeChild(tooltipRef.current);
+            }
         };
     }, []);
 
-    // 监听缩放变化，更新模型大小
+    // Initialize AR scene
     useEffect(() => {
-        if (modelRef.current) {
-            const box = new THREE.Box3().setFromObject(modelRef.current);
-            const size = box.getSize(new THREE.Vector3());
-            const baseScale = 0.5 / Math.max(size.x, size.y, size.z);
-            const finalScale = baseScale * modelScale;
+        if (!modelUrl) return;
 
-            // 应用新的缩放比例
-            modelRef.current.scale.set(finalScale, finalScale, finalScale);
+        const scene = new THREE.Scene();
+        sceneRef.current = scene;
+
+        const camera = new THREE.PerspectiveCamera(
+            75,
+            window.innerWidth / window.innerHeight,
+            0.1,
+            1000
+        );
+        cameraRef.current = camera;
+        scene.add(camera);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.xr.enabled = true;
+        rendererRef.current = renderer;
+        containerRef.current.appendChild(renderer.domElement);
+
+        renderer.domElement.style.position = 'absolute';
+        renderer.domElement.style.top = '0';
+        renderer.domElement.style.left = '0';
+        renderer.domElement.style.width = '100%';
+        renderer.domElement.style.height = '100%';
+
+        const arButton = ARButton.createButton(renderer, {
+            onError: (error) => {
+                console.error('ARButton 初始化错误:', error);
+                setError('AR 初始化失败: ' + error.message);
+            },
+        });
+        document.body.appendChild(arButton);
+
+        const sourceWidth = Math.min(window.innerWidth, 640);
+        const sourceHeight = Math.min(window.innerHeight, 480);
+
+        const arToolkitSource = new THREEx.ArToolkitSource({
+            sourceType: 'webcam',
+            sourceWidth: sourceWidth,
+            sourceHeight: sourceHeight,
+            displayWidth: window.innerWidth,
+            displayHeight: window.innerHeight,
+        });
+        arToolkitSourceRef.current = arToolkitSource;
+
+        arToolkitSource.init(
+            () => {
+                console.log('摄像头初始化成功:', { sourceWidth, sourceHeight });
+                onResize();
+                if (arToolkitSource.domElement) {
+                    arToolkitSource.domElement.style.position = 'absolute';
+                    arToolkitSource.domElement.style.top = '0';
+                    arToolkitSource.domElement.style.left = '0';
+                    arToolkitSource.domElement.style.width = '100%';
+                    arToolkitSource.domElement.style.height = '100%';
+                    arToolkitSource.domElement.style.objectFit = 'contain';
+                    arToolkitSource.domElement.style.transform = 'translateZ(0)';
+                } else {
+                    console.error('arToolkitSource.domElement 未创建');
+                    setError('摄像头初始化失败');
+                }
+            },
+            (error) => {
+                console.error('摄像头初始化错误:', error);
+                setError('摄像头访问失败: ' + error.message);
+            }
+        );
+
+        const arToolkitContext = new THREEx.ArToolkitContext({
+            cameraParametersUrl: '/camera_para.dat',
+            detectionMode: 'mono_and_matrix',
+            matrixCodeType: '3x3',
+            maxDetectionRate: 60,
+            patternRatio: 0.5,
+            imageSmoothingEnabled: true,
+        });
+        arToolkitContextRef.current = arToolkitContext;
+
+        arToolkitContext.init(() => {
+            console.log('AR 上下文初始化成功');
+            camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
+        });
+
+        const markerRoot = new THREE.Group();
+        markerRootRef.current = markerRoot;
+        scene.add(markerRoot);
+
+        try {
+            const markerControls = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
+                type: 'pattern',
+                patternUrl: '/patt.hiro',
+                changeMatrixMode: 'modelViewMatrix',
+            });
+            console.log('标记控件初始化成功，patternUrl: /patt.hiro');
+        } catch (error) {
+            console.error('标记控件初始化错误:', error);
+            setError('标记控件初始化失败: ' + error.message);
         }
-    }, [modelScale]);
+
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        directionalLight.position.set(0, 1, 0);
+        scene.add(directionalLight);
+
+        const loader = new GLTFLoader();
+        loader.load(
+            modelUrl,
+            (gltf) => {
+                const model = gltf.scene;
+                modelRef.current = model;
+
+                const box = new THREE.Box3().setFromObject(model);
+                const center = box.getCenter(new THREE.Vector3());
+                model.position.set(-center.x, -center.y, -center.z);
+                model.scale.set(scale, scale, scale);
+                model.rotation.set(0, 0, 0);
+
+                const meshes = [];
+                model.traverse((node) => {
+                    if (node.isMesh) {
+                        meshes.push(node);
+                    }
+                });
+                if (meshes.length > 0) {
+                    meshRef.current = meshes;
+                    console.log('找到模型 Mesh 列表:', meshes);
+                } else {
+                    console.error('模型中未找到 Mesh');
+                    setError('模型中未找到 Mesh');
+                }
+
+                markerRoot.add(model);
+                console.log('模型加载并居中:', modelUrl);
+
+                meshes.forEach((mesh, index) => {
+                    const faceCount = mesh.geometry.index
+                        ? mesh.geometry.index.count / 3
+                        : mesh.geometry.attributes.position.count / 3;
+                    console.log(`Mesh ${index} 面数: ${faceCount}`);
+                });
+            },
+            (progress) => {
+                const percent = Math.round((progress.loaded / progress.total) * 100);
+                setLoadingProgress(percent);
+                console.log('模型加载进度:', percent, '%');
+            },
+            (err) => {
+                console.error('模型加载错误:', err);
+                setError(`模型加载失败: ${err.message}`);
+            }
+        );
+
+        const handleClick = (event) => {
+            if (!meshRef.current || !rendererRef.current || !cameraRef.current) {
+                console.log('点击检测失败: 缺少 mesh, renderer 或 camera');
+                return;
+            }
+
+            const canvas = renderer.domElement;
+            const rect = canvas.getBoundingClientRect();
+            mouseRef.current.x = ((event.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
+            mouseRef.current.y = -((event.clientY - rect.top) / canvas.clientHeight) * 2 + 1;
+
+            raycasterRef.current.setFromCamera(mouseRef.current, camera);
+            const intersects = raycasterRef.current.intersectObjects(
+                Array.isArray(meshRef.current) ? meshRef.current : [meshRef.current],
+                true
+            );
+
+            if (intersects.length > 0 && intersects[0].faceIndex !== undefined) {
+                const clickedFaceIndex = intersects[0].faceIndex;
+                const clickedMesh = intersects[0].object;
+                console.log('点击的面索引:', clickedFaceIndex, '交点 Mesh:', clickedMesh);
+
+                const foundMarker = markersData.find((marker) => marker.faces.includes(clickedFaceIndex));
+                if (foundMarker) {
+                    console.log('找到标记:', foundMarker, '高亮面数:', foundMarker.faces.length);
+
+                    // Check if this marker is already highlighted
+                    if (highlightedPart && highlightedPart.markerId === foundMarker.id) {
+                        // Remove highlight
+                        if (sceneRef.current && highlightedPart.mesh) {
+                            sceneRef.current.remove(highlightedPart.mesh);
+                        }
+                        setHighlightedPart(null);
+                        console.log('移除高亮部位:', foundMarker.id);
+                        hidePartInfo();
+                        return;
+                    }
+
+                    // Remove existing highlight if any
+                    if (highlightedPart && highlightedPart.mesh) {
+                        sceneRef.current.remove(highlightedPart.mesh);
+                        console.log('移除旧高亮部位:', highlightedPart.markerId);
+                    }
+
+                    // Create new highlight Mesh
+                    const highlightGeometry = new THREE.BufferGeometry();
+                    const originalGeometry = clickedMesh.geometry;
+                    const indices = [];
+                    const vertices = originalGeometry.attributes.position.array;
+
+                    // Validate face indices
+                    const maxFaceIndex = originalGeometry.index
+                        ? originalGeometry.index.count / 3
+                        : originalGeometry.attributes.position.count / 3;
+                    const validFaces = foundMarker.faces.filter((faceIndex) => faceIndex < maxFaceIndex);
+
+                    if (validFaces.length === 0) {
+                        console.error('无效的面索引:', foundMarker.faces);
+                        hidePartInfo();
+                        setHighlightedPart(null);
+                        return;
+                    }
+
+                    validFaces.forEach((faceIndex) => {
+                        if (originalGeometry.index) {
+                            const start = faceIndex * 3;
+                            indices.push(
+                                originalGeometry.index.array[start],
+                                originalGeometry.index.array[start + 1],
+                                originalGeometry.index.array[start + 2]
+                            );
+                        } else {
+                            const start = faceIndex * 3;
+                            indices.push(start, start + 1, start + 2);
+                        }
+                    });
+
+                    highlightGeometry.setIndex(indices);
+                    highlightGeometry.setAttribute(
+                        'position',
+                        new THREE.Float32BufferAttribute(vertices, 3)
+                    );
+                    highlightGeometry.computeVertexNormals();
+
+                    const highlightMaterial = new THREE.MeshStandardMaterial({
+                        color: highlightColor,
+                        emissive: highlightColor,
+                        emissiveIntensity: 0.5,
+                        transparent: true,
+                        opacity: 0.8,
+                        side: THREE.DoubleSide,
+                    });
+
+                    const highlightMesh = new THREE.Mesh(highlightGeometry, highlightMaterial);
+                    highlightMesh.position.copy(clickedMesh.position);
+                    highlightMesh.rotation.copy(clickedMesh.rotation);
+                    highlightMesh.scale.copy(clickedMesh.scale);
+                    clickedMesh.parent.add(highlightMesh);
+
+                    // Set new highlight
+                    setHighlightedPart({
+                        markerId: foundMarker.id,
+                        mesh: highlightMesh,
+                        sourceMesh: clickedMesh,
+                    });
+                    console.log('添加高亮部位:', foundMarker.id);
+
+                    showPartInfo(foundMarker, event);
+                } else {
+                    console.log('未找到匹配的标记，面索引:', clickedFaceIndex);
+                    console.log('当前 markersData:', markersData);
+                    // Clear highlight
+                    if (highlightedPart && highlightedPart.mesh) {
+                        sceneRef.current.remove(highlightedPart.mesh);
+                        setHighlightedPart(null);
+                        console.log('清除高亮部位: 非标记部位');
+                    }
+                    hidePartInfo();
+                }
+            } else {
+                console.log('未检测到点击交点，交点数组:', intersects);
+                // Clear highlight
+                if (highlightedPart && highlightedPart.mesh) {
+                    sceneRef.current.remove(highlightedPart.mesh);
+                    setHighlightedPart(null);
+                    console.log('清除高亮部位: 空白区域');
+                }
+                hidePartInfo();
+            }
+        };
+
+        const showPartInfo = (marker, event) => {
+            if (!tooltipRef.current) {
+                console.error('提示框未初始化');
+                return;
+            }
+
+            const canvas = renderer.domElement;
+            const rect = canvas.getBoundingClientRect();
+
+            tooltipRef.current.style.display = 'block';
+            tooltipRef.current.innerHTML = `
+        <div style="margin-bottom: 8px;"><strong>位置信息：</strong></div>
+        <div>${marker.description}</div>
+      `;
+
+            const tooltipRect = tooltipRef.current.getBoundingClientRect();
+            let left = event.clientX + 10;
+            let top = event.clientY + 10;
+
+            if (left + tooltipRect.width > window.innerWidth) {
+                left = event.clientX - tooltipRect.width - 10;
+            }
+            if (top + tooltipRect.height > window.innerHeight) {
+                top = event.clientY - tooltipRect.height - 10;
+            }
+
+            tooltipRef.current.style.left = `${left}px`;
+            tooltipRef.current.style.top = `${top}px`;
+            console.log('显示提示框:', marker.description);
+        };
+
+        const hidePartInfo = () => {
+            if (tooltipRef.current) {
+                tooltipRef.current.style.display = 'none';
+                console.log('隐藏提示框');
+            }
+        };
+
+        renderer.domElement.addEventListener('click', handleClick);
+
+        const onResize = () => {
+            arToolkitSource.onResizeElement();
+            arToolkitSource.copyElementSizeTo(renderer.domElement);
+            if (arToolkitContext.arController !== null) {
+                arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas);
+            }
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            console.log('窗口调整大小');
+        };
+        window.addEventListener('resize', onResize, { passive: true });
+
+        const animate = () => {
+            renderer.setAnimationLoop(() => {
+                if (arToolkitSource.ready) {
+                    arToolkitContext.update(arToolkitSource.domElement);
+                    if (markerRootRef.current) {
+                        const isVisible = markerRootRef.current.visible;
+                        if (isVisible && !isMarkerVisible) {
+                            console.log('Hiro 标记已检测');
+                            setIsMarkerVisible(true);
+                            setMarkerNotDetected(false);
+                        } else if (!isVisible && isMarkerVisible) {
+                            console.log('未检测到 Hiro 标记');
+                            setIsMarkerVisible(false);
+                            setMarkerNotDetected(true);
+                        }
+                        scene.visible = camera.visible;
+                    }
+                } else {
+                    console.log('arToolkitSource 未准备就绪');
+                }
+                renderer.render(scene, camera);
+            });
+        };
+        animate();
+
+        const timer = setTimeout(() => {
+            if (markerRootRef.current && !markerRootRef.current.visible) {
+                setMarkerNotDetected(true);
+            }
+        }, 10000);
+
+        return () => {
+            renderer.setAnimationLoop(null);
+            if (containerRef.current && renderer.domElement) {
+                containerRef.current.removeChild(renderer.domElement);
+            }
+            renderer.domElement.removeEventListener('click', handleClick);
+            window.removeEventListener('resize', onResize);
+            if (arButton && document.body.contains(arButton)) {
+                document.body.removeChild(arButton);
+            }
+            if (highlightedPart && highlightedPart.mesh) {
+                sceneRef.current.remove(highlightedPart.mesh);
+            }
+            clearTimeout(timer);
+            console.log('清理 AR 场景');
+        };
+    }, [modelUrl, scale, markersData]);
+
+    const handleScaleUp = () => {
+        setScale((prev) => {
+            const newScale = Math.min(prev + 0.1, 2.0);
+            if (modelRef.current) {
+                modelRef.current.scale.set(newScale, newScale, newScale);
+                // Update highlighted part scale
+                if (highlightedPart && highlightedPart.mesh) {
+                    highlightedPart.mesh.scale.copy(modelRef.current.scale);
+                }
+                console.log('放大模型，缩放:', newScale);
+            }
+            return newScale;
+        });
+    };
+
+    const handleScaleDown = () => {
+        setScale((prev) => {
+            const newScale = Math.max(prev - 0.1, 0.1);
+            if (modelRef.current) {
+                modelRef.current.scale.set(newScale, newScale, newScale);
+                // Update highlighted part scale
+                if (highlightedPart && highlightedPart.mesh) {
+                    highlightedPart.mesh.scale.copy(modelRef.current.scale);
+                }
+                console.log('缩小模型，缩放:', newScale);
+            }
+            return newScale;
+        });
+    };
+
+    const handleColorChange = (event) => {
+        setHighlightColor(event.target.value);
+        // Update highlighted part
+        if (highlightedPart && highlightedPart.mesh) {
+            highlightedPart.mesh.material.color.set(event.target.value);
+            highlightedPart.mesh.material.emissive.set(event.target.value);
+            console.log('更新高亮颜色:', event.target.value);
+        }
+    };
+
+    if (error) {
+        return <div style={{ color: 'red', textAlign: 'center', padding: '20px' }}>错误: {error}</div>;
+    }
 
     return (
-        <div className={`${isFullscreen ? 'fixed inset-0 z-50 bg-black' : 'min-h-screen'} flex flex-col items-center justify-center`}>
-            {!isFullscreen && <h1 className="text-3xl font-bold mb-4">AR 兼容模式 - ID: {builderId}</h1>}
-
-            {loading && (
-                <div className="text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-                    <p className="text-white">加载模型中...</p>
-                </div>
-            )}
-            {error && <p className="text-red-500 absolute top-10 left-1/2 transform -translate-x-1/2 z-30">{error}</p>}
-
-            {/* AR 操作指引 */}
-            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20 bg-black bg-opacity-50 p-2 rounded text-white text-center">
-                <p>将相机对准<a href="/hiro.png" target="_blank" className="text-blue-300 underline">Hiro 标记</a>，点击模型部位查看标记</p>
-                <p className="text-xs mt-1">使用界面下方的 + / - 按钮调整模型大小</p>
-                {activeMarker && (
-                    <div className="mt-2 p-2 bg-green-900 rounded">
-                        <p><strong>当前选中:</strong> {activeMarker.description}</p>
-                    </div>
-                )}
-            </div>
-
-            <div
-                ref={containerRef}
-                className={`relative ${isFullscreen ? 'w-full h-full' : 'w-full h-[70vh]'}`}
-                style={{ overflow: 'hidden' }}
-            />
-
-            <div className={`flex gap-2 ${isFullscreen ? 'absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20' : 'mt-4'}`}>
-                <button
-                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                    onClick={() => {
-                        if (arToolkitSourceRef.current && arToolkitSourceRef.current.domElement) {
-                            arToolkitSourceRef.current.domElement.play();
-                        }
+        <div
+            ref={containerRef}
+            style={{ width: '100%', height: '100vh', position: 'relative', overflow: 'hidden' }}
+        >
+            {!modelUrl && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        color: 'white',
+                        zIndex: 9999,
                     }}
                 >
-                    启动摄像头
-                </button>
-                <button
-                    className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
-                    onClick={toggleFullscreen}
-                >
-                    {isFullscreen ? '退出全屏' : '进入全屏'}
-                </button>
-
-                {/* 模型缩放控制按钮 */}
-                <div className="flex items-center gap-1">
-                    <button
-                        className="px-3 py-2 bg-yellow-500 text-white rounded-l hover:bg-yellow-600 font-bold"
-                        onClick={() => scaleModel(0.8)}
-                        title="缩小模型"
-                    >
-                        -
-                    </button>
-                    <span className="bg-gray-700 text-white px-2 py-1 text-sm">
-                        {Math.round(modelScale * 100)}%
-                    </span>
-                    <button
-                        className="px-3 py-2 bg-yellow-500 text-white rounded-r hover:bg-yellow-600 font-bold"
-                        onClick={() => scaleModel(1.25)}
-                        title="放大模型"
-                    >
-                        +
-                    </button>
+                    加载模型中... {loadingProgress}%
                 </div>
-
-                {!isFullscreen && (
+            )}
+            {markerNotDetected && modelUrl && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: '20px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                        color: 'white',
+                        padding: '10px',
+                        borderRadius: '5px',
+                        zIndex: 1000,
+                        textAlign: 'center',
+                    }}
+                >
+                    未检测到 Hiro 标记，请确保标记清晰可见，调整摄像头角度或增加光线
+                </div>
+            )}
+            {modelUrl && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        bottom: '20px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        zIndex: 1000,
+                        display: 'flex',
+                        gap: '10px',
+                        alignItems: 'center',
+                    }}
+                >
                     <button
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                        onClick={() => navigate(`/model/${builderId}`)}
+                        onClick={handleScaleUp}
+                        style={{
+                            padding: '15px 30px',
+                            fontSize: '18px',
+                            backgroundColor: '#4CAF50',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                        }}
                     >
-                        返回
+                        放大
                     </button>
-                )}
-            </div>
+                    <button
+                        onClick={handleScaleDown}
+                        style={{
+                            padding: '15px 30px',
+                            fontSize: '18px',
+                            backgroundColor: '#f44336',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                        }}
+                    >
+                        缩小
+                    </button>
+                    <input
+                        type="color"
+                        value={highlightColor}
+                        onChange={handleColorChange}
+                        style={{
+                            width: '40px',
+                            height: '40px',
+                            border: 'none',
+                            cursor: 'pointer',
+                        }}
+                        title="选择高亮颜色"
+                    />
+                </div>
+            )}
         </div>
     );
 };

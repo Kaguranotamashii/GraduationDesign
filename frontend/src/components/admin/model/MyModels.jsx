@@ -130,7 +130,7 @@ const MyModels = () => {
 
     // 打开编辑页面
     const handleEdit = (model) => {
-        navigate(`/admin/models/edit/${model.id}`);
+        navigate(`/modelEdit/${model.id}`);
     };
 
     // 查看3D模型

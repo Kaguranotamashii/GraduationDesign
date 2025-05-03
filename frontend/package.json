@@ -11,6 +11,7 @@
   },
   "homepage": "https://kaguranotamashii.github.io/GraduationDesign/",
   "dependencies": {
+    "@ar-js-org/ar.js-threejs": "^0.3.2",
     "@emoji-mart/data": "^1.2.1",
     "@emoji-mart/react": "^1.1.1",
     "@radix-ui/react-accordion": "^1.2.3",
@@ -34,7 +35,6 @@
     "@tailwindcss/vite": "^4.0.3",
     "@uiw/react-md-editor": "^4.0.5",
     "antd": "^5.23.2",
-    "ar.js": "^2.2.2",
     "axios": "^1.7.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
