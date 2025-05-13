@@ -3601,3 +3601,51 @@ G:/GraduationDesign/probject/frontend/public/index.html
 20:44:36 [vite] (client) hmr update /src/App.jsx
 20:49:05 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
 20:52:56 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+
+  VITE v6.0.11  ready in 907 ms
+
+  ➜  Local:   https://localhost:5173/
+  ➜  Network: https://192.168.19.220:5173/
+  ➜  Network: https://169.254.154.113:5173/
+  ➜  Network: https://169.254.233.85:5173/
+  ➜  Network: https://192.168.144.81:5173/
+09:06:04 [vite] vite.config.js changed, restarting server...
+09:06:04 [vite] server restarted.
+
+  VITE v6.0.11  ready in 1914 ms
+
+  ➜  Local:   https://localhost:5173/
+  ➜  Network: https://192.168.144.81:5173/
+  ➜  Network: https://192.168.81.1:5173/
+  ➜  Network: https://192.168.255.1:5173/
+16:25:03 [vite] vite.config.js changed, restarting server...
+16:25:04 [vite] server restarted.
+
+  VITE v6.0.11  ready in 1070 ms
+
+  ➜  Local:   https://localhost:5173/
+  ➜  Network: https://10.145.155.182:5173/
+  ➜  Network: https://192.168.81.1:5173/
+  ➜  Network: https://192.168.255.1:5173/
+20:27:58 [vite] vite.config.js changed, restarting server...
+20:27:59 [vite] server restarted.
+
+  VITE v6.0.11  ready in 2749 ms
+
+  ➜  Local:   https://localhost:5173/
+  ➜  Network: https://169.254.126.90:5173/
+  ➜  Network: https://169.254.161.185:5173/
+  ➜  Network: https://10.145.153.49:5173/
+20:16:32 [vite] vite.config.js changed, restarting server...
+20:16:33 [vite] server restarted.
+
+  VITE v6.0.11  ready in 911 ms
+
+  ➜  Local:   https://localhost:5173/
+  ➜  Network: https://198.18.0.1:5173/
+  ➜  Network: https://10.153.121.204:5173/
+  ➜  Network: https://169.254.126.90:5173/
+  ➜  Network: https://169.254.161.185:5173/
+  ➜  Network: https://172.22.240.1:5173/
+19:11:06 [vite] vite.config.js changed, restarting server...
+19:11:06 [vite] server restarted.
