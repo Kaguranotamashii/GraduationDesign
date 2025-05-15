@@ -4,7 +4,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { searchArticlesV2, getTopArticles, getAllTags } from '@/api/articleApi';
+import { searchArticles, getTopArticles, getAllTags } from '@/api/articleApi'; // 修改：searchArticlesV2 改为 searchArticles
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/home/Footer";
 
@@ -430,7 +430,7 @@ const ArticleList = () => {
     const [tagArticleCounts, setTagArticleCounts] = useState({ all: 0 });
     const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
-    // Fetch tags - completely rewritten to properly handle comma-separated tags
+    // Fetch tags
     const fetchTags = useCallback(async () => {
         try {
             const response = await getAllTags();
@@ -481,7 +481,7 @@ const ArticleList = () => {
         }
     }, []);
 
-    // Fetch articles with filtering and pagination - completely rewritten to properly handle tag counting
+    // Fetch articles with filtering and pagination
     const fetchArticles = useCallback(async (page = 1) => {
         try {
             setState(prev => ({ ...prev, loading: true, error: null }));
@@ -494,7 +494,7 @@ const ArticleList = () => {
             };
             console.log("Fetching articles with params:", searchParams);
 
-            const response = await searchArticlesV2(searchParams);
+            const response = await searchArticles(searchParams); // 修改：searchArticlesV2 改为 searchArticles
             if (response?.code === 200 && response.data) {
                 setState(prev => ({
                     ...prev,
@@ -512,14 +512,13 @@ const ArticleList = () => {
                     // 尝试获取所有文章以获取准确的标签计数
                     let allArticles = response.data.results || [];
 
-
                     // 使用改进的计数逻辑计算标签数量
                     calculateTagCounts(allArticles);
                 }
             } else {
                 setState(prev => ({
                     ...prev,
-                    error: '获取文章列表失败',
+                    error: 'Failed to fetch articles',
                     loading: false,
                     articles: []
                 }));
@@ -528,14 +527,14 @@ const ArticleList = () => {
             console.error('Error fetching articles:', err);
             setState(prev => ({
                 ...prev,
-                error: '获取文章列表失败，请稍后重试',
+                error: 'Failed to fetch articles, please try again later',
                 loading: false,
                 articles: []
             }));
         }
     }, [searchTerm, currentTag, pagination.pageSize]);
 
-    // Calculate tag article counts - completely rewritten to properly handle comma-separated tags
+    // Calculate tag article counts
     const calculateTagCounts = (articles) => {
         // 首先计算总文章数
         const counts = { all: articles.length };

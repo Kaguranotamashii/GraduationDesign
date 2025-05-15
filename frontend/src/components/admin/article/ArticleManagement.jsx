@@ -2,20 +2,20 @@ import React, { useState, useEffect, useCallback } from 'react';
 import {
     Table, Card, Button, Space, Modal, message,
     Input, Select, Form, Tooltip, Tag,
-    Popconfirm
+    Popconfirm,
 } from 'antd';
 import {
     DeleteOutlined, EyeOutlined, EditOutlined,
     SearchOutlined, ReloadOutlined, StarOutlined,
-    CheckOutlined, RollbackOutlined, LikeOutlined, LikeFilled
+    CheckOutlined, RollbackOutlined, LikeOutlined, LikeFilled,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import {
     adminGetAllArticles,
     adminDeleteArticle,
     adminUpdateArticle,
-    likeArticle,        // 新增点赞 API
-    unlikeArticle       // 新增取消点赞 API
+    likeArticle,
+    unlikeArticle,
 } from '@/api/articleApi';
 
 const { Search } = Input;
@@ -32,32 +32,43 @@ const ArticleManagement = () => {
     const [refreshKey, setRefreshKey] = useState(0);
     const navigate = useNavigate();
 
-    // 获取文章列表
-    const fetchArticles = useCallback(async (params = {}) => {
-        setLoading(true);
-        try {
-            const cleanParams = {};
-            Object.keys(params).forEach(key => {
-                if (params[key] && params[key] !== 'undefined') {
-                    cleanParams[key] = params[key];
-                }
-            });
-            cleanParams.page = params.page || currentPage;
-            cleanParams.page_size = params.page_size || pageSize;
+    // 状态显示配置
+    const statusDisplay = {
+        draft: { text: '草稿', color: 'orange' },
+        reviewing: { text: '审核中', color: 'blue' },
+        review_failed: { text: '审核失败', color: 'red' },
+        published: { text: '已发布', color: 'green' },
+    };
 
-            const response = await adminGetAllArticles(cleanParams);
-            if (response.results) {
-                setArticles(response.results || []);
-                setTotal(response.count || 0);
-            } else {
-                throw new Error('数据格式错误');
+    // 获取文章列表
+    const fetchArticles = useCallback(
+        async (params = {}) => {
+            setLoading(true);
+            try {
+                const cleanParams = {};
+                Object.keys(params).forEach((key) => {
+                    if (params[key] && params[key] !== 'undefined' && params[key] !== 'all') {
+                        cleanParams[key] = params[key];
+                    }
+                });
+                cleanParams.page = params.page || currentPage;
+                cleanParams.page_size = params.page_size || pageSize;
+
+                const response = await adminGetAllArticles(cleanParams);
+                if (response.results?.code === 200 && Array.isArray(response.results.data)) {
+                    setArticles(response.results.data || []);
+                    setTotal(response.count || 0);
+                } else {
+                    throw new Error(response.results?.message || '数据格式错误');
+                }
+            } catch (error) {
+                message.error('获取文章列表失败：' + (error.response?.data?.message || error.message || '未知错误'));
+            } finally {
+                setLoading(false);
             }
-        } catch (error) {
-            message.error('获取文章列表失败：' + (error.message || '未知错误'));
-        } finally {
-            setLoading(false);
-        }
-    }, [currentPage, pageSize]);
+        },
+        [currentPage, pageSize]
+    );
 
     useEffect(() => {
         const formValues = searchForm.getFieldsValue();
@@ -74,13 +85,13 @@ const ArticleManagement = () => {
                 if (currentDataLength === 1 && currentPage > 1) {
                     setCurrentPage(currentPage - 1);
                 } else {
-                    setRefreshKey(prev => prev + 1);
+                    setRefreshKey((prev) => prev + 1);
                 }
             } else {
                 throw new Error(response.message);
             }
         } catch (error) {
-            message.error('删除失败：' + (error.message || '未知错误'));
+            message.error('删除失败：' + (error.response?.data?.message || error.message || '未知错误'));
         }
     };
 
@@ -91,17 +102,32 @@ const ArticleManagement = () => {
             return;
         }
         try {
-            await Promise.all(selectedRowKeys.map(id => adminDeleteArticle(id)));
-            message.success('批量删除成功');
+            const results = await Promise.all(
+                selectedRowKeys.map(async (id) => {
+                    try {
+                        await adminDeleteArticle(id);
+                        return { id, success: true };
+                    } catch (error) {
+                        return { id, success: false, error };
+                    }
+                })
+            );
+            const failed = results.filter((r) => !r.success);
+            if (failed.length === 0) {
+                message.success('批量删除成功');
+            } else {
+                message.error(`部分删除失败：${failed.length} 篇文章`);
+                console.error('批量删除错误:', failed);
+            }
             setSelectedRowKeys([]);
             const remainingItems = total - selectedRowKeys.length;
             const newTotalPages = Math.ceil(remainingItems / pageSize);
             if (currentPage > newTotalPages) {
                 setCurrentPage(Math.max(1, newTotalPages));
             }
-            setRefreshKey(prev => prev + 1);
+            setRefreshKey((prev) => prev + 1);
         } catch (error) {
-            message.error('批量删除失败：' + (error.message || '未知错误'));
+            message.error('批量删除失败：' + (error.response?.data?.message || error.message || '未知错误'));
         }
     };
 
@@ -113,30 +139,34 @@ const ArticleManagement = () => {
             const response = await adminUpdateArticle(article.id, formData);
             if (response.code === 200) {
                 message.success(article.is_featured ? '取消精选成功' : '设为精选成功');
-                setRefreshKey(prev => prev + 1);
+                setRefreshKey((prev) => prev + 1);
             } else {
                 throw new Error(response.message);
             }
         } catch (error) {
-            message.error('操作失败：' + (error.message || '未知错误'));
+            message.error('操作失败：' + (error.response?.data?.message || error.message || '未知错误'));
         }
     };
 
-    // 切换公开状态（基于 status）
-    const handleTogglePublish = async (article) => {
-        const newStatus = article.status === 'published' ? 'draft' : 'published';
+    // 审核文章（支持所有状态转换）
+    const handleUpdateStatus = async (article, newStatus) => {
         try {
             const formData = new FormData();
             formData.append('status', newStatus);
             const response = await adminUpdateArticle(article.id, formData);
             if (response.code === 200) {
-                message.success(newStatus === 'published' ? '已公开' : '已转为草稿');
-                setRefreshKey(prev => prev + 1);
+                message.success(
+                    newStatus === 'published' ? '已通过审核并发布' :
+                        newStatus === 'review_failed' ? '已拒绝审核' :
+                            newStatus === 'reviewing' ? '已重新提交审核' :
+                                '已转为草稿'
+                );
+                setRefreshKey((prev) => prev + 1);
             } else {
                 throw new Error(response.message);
             }
         } catch (error) {
-            message.error('操作失败：' + (error.message || '未知错误'));
+            message.error('操作失败：' + (error.response?.data?.message || error.message || '未知错误'));
         }
     };
 
@@ -144,20 +174,16 @@ const ArticleManagement = () => {
     const handleToggleLike = async (article) => {
         try {
             const isLiked = article.is_liked;
-            const response = isLiked
-                ? await unlikeArticle(article.id)
-                : await likeArticle(article.id);
-
+            const response = isLiked ? await unlikeArticle(article.id) : await likeArticle(article.id);
             if (response.code === 200) {
                 message.success(isLiked ? '取消点赞成功' : '点赞成功');
-                // 更新本地文章数据
-                setArticles(prevArticles =>
-                    prevArticles.map(item =>
+                setArticles((prevArticles) =>
+                    prevArticles.map((item) =>
                         item.id === article.id
                             ? {
                                 ...item,
                                 is_liked: !isLiked,
-                                likes: isLiked ? item.likes - 1 : item.likes + 1
+                                likes: isLiked ? item.likes - 1 : item.likes + 1,
                             }
                             : item
                     )
@@ -166,7 +192,7 @@ const ArticleManagement = () => {
                 throw new Error(response.message);
             }
         } catch (error) {
-            message.error('操作失败：' + (error.message || '未知错误'));
+            message.error('操作失败：' + (error.response?.data?.message || error.message || '未知错误'));
         }
     };
 
@@ -182,7 +208,7 @@ const ArticleManagement = () => {
         searchForm.resetFields();
         setCurrentPage(1);
         setSelectedRowKeys([]);
-        setRefreshKey(prev => prev + 1);
+        setRefreshKey((prev) => prev + 1);
     };
 
     // 表格列配置
@@ -210,26 +236,27 @@ const ArticleManagement = () => {
             title: '状态',
             dataIndex: 'status',
             key: 'status',
-            width: 100,
+            width: 120,
             render: (status) => (
-                <Tag color={status === 'published' ? 'green' : 'orange'}>
-                    {status === 'published' ? '已发布' : '草稿'}
+                <Tag color={statusDisplay[status]?.color || 'default'}>
+                    {statusDisplay[status]?.text || status}
                 </Tag>
             ),
             filters: [
-                { text: '已发布', value: 'published' },
                 { text: '草稿', value: 'draft' },
+                { text: '审核中', value: 'reviewing' },
+                { text: '审核失败', value: 'review_failed' },
+                { text: '已发布', value: 'published' },
+                { text: '全部', value: 'all' },
             ],
-            onFilter: (value, record) => record.status === value,
+            onFilter: (value, record) => value === 'all' || record.status === value,
         },
         {
             title: '精选',
             dataIndex: 'is_featured',
             key: 'is_featured',
             width: 80,
-            render: (isFeatured) => (
-                isFeatured ? <Tag color="gold">精选</Tag> : null
-            ),
+            render: (isFeatured) => (isFeatured ? <Tag color="gold">精选</Tag> : null),
         },
         {
             title: '浏览/点赞',
@@ -262,16 +289,12 @@ const ArticleManagement = () => {
         {
             title: '操作',
             key: 'action',
-            width: 250,
+            width: 300,
             fixed: 'right',
             render: (_, record) => (
                 <Space size="middle">
                     <Tooltip title="查看">
-                        <Button
-                            type="text"
-                            icon={<EyeOutlined />}
-                            onClick={() => navigate(`/articles/${record.id}`)}
-                        />
+                        <Button type="text" icon={<EyeOutlined />} onClick={() => navigate(`/articles/${record.id}`)} />
                     </Tooltip>
                     <Tooltip title="编辑">
                         <Button
@@ -280,21 +303,50 @@ const ArticleManagement = () => {
                             onClick={() => navigate(`/articles/edit/${record.id}`)}
                         />
                     </Tooltip>
-                    <Tooltip title={record.status === 'published' ? '转为草稿' : '发布'}>
-                        <Popconfirm
-                            title={record.status === 'published' ? '转为草稿' : '发布文章'}
-                            description={record.status === 'published' ? '转为草稿后文章将不再公开，确认操作？' : '确认发布此文章？'}
-                            onConfirm={() => handleTogglePublish(record)}
-                            okText="确认"
-                            cancelText="取消"
-                        >
-                            <Button
-                                type="text"
-                                icon={record.status === 'published' ? <RollbackOutlined /> : <CheckOutlined />}
-                                className={record.status === 'published' ? 'text-orange-600' : 'text-green-600'}
-                            />
-                        </Popconfirm>
-                    </Tooltip>
+                    {record.status === 'reviewing' ? (
+                        <>
+                            <Tooltip title="通过审核并发布">
+                                <Popconfirm
+                                    title="通过审核"
+                                    description="确认通过审核并发布此文章？"
+                                    onConfirm={() => handleUpdateStatus(record, 'published')}
+                                    okText="确认"
+                                    cancelText="取消"
+                                >
+                                    <Button type="text" icon={<CheckOutlined />} className="text-green-600" />
+                                </Popconfirm>
+                            </Tooltip>
+                            <Tooltip title="拒绝审核">
+                                <Popconfirm
+                                    title="拒绝审核"
+                                    description="确认拒绝此文章的审核？"
+                                    onConfirm={() => handleUpdateStatus(record, 'review_failed')}
+                                    okText="确认"
+                                    cancelText="取消"
+                                >
+                                    <Button type="text" icon={<RollbackOutlined />} className="text-red-600" />
+                                </Popconfirm>
+                            </Tooltip>
+                        </>
+                    ) : (
+                        <Tooltip title={record.status === 'published' ? '转为草稿' : '提交审核'}>
+                            <Popconfirm
+                                title={record.status === 'published' ? '转为草稿' : '提交审核'}
+                                description={
+                                    record.status === 'published' ? '转为草稿后文章将不再公开，确认操作？' : '确认提交此文章进行审核？'
+                                }
+                                onConfirm={() => handleUpdateStatus(record, record.status === 'published' ? 'draft' : 'reviewing')}
+                                okText="确认"
+                                cancelText="取消"
+                            >
+                                <Button
+                                    type="text"
+                                    icon={record.status === 'published' ? <RollbackOutlined /> : <CheckOutlined />}
+                                    className={record.status === 'published' ? 'text-orange-600' : 'text-blue-600'}
+                                />
+                            </Popconfirm>
+                        </Tooltip>
+                    )}
                     <Tooltip title={record.is_featured ? '取消精选' : '设为精选'}>
                         <Button
                             type="text"
@@ -312,11 +364,7 @@ const ArticleManagement = () => {
                             cancelText="取消"
                             okButtonProps={{ danger: true }}
                         >
-                            <Button
-                                type="text"
-                                danger
-                                icon={<DeleteOutlined />}
-                            />
+                            <Button type="text" danger icon={<DeleteOutlined />} />
                         </Popconfirm>
                     </Tooltip>
                 </Space>
@@ -350,32 +398,17 @@ const ArticleManagement = () => {
     };
 
     return (
-        <Card
-            title="文章管理"
-            className="shadow-sm"
-            extra={
-                <Space>
-                    <Button
-                        type="primary"
-                        onClick={() => navigate('/admin/articles/create')}
-                    >
-                        创建文章
-                    </Button>
-                    <Button
-                        icon={<ReloadOutlined />}
-                        onClick={() => setRefreshKey(prev => prev + 1)}
-                    >
-                        刷新
-                    </Button>
-                </Space>
-            }
-        >
-            <Form
-                form={searchForm}
-                layout="inline"
-                className="mb-4 gap-2"
-                onFinish={handleSearch}
-            >
+        <Card title="文章管理" className="shadow-sm" extra={
+            <Space>
+                <Button type="primary" onClick={() => navigate('/admin/articles/create')}>
+                    创建文章
+                </Button>
+                <Button icon={<ReloadOutlined />} onClick={() => setRefreshKey((prev) => prev + 1)}>
+                    刷新
+                </Button>
+            </Space>
+        }>
+            <Form form={searchForm} layout="inline" className="mb-4 gap-2" onFinish={handleSearch}>
                 <Form.Item name="search" className="min-w-[200px]">
                     <Input
                         placeholder="搜索文章标题"
@@ -384,13 +417,11 @@ const ArticleManagement = () => {
                     />
                 </Form.Item>
                 <Form.Item name="status">
-                    <Select
-                        placeholder="文章状态"
-                        style={{ width: 120 }}
-                        allowClear
-                    >
-                        <Option value="published">已发布</Option>
+                    <Select placeholder="文章状态" style={{ width: 120 }} allowClear>
                         <Option value="draft">草稿</Option>
+                        <Option value="reviewing">审核中</Option>
+                        <Option value="review_failed">审核失败</Option>
+                        <Option value="published">已发布</Option>
                         <Option value="all">全部</Option>
                     </Select>
                 </Form.Item>
@@ -403,7 +434,6 @@ const ArticleManagement = () => {
                     </Space>
                 </Form.Item>
             </Form>
-
             <div className="mb-4 flex justify-between items-center">
                 <Space>
                     <Popconfirm
@@ -415,20 +445,15 @@ const ArticleManagement = () => {
                         okButtonProps={{ danger: true }}
                         disabled={selectedRowKeys.length === 0}
                     >
-                        <Button
-                            danger
-                            icon={<DeleteOutlined />}
-                            disabled={selectedRowKeys.length === 0}
-                        >
+                        <Button danger icon={<DeleteOutlined />} disabled={selectedRowKeys.length === 0}>
                             批量删除
                         </Button>
                     </Popconfirm>
                 </Space>
                 <span className="text-gray-500">
-                    {selectedRowKeys.length > 0 && `已选择 ${selectedRowKeys.length} 项`}
-                </span>
+          {selectedRowKeys.length > 0 && `已选择 ${selectedRowKeys.length} 项`}
+        </span>
             </div>
-
             <Table
                 columns={columns}
                 dataSource={articles}

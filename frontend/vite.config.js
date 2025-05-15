@@ -4,7 +4,7 @@ import fs from 'fs';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 
-var url = 'https://172.22.240.1:8005';
+var url = 'https://192.168.60.81:8005';
 // 将上面的url 8005变成5173
 if (url.includes('8005')) {
     var url2 = url.replace('8005', '5173');

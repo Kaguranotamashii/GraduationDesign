@@ -3649,3 +3649,49 @@ G:/GraduationDesign/probject/frontend/public/index.html
   ➜  Network: https://172.22.240.1:5173/
 19:11:06 [vite] vite.config.js changed, restarting server...
 19:11:06 [vite] server restarted.
+
+  VITE v6.0.11  ready in 764 ms
+
+  ➜  Local:   https://localhost:5173/
+  ➜  Network: https://198.18.0.1:5173/
+  ➜  Network: https://10.153.146.151:5173/
+  ➜  Network: https://169.254.126.90:5173/
+  ➜  Network: https://169.254.161.185:5173/
+21:25:30 [vite] vite.config.js changed, restarting server...
+21:25:30 [vite] server restarted.
+21:28:24 [vite] (client) hmr update /src/pages/home/index.jsx, /src/components/admin/article/MyArticles.jsx, /src/components/admin/article/ArticleManagement.jsx, /src/components/admin/article/CreateArticle.jsx, /src/pages/articles/detail/ArticleDetail.jsx, /src/pages/articles/list/ArticleList.jsx, /src/components/admin/article/EditArticleModal.jsx
+21:29:38 [vite] (client) hmr update /src/pages/home/index.jsx
+21:30:24 [vite] (client) hmr update /src/pages/home/index.jsx
+21:31:49 [vite] (client) hmr update /src/pages/home/index.jsx
+21:35:58 [vite] (client) hmr update /src/pages/articles/list/ArticleList.jsx
+21:38:51 [vite] (client) hmr update /src/components/admin/article/MyArticles.jsx
+21:58:58 [vite] (client) hmr update /src/pages/home/index.jsx
+22:01:08 [vite] (client) hmr update /src/pages/home/index.jsx
+22:13:10 [vite] (client) hmr update /src/pages/home/index.jsx, /src/components/admin/article/MyArticles.jsx, /src/components/admin/article/ArticleManagement.jsx, /src/components/admin/article/CreateArticle.jsx, /src/pages/articles/detail/ArticleDetail.jsx, /src/pages/articles/list/ArticleList.jsx, /src/components/admin/article/EditArticleModal.jsx
+22:13:30 [vite] (client) hmr update /src/pages/home/index.jsx, /src/components/admin/article/MyArticles.jsx, /src/components/admin/article/ArticleManagement.jsx, /src/components/admin/article/CreateArticle.jsx, /src/pages/articles/detail/ArticleDetail.jsx, /src/pages/articles/list/ArticleList.jsx, /src/components/admin/article/EditArticleModal.jsx
+22:13:45 [vite] (client) hmr update /src/components/admin/article/MyArticles.jsx
+22:14:39 [vite] (client) hmr update /src/components/admin/article/MyArticles.jsx
+22:16:28 [vite] (client) hmr update /src/components/admin/article/MyArticles.jsx
+22:26:06 [vite] (client) hmr update /src/components/admin/article/ArticleManagement.jsx
+22:42:13 [vite] (client) hmr update /src/components/admin/article/ArticleManagement.jsx
+22:43:00 [vite] (client) hmr update /src/components/admin/article/ArticleManagement.jsx
+22:44:35 [vite] (client) hmr update /src/components/admin/article/CreateArticle.jsx
+22:44:35 [vite] (client) hmr update /src/components/admin/article/ArticleManagement.jsx
+22:45:42 [vite] (client) hmr update /src/components/admin/article/CreateArticle.jsx
+22:45:58 [vite] (client) hmr update /src/components/admin/article/CreateArticle.jsx
+22:48:40 [vite] (client) hmr update /src/components/admin/article/MyArticles.jsx
+22:51:50 [vite] (client) hmr update /src/components/admin/article/ArticleManagement.jsx
+
+  VITE v6.0.11  ready in 4867 ms
+
+  ➜  Local:   https://localhost:5173/
+  ➜  Network: https://169.254.126.90:5173/
+  ➜  Network: https://169.254.161.185:5173/
+  ➜  Network: https://192.168.60.81:5173/
+10:44:02 [vite] vite.config.js changed, restarting server...
+10:44:05 [vite] server restarted.
+10:45:22 [vite] http proxy error: /media/buildings/2025/02/67918401-1c17-4242-abc2-4c9be424f32d.png
+Error: read ECONNRESET
+    at TLSWrap.onStreamRead (node:internal/stream_base_commons:218:20)
+10:49:53 [vite] (client) hmr update /src/pages/modelEdit/ModelEdit.jsx
+10:50:17 [vite] (client) hmr update /src/pages/map/components/HeritageMarkers.jsx

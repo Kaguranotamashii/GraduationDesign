@@ -33,13 +33,15 @@ const HomePage = () => {
         const fetchData = async () => {
             try {
                 const topArticlesResponse = await getTopArticles();
-                setTopArticles(topArticlesResponse.data || []);
+                console.log("topArticlesResponse", topArticlesResponse)
+                setTopArticles(topArticlesResponse.data.results || topArticlesResponse.data || []);
                 const featuredArticlesResponse = await getFeaturedArticles();
-                setFeaturedArticles(featuredArticlesResponse.data?.results || []);
+                console.log("featuredArticlesResponse", featuredArticlesResponse)
+                setFeaturedArticles(featuredArticlesResponse.results || featuredArticlesResponse.data || []);
                 setLoading((prev) => ({ ...prev, articles: false }));
             } catch (err) {
-                console.error('获取文章数据失败:', err);
-                setError((prev) => ({ ...prev, articles: '获取文章数据失败' }));
+                console.error('Error fetching articles:', err);
+                setError((prev) => ({ ...prev, articles: 'Failed to fetch articles' }));
                 setLoading((prev) => ({ ...prev, articles: false }));
             }
 
@@ -48,15 +50,13 @@ const HomePage = () => {
                 setTopModels((modelsResponse.data || []).slice(0, 4));
                 setLoading((prev) => ({ ...prev, models: false }));
             } catch (err) {
-                console.error('获取模型数据失败:', err);
-                setError((prev) => ({ ...prev, models: '获取模型数据失败' }));
+                console.error('Error fetching models:', err);
+                setError((prev) => ({ ...prev, models: 'Failed to fetch models' }));
                 setLoading((prev) => ({ ...prev, models: false }));
             }
         };
         fetchData();
     }, []);
-
-    // 移除了包含 GSAP 代码的 useEffect
 
     return (
         <MainLayout>

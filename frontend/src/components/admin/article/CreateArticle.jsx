@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Select, message, Card, Space, Tag, Upload } from 'antd';
 import { PlusOutlined, InboxOutlined } from '@ant-design/icons';
 import MDEditor from '@uiw/react-md-editor';
-import rehypeSanitize from "rehype-sanitize";
+import rehypeSanitize from 'rehype-sanitize';
 import { useNavigate } from 'react-router-dom';
 import { getAllModels, getBuildingTags } from '@/api/builderApi';
 import { createArticle, saveDraft, uploadImage } from '@/api/articleApi';
-import EditArticleModal from './EditArticleModal';
+
 const { Dragger } = Upload;
 
 const CreateArticle = () => {
@@ -18,25 +18,15 @@ const CreateArticle = () => {
     const [inputValue, setInputValue] = useState('');
     const [existingTags, setExistingTags] = useState([]);
     const [coverFile, setCoverFile] = useState(null);
-    const [content, setContent] = useState("");
-    const [autoSaveTimer, setAutoSaveTimer] = useState(null);
-    const [lastSavedTime, setLastSavedTime] = useState(null);
+    const [content, setContent] = useState('');
     const navigate = useNavigate();
-    const [editModalVisible, setEditModalVisible] = useState(false);
-    const [currentArticle, setCurrentArticle] = useState(null);
-
-    // 3. 添加编辑处理函数
-    const handleEdit = (article) => {
-        setCurrentArticle(article);
-        setEditModalVisible(true);
-    };
 
     // 获取建筑列表和标签
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const buildersResponse = await getAllModels();
-                console.log( '获取数据成功:', buildersResponse.data)
+                console.log('获取建筑数据成功:', buildersResponse.data);
                 if (buildersResponse.code === 200) {
                     setBuilders(buildersResponse.data);
                 }
@@ -54,13 +44,9 @@ const CreateArticle = () => {
         fetchData();
     }, []);
 
-
-
-
-
-    // 修改 handleSubmit 函数
-    const handleSubmit = async (values) => {
-        if (!content) {
+    // 提交文章
+    const handleSubmit = async (values, status) => {
+        if (!content.trim()) {
             message.error('请输入文章内容');
             return;
         }
@@ -68,66 +54,99 @@ const CreateArticle = () => {
         setLoading(true);
         try {
             const formData = new FormData();
-            formData.append('title', values.title);
-            formData.append('content', content);
+            formData.append('title', values.title.trim());
+            formData.append('content', content.trim());
             if (coverFile) {
+                if (!coverFile.type.startsWith('image/')) {
+                    throw new Error('封面图片必须是图片格式（jpg、png等）');
+                }
                 formData.append('cover_image_file', coverFile);
             }
 
-            // 确保状态值存在
-            const status = values.status || 'draft';
+            // 设置状态（普通用户：draft 或 reviewing）
             formData.append('status', status);
 
-            console.log('提交的状态:', status); // 调试日志
-
-            // 确保builder作为数字类型传递
+            // 处理 builder，确保是整数
             if (values.builder) {
-                formData.append('builder', String(values.builder));
+                const builderId = parseInt(values.builder, 10);
+                if (isNaN(builderId)) {
+                    throw new Error('关联建筑 ID 无效');
+                }
+                formData.append('builder', builderId);
             }
 
+            // 处理 tags
             if (tags.length > 0) {
-                formData.append('tags', tags.join(','));
+                formData.append('tags', tags.map((tag) => tag.trim()).join(','));
             }
 
-            console.log( formData.status)
+            // 调试 FormData
+            console.log('提交的 FormData:', {
+                title: formData.get('title'),
+                status: formData.get('status'),
+                builder: formData.get('builder'),
+                tags: formData.get('tags'),
+                hasCover: !!formData.get('cover_image_file'),
+            });
 
-            // 根据状态选择接口
+            // 选择接口
             const response = await (status === 'draft' ? saveDraft(formData) : createArticle(formData));
 
             if (response.code === 200) {
-                message.success(status === 'draft' ? '草稿保存成功！' : '文章发布成功！');
-                navigate('/admin/articles');
+                message.success(status === 'draft' ? '草稿保存成功！' : '文章提交审核成功！');
+                navigate('/admin/articles'); // 跳转到用户文章列表
+            } else {
+                throw new Error(response.message || '请求失败');
             }
         } catch (error) {
             console.error('保存文章失败:', error);
-            message.error('保存失败：' + (error.message || '未知错误'));
+            let errorMsg = '保存失败：';
+            if (error.response?.data?.errors) {
+                const errors = error.response.data.errors;
+                if (errors.status) {
+                    errorMsg += `状态无效：${errors.status}`;
+                } else if (errors.title) {
+                    errorMsg += `标题错误：${errors.title}`;
+                } else if (errors.builder) {
+                    errorMsg += `建筑错误：${errors.builder}`;
+                } else {
+                    errorMsg += Object.values(errors).flat().join('；');
+                }
+            } else {
+                errorMsg += error.message || '未知错误';
+            }
+            message.error(errorMsg);
         } finally {
             setLoading(false);
         }
     };
 
-    // 在表单中添加以下处理函数
+    // 保存草稿
     const handleDraftClick = () => {
-        // 设置表单状态值并提交
-        form.validateFields()
-            .then(values => {
-                handleSubmit({ ...values, status: 'draft' });
+        form
+            .validateFields()
+            .then((values) => {
+                handleSubmit(values, 'draft');
             })
-            .catch(err => {
+            .catch((err) => {
                 console.error('表单验证失败:', err);
+                message.error('请检查表单字段');
             });
     };
 
-    const handlePublishClick = () => {
-        // 设置表单状态值并提交
-        form.validateFields()
-            .then(values => {
-                handleSubmit({ ...values, status: 'published' });
+    // 提交审核
+    const handleSubmitForReviewClick = () => {
+        form
+            .validateFields()
+            .then((values) => {
+                handleSubmit(values, 'reviewing');
             })
-            .catch(err => {
+            .catch((err) => {
                 console.error('表单验证失败:', err);
+                message.error('请检查表单字段');
             });
     };
+
     // 封面上传配置
     const uploadProps = {
         accept: 'image/*',
@@ -135,17 +154,21 @@ const CreateArticle = () => {
         showUploadList: true,
         maxCount: 1,
         beforeUpload: (file) => {
+            if (!file.type.startsWith('image/')) {
+                message.error('只能上传图片文件（jpg、png等）');
+                return Upload.LIST_IGNORE;
+            }
             setCoverFile(file);
             return false;
         },
         onRemove: () => {
             setCoverFile(null);
-        }
+        },
     };
 
     // 标签相关处理
     const handleClose = (removedTag) => {
-        const newTags = tags.filter(tag => tag !== removedTag);
+        const newTags = tags.filter((tag) => tag !== removedTag);
         setTags(newTags);
     };
 
@@ -159,7 +182,7 @@ const CreateArticle = () => {
 
     const handleInputConfirm = () => {
         if (inputValue && !tags.includes(inputValue)) {
-            setTags([...tags, inputValue]);
+            setTags([...tags, inputValue.trim()]);
         }
         setInputVisible(false);
         setInputValue('');
@@ -167,24 +190,25 @@ const CreateArticle = () => {
 
     const handleSelectTag = (tag) => {
         if (!tags.includes(tag)) {
-            setTags([...tags, tag]);
+            setTags([...tags, tag.trim()]);
         }
     };
 
     // 处理图片上传
     const handleImageUpload = async (file) => {
         try {
+            if (!file.type.startsWith('image/')) {
+                throw new Error('只能上传图片文件');
+            }
             const formData = new FormData();
             formData.append('image', file);
             formData.append('folder', 'articles/content');
 
             const response = await uploadImage(formData);
-
             if (response.code === 200) {
                 return response.data.url;
             } else {
-                message.error('图片上传失败');
-                return null;
+                throw new Error(response.message || '图片上传失败');
             }
         } catch (error) {
             console.error('上传图片失败:', error);
@@ -206,7 +230,7 @@ const CreateArticle = () => {
                         const url = await handleImageUpload(file);
                         if (url) {
                             const imageMarkdown = `![image](${url})\n`;
-                            setContent(prev => {
+                            setContent((prev) => {
                                 const textarea = document.querySelector('.w-md-editor-text-input');
                                 if (textarea) {
                                     const start = textarea.selectionStart;
@@ -238,7 +262,7 @@ const CreateArticle = () => {
                     const url = await handleImageUpload(files[i]);
                     if (url) {
                         const imageMarkdown = `![image](${url})\n`;
-                        setContent(prev => prev + imageMarkdown);
+                        setContent((prev) => prev + imageMarkdown);
                     }
                 } catch (error) {
                     console.error('拖放图片处理失败:', error);
@@ -249,17 +273,16 @@ const CreateArticle = () => {
     };
 
     return (
-        <Card title="发布新文章" className="shadow-sm">
+        <Card title="创建文章" className="shadow-sm">
             <Form
                 form={form}
                 layout="vertical"
-                onFinish={handleSubmit}
                 className="max-w-4xl"
             >
                 <Form.Item
                     name="title"
                     label="文章标题"
-                    rules={[{ required: true, message: '请输入文章标题' }]}
+                    rules={[{ required: true, message: '请输入文章标题' }, { max: 200, message: '标题不能超过200个字符' }]}
                 >
                     <Input placeholder="请输入文章标题" />
                 </Form.Item>
@@ -273,15 +296,14 @@ const CreateArticle = () => {
                             <InboxOutlined />
                         </p>
                         <p className="ant-upload-text">点击或拖拽图片到此区域上传</p>
-                        <p className="ant-upload-hint">
-                            建议尺寸: 1200 x 675 像素
-                        </p>
+                        <p className="ant-upload-hint">建议尺寸: 1200 x 675 像素</p>
                     </Dragger>
                 </Form.Item>
 
                 <Form.Item
                     name="builder"
                     label="关联建筑"
+                    rules={[{ type: 'number', message: '请选择有效的建筑' }]}
                 >
                     <Select
                         placeholder="请选择关联建筑（可选）"
@@ -292,7 +314,7 @@ const CreateArticle = () => {
                             (option?.children ?? '').toLowerCase().includes(input.toLowerCase())
                         }
                     >
-                        {builders.map(builder => (
+                        {builders.map((builder) => (
                             <Select.Option key={builder.id} value={builder.id}>
                                 {builder.name}
                             </Select.Option>
@@ -305,11 +327,7 @@ const CreateArticle = () => {
                         <span className="text-gray-600 text-sm mb-2 block">已有标签:</span>
                         <Space size={[0, 8]} wrap>
                             {existingTags.map((tag) => (
-                                <Tag
-                                    key={tag}
-                                    className="cursor-pointer"
-                                    onClick={() => handleSelectTag(tag)}
-                                >
+                                <Tag key={tag} className="cursor-pointer" onClick={() => handleSelectTag(tag)}>
                                     {tag}
                                 </Tag>
                             ))}
@@ -319,11 +337,7 @@ const CreateArticle = () => {
                         <span className="text-gray-600 text-sm mb-2 block">已选标签:</span>
                         <Space size={[0, 8]} wrap>
                             {tags.map((tag) => (
-                                <Tag
-                                    key={tag}
-                                    closable
-                                    onClose={() => handleClose(tag)}
-                                >
+                                <Tag key={tag} closable onClose={() => handleClose(tag)}>
                                     {tag}
                                 </Tag>
                             ))}
@@ -339,10 +353,7 @@ const CreateArticle = () => {
                                     autoFocus
                                 />
                             ) : (
-                                <Tag
-                                    onClick={showInput}
-                                    className="cursor-pointer hover:bg-gray-100"
-                                >
+                                <Tag onClick={showInput} className="cursor-pointer hover:bg-gray-100">
                                     <PlusOutlined /> 新标签
                                 </Tag>
                             )}
@@ -353,6 +364,7 @@ const CreateArticle = () => {
                 <Form.Item
                     label="文章内容"
                     required
+                    rules={[{ validator: () => (content.trim() ? Promise.resolve() : Promise.reject('请输入文章内容')) }]}
                 >
                     <MDEditor
                         value={content}
@@ -364,7 +376,7 @@ const CreateArticle = () => {
                         onDrop={handleDrop}
                         onDragOver={(e) => e.preventDefault()}
                         previewOptions={{
-                            rehypePlugins: [[rehypeSanitize]]
+                            rehypePlugins: [[rehypeSanitize]],
                         }}
                         data-color-mode="light"
                     />
@@ -372,18 +384,11 @@ const CreateArticle = () => {
 
                 <Form.Item>
                     <Space>
-                        <Button
-                            type="primary"
-                            onClick={handleDraftClick}
-                            loading={loading}
-                        >
+                        <Button type="primary" onClick={handleDraftClick} loading={loading}>
                             保存为草稿
                         </Button>
-                        <Button
-                            onClick={handlePublishClick}
-                            loading={loading}
-                        >
-                            直接发布
+                        <Button type="primary" onClick={handleSubmitForReviewClick} loading={loading}>
+                            提交审核
                         </Button>
                     </Space>
                 </Form.Item>
