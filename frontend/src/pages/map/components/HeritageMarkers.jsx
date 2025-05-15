@@ -88,11 +88,12 @@ const HeritageMarkers = ({ mapZoom }) => {
         try {
             const coordinates = parseCoordinates(site.address);
             const tags = site.tags?.split(',').filter(Boolean) || [];
+
             const articleLink = site.article_id
-                ? `https://10.157.248.175:5173/articles/${site.article_id}`
+                ? `/articles/${site.article_id}`
                 : null;
             const modelLink = site.model_url
-                ? `https://10.157.248.175:5173/modelViewer/${site.id}`
+                ? `/modelViewer/${site.id}`
                 : null;
 
             return (
