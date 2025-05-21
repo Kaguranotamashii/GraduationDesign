@@ -59,10 +59,13 @@ const Auth = () => {
                 dispatch(setUser(response.data.user));
                 message.success('登录成功');
                 setLoginModalOpen(false);
+                // 这里修改下 登录后的页面 跳转上一级
+
+
                 setTimeout(() => {
-                    if (window.history.length > 1 && location.pathname === '/auth') {
+                    if (window.history.length > 1 && location.pathname === '/auth' || location.pathname === '/login') {
                         navigate(-1);
-                    } else if (location.pathname === '/auth') {
+                    } else if (location.pathname === '/auth' || location.pathname === '/login') {
                         navigate('/');
                     }
                 }, 300);
@@ -135,10 +138,10 @@ const Auth = () => {
                     layout="vertical"
                     initialValues={{ username: 'root', password: '12345678' }}
                 >
-                    <Form.Item name="username" rules={[{ required: true, message: '请输入用户名' }, { min: 4, message: '用户名至少4个字符' }]}>
+                    <Form.Item name="username" rules={[{ required: true, message: '请输入用户名' }, { min: 1, message: '用户名至少4个字符' }]}>
                         <Input placeholder="用户名" size="large" className="rounded-md" />
                     </Form.Item>
-                    <Form.Item name="password" rules={[{ required: true, message: '请输入密码' }, { min: 8, message: '密码至少8个字符' }]}>
+                    <Form.Item name="password" rules={[{ required: true, message: '请输入密码' }, { min: 1, message: '密码至少8个字符' }]}>
                         <Input.Password placeholder="密码" size="large" className="rounded-md" />
                     </Form.Item>
                     <Form.Item>

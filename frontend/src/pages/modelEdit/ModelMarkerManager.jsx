@@ -288,7 +288,7 @@ class ModelMarkerManager {
     areFacesSimilar(face1, face2) {
         // 使用点积快速比较法向量
         const normalDot = face1.normal.dot(face2.normal);
-        if (Math.abs(normalDot) < 0.9) return false;
+        if (Math.abs(normalDot) < 1.0) return false;
 
         // 使用缓存的向量计算距离
         return this._vec3.copy(face1.center)

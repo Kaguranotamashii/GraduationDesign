@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux'; // Import useSelector to access Redux state
 import ReactMarkdown from 'react-markdown';
 import MarkdownNavbar from 'markdown-navbar';
 import { useSpring, animated } from '@react-spring/web';
@@ -28,7 +29,10 @@ const ArticleDetail = () => {
     const [readingProgress, setReadingProgress] = useState(0);
     const [estimatedReadTime, setEstimatedReadTime] = useState(0);
     const [isLiked, setIsLiked] = useState(false);
-    const [isTocOpen, setIsTocOpen] = useState(false); // 控制移动端目录显示
+    const [isTocOpen, setIsTocOpen] = useState(false);
+
+    // Access authentication state from Redux
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
     const fadeIn = useSpring({
         from: { opacity: 0, transform: 'translateY(20px)' },
@@ -80,6 +84,11 @@ const ArticleDetail = () => {
     }, [id]);
 
     const handleLike = async () => {
+        if (!isAuthenticated) {
+            message.warning("请先登录再点赞！");
+            navigate('/login');
+            return;
+        }
         try {
             const response = await (isLiked ? unlikeArticle : likeArticle)(id);
 
@@ -126,6 +135,11 @@ const ArticleDetail = () => {
     };
 
     const handleBookmark = () => {
+        if (!isAuthenticated) {
+            message.warning("请先登录再收藏！");
+            navigate('/login');
+            return;
+        }
         message.info('收藏功能开发中');
     };
 
@@ -213,12 +227,12 @@ const ArticleDetail = () => {
                                 <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
                                 <span className="text-sm hidden md:inline">{article.likes}</span>
                             </button>
-                            <button
-                                onClick={handleBookmark}
-                                className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                            >
-                                <Bookmark className="w-5 h-5" />
-                            </button>
+                            {/*<button*/}
+                            {/*    onClick={handleBookmark}*/}
+                            {/*    className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"*/}
+                            {/*>*/}
+                            {/*    <Bookmark className="w-5 h-5" />*/}
+                            {/*</button>*/}
                             <button
                                 onClick={handleShare}
                                 className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
@@ -304,7 +318,21 @@ const ArticleDetail = () => {
 
                         {/* Comments */}
                         <div className="mt-6 md:mt-8">
-                            <CommentSection articleId={id} />
+                            {isAuthenticated ? (
+                                <CommentSection articleId={id} />
+                            ) : (
+                                <div className="bg-white rounded-lg shadow-sm p-6 text-center">
+                                    <p className="text-gray-600 mb-4">
+                                        请先登录以查看和发表评论
+                                    </p>
+                                    <button
+                                        onClick={() => navigate('/login')}
+                                        className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                    >
+                                        立即登录
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </animated.div>
 

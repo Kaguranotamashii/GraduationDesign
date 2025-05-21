@@ -73,7 +73,7 @@ class ArticleAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         """优化查询性能"""
         return super().get_queryset(request).select_related(
-            'author', 'builder', 'cover_image'
+            'author', 'builder'
         )
         # 移除了 prefetch_related('content_images')，因为 content_images 字段不存在
         # .prefetch_related('content_images')

@@ -1,10 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { ARButton } from 'three/examples/jsm/webxr/ARButton';
 import { THREEx } from '@ar-js-org/ar.js-threejs';
 import { getBuilderModelUrl } from '@/api/builderApi';
 import { useParams } from 'react-router-dom';
+
+// Utility to debounce functions
+const debounce = (func, wait) => {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func(...args), wait);
+    };
+};
 
 const ARCompatViewer = () => {
     const containerRef = useRef(null);
@@ -16,20 +24,24 @@ const ARCompatViewer = () => {
     const modelRef = useRef(null);
     const markerRootRef = useRef(null);
     const meshRef = useRef(null);
+    const tooltipRef = useRef(null);
+    const debugCubeRef = useRef(null);
+    const raycasterRef = useRef(new THREE.Raycaster());
+    const mouseRef = useRef(new THREE.Vector2());
     const [modelUrl, setModelUrl] = useState(null);
     const [error, setError] = useState(null);
-    const [scale, setScale] = useState(0.8);
+    const [scale, setScale] = useState(1.6);
     const [loadingProgress, setLoadingProgress] = useState(0);
     const [markerNotDetected, setMarkerNotDetected] = useState(false);
     const [markersData, setMarkersData] = useState([]);
-    const tooltipRef = useRef(null);
-    const raycasterRef = useRef(new THREE.Raycaster());
-    const mouseRef = useRef(new THREE.Vector2());
-    const mounted = useRef(true);
-    const { builderId } = useParams();
     const [isMarkerVisible, setIsMarkerVisible] = useState(false);
-    const [highlightColor, setHighlightColor] = useState('#ff0000'); // Default highlight color
-    const [highlightedPart, setHighlightedPart] = useState(null); // Track single highlighted part
+    const [highlightColor, setHighlightColor] = useState('#ff0000');
+    const [highlightedPart, setHighlightedPart] = useState(null);
+    const [showDebugCube, setShowDebugCube] = useState(true);
+    const [offsetX, setOffsetX] = useState(0);
+    const [offsetY, setOffsetY] = useState(0);
+    const { builderId } = useParams();
+    const mounted = useRef(true);
 
     // Fetch model and marker data
     useEffect(() => {
@@ -40,24 +52,26 @@ const ARCompatViewer = () => {
                 if (response.code !== 200 || !response.data.model_url) {
                     throw new Error('未找到模型文件');
                 }
-                console.log('API Response:', response.data);
                 setModelUrl(response.data.model_url);
-
                 if (response.data.json) {
-                    console.log('原始 JSON 数据:', response.data.json);
                     try {
                         const markers = JSON.parse(response.data.json);
-                        console.log('解析后的标记数据:', markers);
-                        setMarkersData(markers);
+                        // Validate markersData
+                        const validatedMarkers = markers.filter(marker => {
+                            if (!marker.id || !Array.isArray(marker.faces) || !marker.description) {
+                                console.warn('无效标记数据:', marker);
+                                return false;
+                            }
+                            marker.faces = marker.faces.filter(face => Number.isInteger(face) && face >= 0);
+                            return marker.faces.length > 0;
+                        });
+                        setMarkersData(validatedMarkers);
+                        console.log('Validated markersData:', validatedMarkers);
                     } catch (e) {
-                        console.error('JSON 解析错误:', e.message);
                         setError('标记数据解析失败: ' + e.message);
                     }
-                } else {
-                    console.log('API 响应中未找到 JSON 数据');
                 }
             } catch (err) {
-                console.error('API 错误:', err.message);
                 setError(`API 错误: ${err.message}`);
             }
         };
@@ -86,9 +100,8 @@ const ARCompatViewer = () => {
     `;
         document.body.appendChild(tooltip);
         tooltipRef.current = tooltip;
-
         return () => {
-            if (tooltipRef.current && document.body.contains(tooltipRef.current)) {
+            if (tooltipRef.current) {
                 document.body.removeChild(tooltipRef.current);
             }
         };
@@ -98,9 +111,11 @@ const ARCompatViewer = () => {
     useEffect(() => {
         if (!modelUrl) return;
 
+        // Initialize scene
         const scene = new THREE.Scene();
         sceneRef.current = scene;
 
+        // Initialize camera
         const camera = new THREE.PerspectiveCamera(
             75,
             window.innerWidth / window.innerHeight,
@@ -110,99 +125,91 @@ const ARCompatViewer = () => {
         cameraRef.current = camera;
         scene.add(camera);
 
-        const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        // Initialize renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.xr.enabled = true;
         rendererRef.current = renderer;
         containerRef.current.appendChild(renderer.domElement);
 
-        renderer.domElement.style.position = 'absolute';
-        renderer.domElement.style.top = '0';
-        renderer.domElement.style.left = '0';
-        renderer.domElement.style.width = '100%';
-        renderer.domElement.style.height = '100%';
-
-        const arButton = ARButton.createButton(renderer, {
-            onError: (error) => {
-                console.error('ARButton 初始化错误:', error);
-                setError('AR 初始化失败: ' + error.message);
-            },
-        });
-        document.body.appendChild(arButton);
-
-        const sourceWidth = Math.min(window.innerWidth, 640);
-        const sourceHeight = Math.min(window.innerHeight, 480);
-
+        // Initialize ARToolkitSource
         const arToolkitSource = new THREEx.ArToolkitSource({
             sourceType: 'webcam',
-            sourceWidth: sourceWidth,
-            sourceHeight: sourceHeight,
-            displayWidth: window.innerWidth,
-            displayHeight: window.innerHeight,
+            sourceWidth: 640,
+            sourceHeight: 480,
         });
         arToolkitSourceRef.current = arToolkitSource;
 
-        arToolkitSource.init(
-            () => {
-                console.log('摄像头初始化成功:', { sourceWidth, sourceHeight });
-                onResize();
-                if (arToolkitSource.domElement) {
-                    arToolkitSource.domElement.style.position = 'absolute';
-                    arToolkitSource.domElement.style.top = '0';
-                    arToolkitSource.domElement.style.left = '0';
-                    arToolkitSource.domElement.style.width = '100%';
-                    arToolkitSource.domElement.style.height = '100%';
-                    arToolkitSource.domElement.style.objectFit = 'contain';
-                    arToolkitSource.domElement.style.transform = 'translateZ(0)';
-                } else {
-                    console.error('arToolkitSource.domElement 未创建');
-                    setError('摄像头初始化失败');
-                }
-            },
-            (error) => {
-                console.error('摄像头初始化错误:', error);
-                setError('摄像头访问失败: ' + error.message);
+        arToolkitSource.init(() => {
+            onResize();
+            const video = arToolkitSource.domElement;
+            if (video) {
+                video.style.position = 'fixed';
+                video.style.top = '0';
+                video.style.left = '0';
+                video.style.width = '100%';
+                video.style.height = '100%';
+                video.style.objectFit = 'cover';
+                video.style.zIndex = '-1';
             }
-        );
+        }, (error) => setError('摄像头访问失败: ' + error.message));
 
+        // Initialize ARToolkitContext
         const arToolkitContext = new THREEx.ArToolkitContext({
             cameraParametersUrl: '/camera_para.dat',
-            detectionMode: 'mono_and_matrix',
-            matrixCodeType: '3x3',
-            maxDetectionRate: 60,
+            detectionMode: 'mono',
+            maxDetectionRate: 30,
+            imageSmoothingEnabled: false,
+            canvasWidth: 640,
+            canvasHeight: 480,
             patternRatio: 0.5,
-            imageSmoothingEnabled: true,
+            debug: true,
         });
         arToolkitContextRef.current = arToolkitContext;
 
         arToolkitContext.init(() => {
-            console.log('AR 上下文初始化成功');
+            console.log('ARToolkitContext 初始化成功');
             camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
+        }, (error) => {
+            console.error('初始化 ARToolkitContext 错误:', error);
+            setError('ARToolkit 初始化失败: ' + error.message);
         });
 
+        // Initialize marker
         const markerRoot = new THREE.Group();
         markerRootRef.current = markerRoot;
         scene.add(markerRoot);
 
         try {
-            const markerControls = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
+            new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
                 type: 'pattern',
                 patternUrl: '/patt.hiro',
-                changeMatrixMode: 'modelViewMatrix',
+                patternRatio: 0.5,
             });
-            console.log('标记控件初始化成功，patternUrl: /patt.hiro');
+            console.log('ArMarkerControls 初始化成功');
         } catch (error) {
-            console.error('标记控件初始化错误:', error);
+            console.error('初始化 ArMarkerControls 错误:', error);
             setError('标记控件初始化失败: ' + error.message);
         }
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
-        scene.add(ambientLight);
+        // Add debug marker at markerRoot origin
+        const debugGeometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+        const debugMaterial = new THREE.MeshBasicMaterial({ color: 0xff00ff });
+        const debugCube = new THREE.Mesh(debugGeometry, debugMaterial);
+        debugCube.visible = showDebugCube;
+        debugCubeRef.current = debugCube;
+        markerRoot.add(debugCube);
+
+        // Apply offset to markerRoot
+        markerRoot.position.set(offsetX, offsetY, 0);
+
+        // Lighting
+        scene.add(new THREE.AmbientLight(0xffffff, 1.0));
         const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
         directionalLight.position.set(0, 1, 0);
         scene.add(directionalLight);
 
+        // Load model
         const loader = new GLTFLoader();
         loader.load(
             modelUrl,
@@ -210,53 +217,72 @@ const ARCompatViewer = () => {
                 const model = gltf.scene;
                 modelRef.current = model;
 
-                const box = new THREE.Box3().setFromObject(model);
-                const center = box.getCenter(new THREE.Vector3());
-                model.position.set(-center.x, -center.y, -center.z);
-                model.scale.set(scale, scale, scale);
-                model.rotation.set(0, 0, 0);
-
-                const meshes = [];
+                // Compute bounding box to center the model
+                const box = new THREE.Box3();
                 model.traverse((node) => {
                     if (node.isMesh) {
-                        meshes.push(node);
+                        node.geometry.computeBoundingBox();
+                        const nodeBox = node.geometry.boundingBox.clone();
+                        nodeBox.applyMatrix4(node.matrixWorld);
+                        box.union(nodeBox);
                     }
                 });
-                if (meshes.length > 0) {
+                const center = box.getCenter(new THREE.Vector3());
+                const size = box.getSize(new THREE.Vector3());
+
+                // Adjust model position to align bottom with markerRoot origin
+                model.position.set(-center.x, -center.y, -center.z + size.z / 2);
+                model.scale.set(scale, scale, scale);
+
+                // Log bounding box and triangle count
+                let totalTriangles = 0;
+                model.traverse((node) => {
+                    if (node.isMesh && node.geometry.index) {
+                        totalTriangles += node.geometry.index.count / 3;
+                    }
+                });
+                console.log('Model Bounding Box:', box);
+                console.log('Center:', center);
+                console.log('Size:', size);
+                console.log('Total triangles:', totalTriangles);
+
+                // Collect meshes for raycasting
+                const meshes = [];
+                model.traverse((node) => {
+                    if (node.isMesh) meshes.push(node);
+                });
+                if (meshes.length) {
                     meshRef.current = meshes;
-                    console.log('找到模型 Mesh 列表:', meshes);
+                    console.log('Meshes collected:', meshes.length);
                 } else {
-                    console.error('模型中未找到 Mesh');
                     setError('模型中未找到 Mesh');
                 }
-
                 markerRoot.add(model);
-                console.log('模型加载并居中:', modelUrl);
-
-                meshes.forEach((mesh, index) => {
-                    const faceCount = mesh.geometry.index
-                        ? mesh.geometry.index.count / 3
-                        : mesh.geometry.attributes.position.count / 3;
-                    console.log(`Mesh ${index} 面数: ${faceCount}`);
-                });
             },
-            (progress) => {
-                const percent = Math.round((progress.loaded / progress.total) * 100);
-                setLoadingProgress(percent);
-                console.log('模型加载进度:', percent, '%');
-            },
-            (err) => {
-                console.error('模型加载错误:', err);
-                setError(`模型加载失败: ${err.message}`);
-            }
+            (progress) => setLoadingProgress(Math.round((progress.loaded / progress.total) * 100)),
+            (err) => setError(`模型加载失败: ${err.message}`)
         );
 
-        const handleClick = (event) => {
-            if (!meshRef.current || !rendererRef.current || !cameraRef.current) {
-                console.log('点击检测失败: 缺少 mesh, renderer 或 camera');
+        // Handle click for part highlighting with debounce
+        const handleClick = debounce((event) => {
+            if (!meshRef.current || !rendererRef.current || !cameraRef.current || !sceneRef.current) {
+                console.log('点击失败：缺少必要组件（mesh, renderer, camera, scene）');
                 return;
             }
 
+            // Step 1: Clear existing highlight
+            if (highlightedPart?.mesh) {
+                try {
+                    sceneRef.current.remove(highlightedPart.mesh);
+                    console.log('已清除现有高亮，markerId:', highlightedPart.markerId);
+                } catch (err) {
+                    console.error('清除高亮失败:', err);
+                }
+                setHighlightedPart(null);
+                hidePartInfo();
+            }
+
+            // Step 2: Raycast to find clicked face
             const canvas = renderer.domElement;
             const rect = canvas.getBoundingClientRect();
             mouseRef.current.x = ((event.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
@@ -268,275 +294,274 @@ const ARCompatViewer = () => {
                 true
             );
 
-            if (intersects.length > 0 && intersects[0].faceIndex !== undefined) {
-                const clickedFaceIndex = intersects[0].faceIndex;
-                const clickedMesh = intersects[0].object;
-                console.log('点击的面索引:', clickedFaceIndex, '交点 Mesh:', clickedMesh);
-
-                const foundMarker = markersData.find((marker) => marker.faces.includes(clickedFaceIndex));
-                if (foundMarker) {
-                    console.log('找到标记:', foundMarker, '高亮面数:', foundMarker.faces.length);
-
-                    // Check if this marker is already highlighted
-                    if (highlightedPart && highlightedPart.markerId === foundMarker.id) {
-                        // Remove highlight
-                        if (sceneRef.current && highlightedPart.mesh) {
-                            sceneRef.current.remove(highlightedPart.mesh);
-                        }
-                        setHighlightedPart(null);
-                        console.log('移除高亮部位:', foundMarker.id);
-                        hidePartInfo();
-                        return;
-                    }
-
-                    // Remove existing highlight if any
-                    if (highlightedPart && highlightedPart.mesh) {
-                        sceneRef.current.remove(highlightedPart.mesh);
-                        console.log('移除旧高亮部位:', highlightedPart.markerId);
-                    }
-
-                    // Create new highlight Mesh
-                    const highlightGeometry = new THREE.BufferGeometry();
-                    const originalGeometry = clickedMesh.geometry;
-                    const indices = [];
-                    const vertices = originalGeometry.attributes.position.array;
-
-                    // Validate face indices
-                    const maxFaceIndex = originalGeometry.index
-                        ? originalGeometry.index.count / 3
-                        : originalGeometry.attributes.position.count / 3;
-                    const validFaces = foundMarker.faces.filter((faceIndex) => faceIndex < maxFaceIndex);
-
-                    if (validFaces.length === 0) {
-                        console.error('无效的面索引:', foundMarker.faces);
-                        hidePartInfo();
-                        setHighlightedPart(null);
-                        return;
-                    }
-
-                    validFaces.forEach((faceIndex) => {
-                        if (originalGeometry.index) {
-                            const start = faceIndex * 3;
-                            indices.push(
-                                originalGeometry.index.array[start],
-                                originalGeometry.index.array[start + 1],
-                                originalGeometry.index.array[start + 2]
-                            );
-                        } else {
-                            const start = faceIndex * 3;
-                            indices.push(start, start + 1, start + 2);
-                        }
-                    });
-
-                    highlightGeometry.setIndex(indices);
-                    highlightGeometry.setAttribute(
-                        'position',
-                        new THREE.Float32BufferAttribute(vertices, 3)
-                    );
-                    highlightGeometry.computeVertexNormals();
-
-                    const highlightMaterial = new THREE.MeshStandardMaterial({
-                        color: highlightColor,
-                        emissive: highlightColor,
-                        emissiveIntensity: 0.5,
-                        transparent: true,
-                        opacity: 0.8,
-                        side: THREE.DoubleSide,
-                    });
-
-                    const highlightMesh = new THREE.Mesh(highlightGeometry, highlightMaterial);
-                    highlightMesh.position.copy(clickedMesh.position);
-                    highlightMesh.rotation.copy(clickedMesh.rotation);
-                    highlightMesh.scale.copy(clickedMesh.scale);
-                    clickedMesh.parent.add(highlightMesh);
-
-                    // Set new highlight
-                    setHighlightedPart({
-                        markerId: foundMarker.id,
-                        mesh: highlightMesh,
-                        sourceMesh: clickedMesh,
-                    });
-                    console.log('添加高亮部位:', foundMarker.id);
-
-                    showPartInfo(foundMarker, event);
-                } else {
-                    console.log('未找到匹配的标记，面索引:', clickedFaceIndex);
-                    console.log('当前 markersData:', markersData);
-                    // Clear highlight
-                    if (highlightedPart && highlightedPart.mesh) {
-                        sceneRef.current.remove(highlightedPart.mesh);
-                        setHighlightedPart(null);
-                        console.log('清除高亮部位: 非标记部位');
-                    }
-                    hidePartInfo();
-                }
-            } else {
-                console.log('未检测到点击交点，交点数组:', intersects);
-                // Clear highlight
-                if (highlightedPart && highlightedPart.mesh) {
-                    sceneRef.current.remove(highlightedPart.mesh);
-                    setHighlightedPart(null);
-                    console.log('清除高亮部位: 空白区域');
-                }
-                hidePartInfo();
-            }
-        };
-
-        const showPartInfo = (marker, event) => {
-            if (!tooltipRef.current) {
-                console.error('提示框未初始化');
+            if (!intersects.length || intersects[0].faceIndex === undefined) {
+                console.log('未点击有效部位或无 faceIndex');
                 return;
             }
 
-            const canvas = renderer.domElement;
-            const rect = canvas.getBoundingClientRect();
+            // Step 3: Find matching marker
+            const clickedFaceIndex = intersects[0].faceIndex;
+            const clickedMesh = intersects[0].object;
+            console.log('点击 faceIndex:', clickedFaceIndex, 'mesh:', clickedMesh.name || 'unnamed');
 
+            // Ensure only one marker matches
+            const foundMarker = markersData.find((marker) =>
+                marker.faces.includes(clickedFaceIndex)
+            );
+
+            if (!foundMarker) {
+                console.log('未找到匹配的标记，faceIndex:', clickedFaceIndex);
+                return;
+            }
+
+            console.log('找到标记:', foundMarker);
+
+            // Step 4: Create new highlight
+            const highlightGeometry = new THREE.BufferGeometry();
+            const originalGeometry = clickedMesh.geometry;
+            const indices = [];
+            const vertices = originalGeometry.attributes.position.array;
+            const maxFaceIndex = originalGeometry.index
+                ? originalGeometry.index.count / 3
+                : originalGeometry.attributes.position.count / 3;
+            const validFaces = foundMarker.faces.filter((faceIndex) => faceIndex < maxFaceIndex);
+
+            if (!validFaces.length) {
+                console.log('无有效面，无法高亮，markerId:', foundMarker.id);
+                hidePartInfo();
+                return;
+            }
+
+            console.log('有效面:', validFaces);
+
+            validFaces.forEach((faceIndex) => {
+                const start = faceIndex * 3;
+                indices.push(
+                    originalGeometry.index ? originalGeometry.index.array[start] : start,
+                    originalGeometry.index ? originalGeometry.index.array[start + 1] : start + 1,
+                    originalGeometry.index ? originalGeometry.index.array[start + 2] : start + 2
+                );
+            });
+
+            highlightGeometry.setIndex(indices);
+            highlightGeometry.setAttribute(
+                'position',
+                new THREE.Float32BufferAttribute(vertices, 3)
+            );
+            highlightGeometry.computeVertexNormals();
+
+            const highlightMaterial = new THREE.MeshStandardMaterial({
+                color: highlightColor,
+                emissive: highlightColor,
+                emissiveIntensity: 0.5,
+                transparent: true,
+                opacity: 0.8,
+                side: THREE.DoubleSide,
+            });
+
+            const highlightMesh = new THREE.Mesh(highlightGeometry, highlightMaterial);
+            highlightMesh.position.copy(clickedMesh.position);
+            highlightMesh.rotation.copy(clickedMesh.rotation);
+            highlightMesh.scale.copy(clickedMesh.scale);
+            clickedMesh.parent.add(highlightMesh);
+
+            // Step 5: Update highlighted part
+            setHighlightedPart({
+                markerId: foundMarker.id,
+                mesh: highlightMesh,
+                sourceMesh: clickedMesh,
+            });
+            showPartInfo(foundMarker, event);
+            console.log(`高亮创建成功，markerId: ${foundMarker.id}, faces: ${validFaces}`);
+        }, 100); // Debounce 100ms to prevent rapid clicks
+
+        const showPartInfo = (marker, event) => {
+            if (!tooltipRef.current) {
+                console.log('工具提示未初始化');
+                return;
+            }
             tooltipRef.current.style.display = 'block';
             tooltipRef.current.innerHTML = `
         <div style="margin-bottom: 8px;"><strong>位置信息：</strong></div>
         <div>${marker.description}</div>
       `;
-
+            const canvas = renderer.domElement;
+            const rect = canvas.getBoundingClientRect();
             const tooltipRect = tooltipRef.current.getBoundingClientRect();
             let left = event.clientX + 10;
             let top = event.clientY + 10;
-
             if (left + tooltipRect.width > window.innerWidth) {
                 left = event.clientX - tooltipRect.width - 10;
             }
             if (top + tooltipRect.height > window.innerHeight) {
                 top = event.clientY - tooltipRect.height - 10;
             }
-
             tooltipRef.current.style.left = `${left}px`;
             tooltipRef.current.style.top = `${top}px`;
-            console.log('显示提示框:', marker.description);
+            console.log('显示工具提示:', marker.description);
         };
 
         const hidePartInfo = () => {
             if (tooltipRef.current) {
                 tooltipRef.current.style.display = 'none';
-                console.log('隐藏提示框');
+                console.log('隐藏工具提示');
             }
         };
 
         renderer.domElement.addEventListener('click', handleClick);
 
+        // Handle resize
         const onResize = () => {
             arToolkitSource.onResizeElement();
             arToolkitSource.copyElementSizeTo(renderer.domElement);
-            if (arToolkitContext.arController !== null) {
+            if (arToolkitContext.arController) {
                 arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas);
             }
             renderer.setSize(window.innerWidth, window.innerHeight);
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
-            console.log('窗口调整大小');
         };
-        window.addEventListener('resize', onResize, { passive: true });
 
+        const debouncedResize = debounce(onResize, 100);
+        window.addEventListener('resize', debouncedResize);
+
+        // Animation loop
         const animate = () => {
-            renderer.setAnimationLoop(() => {
+            let lastTimeMsec = null;
+            const render = (nowMsec) => {
+                requestAnimationFrame(render);
+                lastTimeMsec = lastTimeMsec || nowMsec - 1000 / 60;
+                const deltaMsec = Math.min(200, nowMsec - lastTimeMsec);
+                lastTimeMsec = nowMsec;
+
                 if (arToolkitSource.ready) {
                     arToolkitContext.update(arToolkitSource.domElement);
                     if (markerRootRef.current) {
                         const isVisible = markerRootRef.current.visible;
-                        if (isVisible && !isMarkerVisible) {
-                            console.log('Hiro 标记已检测');
-                            setIsMarkerVisible(true);
-                            setMarkerNotDetected(false);
-                        } else if (!isVisible && isMarkerVisible) {
-                            console.log('未检测到 Hiro 标记');
-                            setIsMarkerVisible(false);
-                            setMarkerNotDetected(true);
-                        }
-                        scene.visible = camera.visible;
+                        setIsMarkerVisible(isVisible);
+                        setMarkerNotDetected(!isVisible && modelUrl);
+                        console.log('markerRoot visible:', isVisible, 'matrix:', markerRootRef.current.matrix, 'position:', markerRootRef.current.position);
                     }
-                } else {
-                    console.log('arToolkitSource 未准备就绪');
+                    scene.visible = camera.visible;
                 }
                 renderer.render(scene, camera);
-            });
+            };
+            requestAnimationFrame(render);
         };
         animate();
 
-        const timer = setTimeout(() => {
+        // Marker detection timeout
+        const markerTimeout = setTimeout(() => {
             if (markerRootRef.current && !markerRootRef.current.visible) {
                 setMarkerNotDetected(true);
             }
         }, 10000);
 
+        // Cleanup
         return () => {
             renderer.setAnimationLoop(null);
             if (containerRef.current && renderer.domElement) {
                 containerRef.current.removeChild(renderer.domElement);
             }
             renderer.domElement.removeEventListener('click', handleClick);
-            window.removeEventListener('resize', onResize);
-            if (arButton && document.body.contains(arButton)) {
-                document.body.removeChild(arButton);
-            }
-            if (highlightedPart && highlightedPart.mesh) {
+            window.removeEventListener('resize', debouncedResize);
+            if (highlightedPart?.mesh && sceneRef.current) {
                 sceneRef.current.remove(highlightedPart.mesh);
             }
-            clearTimeout(timer);
-            console.log('清理 AR 场景');
+            clearTimeout(markerTimeout);
         };
-    }, [modelUrl, scale, markersData]);
+    }, [modelUrl, scale, markersData, highlightColor, showDebugCube, offsetX, offsetY]);
 
+    // Update debug cube visibility
+    useEffect(() => {
+        if (debugCubeRef.current) {
+            debugCubeRef.current.visible = showDebugCube;
+        }
+    }, [showDebugCube]);
+
+    // Update markerRoot offset
+    useEffect(() => {
+        if (markerRootRef.current) {
+            markerRootRef.current.position.set(offsetX, offsetY, 0);
+        }
+    }, [offsetX, offsetY]);
+
+    // Scale up handler
     const handleScaleUp = () => {
         setScale((prev) => {
             const newScale = Math.min(prev + 0.1, 2.0);
             if (modelRef.current) {
                 modelRef.current.scale.set(newScale, newScale, newScale);
-                // Update highlighted part scale
-                if (highlightedPart && highlightedPart.mesh) {
+                if (highlightedPart?.mesh) {
                     highlightedPart.mesh.scale.copy(modelRef.current.scale);
                 }
-                console.log('放大模型，缩放:', newScale);
             }
             return newScale;
         });
     };
 
+    // Scale down handler
     const handleScaleDown = () => {
         setScale((prev) => {
             const newScale = Math.max(prev - 0.1, 0.1);
             if (modelRef.current) {
                 modelRef.current.scale.set(newScale, newScale, newScale);
-                // Update highlighted part scale
-                if (highlightedPart && highlightedPart.mesh) {
+                if (highlightedPart?.mesh) {
                     highlightedPart.mesh.scale.copy(modelRef.current.scale);
                 }
-                console.log('缩小模型，缩放:', newScale);
             }
             return newScale;
         });
     };
 
+    // Color change handler
     const handleColorChange = (event) => {
         setHighlightColor(event.target.value);
-        // Update highlighted part
-        if (highlightedPart && highlightedPart.mesh) {
+        if (highlightedPart?.mesh) {
             highlightedPart.mesh.material.color.set(event.target.value);
             highlightedPart.mesh.material.emissive.set(event.target.value);
-            console.log('更新高亮颜色:', event.target.value);
         }
     };
 
+    // Toggle debug cube visibility
+    const toggleDebugCube = () => {
+        setShowDebugCube((prev) => !prev);
+    };
+
+    // Offset change handlers
+    const handleOffsetXChange = (event) => {
+        const value = parseFloat(event.target.value);
+        if (!isNaN(value)) {
+            setOffsetX(value);
+        }
+    };
+
+    const handleOffsetYChange = (event) => {
+        const value = parseFloat(event.target.value);
+        if (!isNaN(value)) {
+            setOffsetY(value);
+        }
+    };
+
+    // Error rendering
     if (error) {
-        return <div style={{ color: 'red', textAlign: 'center', padding: '20px' }}>错误: {error}</div>;
+        return (
+            <div style={{ color: 'red', textAlign: 'center', padding: '20px' }}>
+                错误: {error}
+            </div>
+        );
     }
 
+    // Main rendering
     return (
         <div
             ref={containerRef}
-            style={{ width: '100%', height: '100vh', position: 'relative', overflow: 'hidden' }}
+            style={{ width: '100%', height: '100vh', position: 'fixed', top: 0, left: 0 }}
         >
             {!modelUrl && (
                 <div
                     style={{
-                        position: 'absolute',
+                        position: 'fixed',
                         top: 0,
                         left: 0,
                         width: '100%',
@@ -567,7 +592,7 @@ const ARCompatViewer = () => {
                         textAlign: 'center',
                     }}
                 >
-                    未检测到 Hiro 标记，请确保标记清晰可见，调整摄像头角度或增加光线
+                    未检测到 Hiro 标记，请确保标记清晰可见、平整且光照充足
                 </div>
             )}
             {modelUrl && (
@@ -579,50 +604,42 @@ const ARCompatViewer = () => {
                         transform: 'translateX(-50%)',
                         zIndex: 1000,
                         display: 'flex',
+                        flexWrap: 'wrap',
                         gap: '10px',
                         alignItems: 'center',
                     }}
                 >
-                    <button
-                        onClick={handleScaleUp}
-                        style={{
-                            padding: '15px 30px',
-                            fontSize: '18px',
-                            backgroundColor: '#4CAF50',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '8px',
-                            cursor: 'pointer',
-                        }}
-                    >
-                        放大
-                    </button>
-                    <button
-                        onClick={handleScaleDown}
-                        style={{
-                            padding: '15px 30px',
-                            fontSize: '18px',
-                            backgroundColor: '#f44336',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '8px',
-                            cursor: 'pointer',
-                        }}
-                    >
-                        缩小
-                    </button>
+                    <button onClick={handleScaleUp}>放大</button>
+                    <button onClick={handleScaleDown}>缩小</button>
                     <input
                         type="color"
                         value={highlightColor}
                         onChange={handleColorChange}
-                        style={{
-                            width: '40px',
-                            height: '40px',
-                            border: 'none',
-                            cursor: 'pointer',
-                        }}
-                        title="选择高亮颜色"
+                        style={{ width: '50px' }}
                     />
+                    <button onClick={toggleDebugCube}>
+                        {showDebugCube ? '隐藏调试方块' : '显示调试方块'}
+                    </button>
+                    <div>
+                        <label>X 偏移: </label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            value={offsetX}
+                            onChange={handleOffsetXChange}
+                            style={{ width: '60px' }}
+                        />
+                    </div>
+                    <div>
+                        <label>Y 偏移: </label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            value={offsetY}
+                            onChange={handleOffsetYChange}
+                            style={{ width: '60px' }}
+                        />
+                    </div>
                 </div>
             )}
         </div>

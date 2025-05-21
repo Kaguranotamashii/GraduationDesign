@@ -3695,3 +3695,292 @@ Error: read ECONNRESET
     at TLSWrap.onStreamRead (node:internal/stream_base_commons:218:20)
 10:49:53 [vite] (client) hmr update /src/pages/modelEdit/ModelEdit.jsx
 10:50:17 [vite] (client) hmr update /src/pages/map/components/HeritageMarkers.jsx
+11:02:18 [vite] (client) hmr update /src/pages/modelEdit/ModelEdit.jsx
+11:02:56 [vite] (client) hmr update /src/pages/modelEdit/ModelEdit.jsx
+
+  VITE v6.0.11  ready in 884 ms
+
+  ➜  Local:   https://localhost:5173/
+  ➜  Network: https://169.254.126.90:5173/
+  ➜  Network: https://169.254.161.185:5173/
+  ➜  Network: https://10.153.182.203:5173/
+19:37:10 [vite] vite.config.js changed, restarting server...
+19:37:11 [vite] server restarted.
+20:01:15 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+20:10:00 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+20:15:37 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+20:21:36 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+20:23:06 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+20:35:27 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+20:40:59 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+20:46:51 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+20:47:26 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+20:47:37 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+20:48:31 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+20:50:52 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+20:51:09 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+20:52:45 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+21:02:31 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+21:03:32 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+21:07:22 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+21:08:46 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+21:13:56 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+21:14:18 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+21:15:16 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+21:20:01 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+21:20:50 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+21:22:15 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+21:26:27 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+21:36:42 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+22:07:12 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+22:29:34 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+22:29:34 [vite] Internal server error: G:\GraduationDesign\probject\frontend\src\pages\ARModelEditor\ARCompatViewer.jsx: Unexpected token, expected "}" (504:27)
+
+  502 |     return (
+  503 |         <div
+> 504 |             ref={container WRef}
+      |                            ^
+  505 |             style={{ width: '100%', height: '100vh', position: 'fixed', top: 0, left: 0 }}
+  506 |         >
+  507 |             {!modelUrl && (
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/pages/ARModelEditor/ARCompatViewer.jsx:504:27
+  515|                          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+  516|                          display: 'flex',
+  517|                          justifyContent: 'center',
+     |                             ^
+  518|                          alignItems: 'center',
+  519|                          color: 'white',
+      at constructor (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:360:19)
+      at JSXParserMixin.raise (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3327:19)
+      at JSXParserMixin.unexpected (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3347:16)
+      at JSXParserMixin.expect (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3657:12)
+      at JSXParserMixin.jsxParseExpressionContainer (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6810:10)
+      at JSXParserMixin.jsxParseAttributeValue (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6777:21)
+      at JSXParserMixin.jsxParseAttribute (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6826:38)
+      at JSXParserMixin.jsxParseOpeningElementAfterName (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6840:28)
+      at JSXParserMixin.jsxParseOpeningElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6835:17)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6859:33)
+      at JSXParserMixin.jsxParseElement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6922:17)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6932:19)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12090:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11349:28)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at JSXParserMixin.parseExpressionBase (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10465:23)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12085:16)
+      at JSXParserMixin.parseExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:17)
+      at JSXParserMixin.parseReturnStatement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12776:28)
+      at JSXParserMixin.parseStatementContent (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12427:21)
+      at JSXParserMixin.parseStatementLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12396:17)
+      at JSXParserMixin.parseStatementListItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12376:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12950:61)
+      at JSXParserMixin.parseBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12943:10)
+      at JSXParserMixin.parseBlock (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12931:10)
+      at JSXParserMixin.parseFunctionBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11773:24)
+      at JSXParserMixin.parseArrowExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11748:10)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11361:12)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+22:30:50 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+22:30:50 [vite] Internal server error: G:\GraduationDesign\probject\frontend\src\pages\ARModelEditor\ARCompatViewer.jsx: Unexpected token, expected "}" (504:27)
+
+  502 |     return (
+  503 |         <div
+> 504 |             ref={container WRef}
+      |                            ^
+  505 |             style={{ width: '100%', height: '100vh', position: 'fixed', top: 0, left: 0 }}
+  506 |         >
+  507 |             {!modelUrl && (
+  Plugin: vite:react-babel
+  File: G:/GraduationDesign/probject/frontend/src/pages/ARModelEditor/ARCompatViewer.jsx:504:27
+  515|                          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+  516|                          display: 'flex',
+  517|                          justifyContent: 'center',
+     |                             ^
+  518|                          alignItems: 'center',
+  519|                          color: 'white',
+      at constructor (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:360:19)
+      at JSXParserMixin.raise (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3327:19)
+      at JSXParserMixin.unexpected (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3347:16)
+      at JSXParserMixin.expect (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:3657:12)
+      at JSXParserMixin.jsxParseExpressionContainer (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6810:10)
+      at JSXParserMixin.jsxParseAttributeValue (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6777:21)
+      at JSXParserMixin.jsxParseAttribute (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6826:38)
+      at JSXParserMixin.jsxParseOpeningElementAfterName (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6840:28)
+      at JSXParserMixin.jsxParseOpeningElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6835:17)
+      at JSXParserMixin.jsxParseElementAt (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6859:33)
+      at JSXParserMixin.jsxParseElement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6922:17)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6932:19)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12090:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10481:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11349:28)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+      at JSXParserMixin.parseMaybeUnary (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10713:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10566:61)
+      at JSXParserMixin.parseExprOps (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10571:23)
+      at JSXParserMixin.parseMaybeConditional (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10548:23)
+      at JSXParserMixin.parseMaybeAssign (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10511:21)
+      at JSXParserMixin.parseExpressionBase (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10465:23)
+      at G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:39
+      at JSXParserMixin.allowInAnd (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12085:16)
+      at JSXParserMixin.parseExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10461:17)
+      at JSXParserMixin.parseReturnStatement (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12776:28)
+      at JSXParserMixin.parseStatementContent (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12427:21)
+      at JSXParserMixin.parseStatementLike (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12396:17)
+      at JSXParserMixin.parseStatementListItem (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12376:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12950:61)
+      at JSXParserMixin.parseBlockBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12943:10)
+      at JSXParserMixin.parseBlock (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:12931:10)
+      at JSXParserMixin.parseFunctionBody (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11773:24)
+      at JSXParserMixin.parseArrowExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11748:10)
+      at JSXParserMixin.parseParenAndDistinguishExpression (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:11361:12)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10996:23)
+      at JSXParserMixin.parseExprAtom (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:6937:20)
+      at JSXParserMixin.parseExprSubscripts (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10748:23)
+      at JSXParserMixin.parseUpdate (G:\GraduationDesign\probject\frontend\node_modules\@babel\parser\lib\index.js:10733:21)
+22:33:02 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+22:57:40 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+23:04:22 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+23:10:23 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+23:16:23 [vite] (client) hmr update /src/pages/ARModelEditor/ARCompatViewer.jsx
+
+  VITE v6.0.11  ready in 1766 ms
+
+  ➜  Local:   https://localhost:5173/
+  ➜  Network: https://169.254.126.90:5173/
+  ➜  Network: https://169.254.161.185:5173/
+  ➜  Network: https://10.153.67.41:5173/
+13:04:11 [vite] vite.config.js changed, restarting server...
+13:04:12 [vite] server restarted.
+13:25:06 [vite] (client) hmr update /src/pages/modelEdit/ModelEdit.jsx
+13:27:20 [vite] (client) hmr update /src/pages/modelEdit/ModelEdit.jsx
+16:15:41 [vite] (client) hmr update /src/pages/modelEdit/ModelEdit.jsx
+16:16:24 [vite] (client) hmr update /src/pages/modelEdit/ModelEdit.jsx
+16:16:49 [vite] (client) hmr update /src/pages/modelEdit/ModelEdit.jsx
+16:17:13 [vite] (client) hmr update /src/pages/modelEdit/ModelEdit.jsx
+16:17:44 [vite] (client) hmr update /src/pages/modelEdit/ModelEdit.jsx
+16:17:55 [vite] (client) hmr update /src/pages/modelEdit/ModelEdit.jsx
+16:18:21 [vite] (client) hmr update /src/pages/modelEdit/ModelEdit.jsx
+16:18:26 [vite] (client) hmr update /src/pages/modelEdit/ModelEdit.jsx
+16:18:44 [vite] (client) hmr update /src/pages/modelEdit/ModelEdit.jsx
+16:18:49 [vite] (client) hmr update /src/pages/modelEdit/ModelEdit.jsx
+
+  VITE v6.0.11  ready in 2026 ms
+
+  ➜  Local:   https://localhost:5173/
+  ➜  Network: https://192.168.19.220:5173/
+  ➜  Network: https://169.254.126.90:5173/
+  ➜  Network: https://169.254.161.185:5173/
+  ➜  Network: https://192.168.233.81:5173/
+17:27:43 [vite] vite.config.js changed, restarting server...
+17:27:45 [vite] server restarted.
+
+  VITE v6.0.11  ready in 7997 ms
+
+  ➜  Local:   https://localhost:5173/
+  ➜  Network: https://192.168.112.1:5173/
+  ➜  Network: https://192.168.19.220:5173/
+  ➜  Network: https://169.254.126.90:5173/
+  ➜  Network: https://169.254.161.185:5173/
+  ➜  Network: https://192.168.12.81:5173/
+15:37:45 [vite] vite.config.js changed, restarting server...
+15:37:47 [vite] server restarted.
+15:41:40 [vite] (client) hmr update /src/pages/auth/Auth.jsx
+16:16:39 [vite] http proxy error: /app/article/articles/top/
+Error: connect ETIMEDOUT 192.168.12.81:8005
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)
+16:16:43 [vite] http proxy error: /app/article/articles/top/
+Error: connect ETIMEDOUT 192.168.12.81:8005
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)
+16:25:21 [vite] http proxy error: /app/article/articles/search/?page=1&page_size=9&title=&tags=undefined&status=published
+Error: connect ETIMEDOUT 192.168.12.81:8005
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)
+16:25:21 [vite] http proxy error: /app/article/articles/top/
+Error: connect ETIMEDOUT 192.168.12.81:8005
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)
+16:25:21 [vite] http proxy error: /app/article/articles/tags/
+Error: connect ETIMEDOUT 192.168.12.81:8005
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)
+16:25:28 [vite] http proxy error: /app/article/articles/tags/
+Error: connect ETIMEDOUT 192.168.12.81:8005
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)
+16:25:28 [vite] http proxy error: /app/article/articles/top/
+Error: connect ETIMEDOUT 192.168.12.81:8005
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)
+16:25:28 [vite] http proxy error: /app/article/articles/search/?page=1&page_size=9&title=&tags=undefined&status=published
+Error: connect ETIMEDOUT 192.168.12.81:8005
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)
+16:25:52 [vite] http proxy error: /app/article/articles/top/
+Error: connect ETIMEDOUT 192.168.12.81:8005
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)
+16:26:05 [vite] http proxy error: /app/article/articles/top/
+Error: connect ETIMEDOUT 192.168.12.81:8005
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)
+16:26:14 [vite] http proxy error: /app/user/login/
+Error: connect ETIMEDOUT 192.168.12.81:8005
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)
+16:26:25 [vite] http proxy error: /app/builder/all/
+Error: connect ETIMEDOUT 192.168.12.81:8005
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)
+16:27:02 [vite] http proxy error: /app/article/articles/top/
+Error: connect ETIMEDOUT 192.168.12.81:8005
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)
+16:27:05 [vite] http proxy error: /app/article/articles/top/
+Error: connect ETIMEDOUT 192.168.12.81:8005
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)
+16:27:25 [vite] http proxy error: /app/builder/all/
+Error: connect ETIMEDOUT 192.168.12.81:8005
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)
+
+  VITE v6.0.11  ready in 685 ms
+
+  ➜  Local:   https://localhost:5173/
+  ➜  Network: https://169.254.126.90:5173/
+  ➜  Network: https://169.254.161.185:5173/
+  ➜  Network: https://192.168.197.81:5173/
+  ➜  Network: https://172.21.224.1:5173/
+16:29:59 [vite] vite.config.js changed, restarting server...
+16:29:59 [vite] server restarted.
+16:34:52 [vite] (client) hmr update /src/pages/auth/Auth.jsx
+16:43:40 [vite] (client) hmr update /src/components/ErrorBoundary/NotFound.jsx
+16:43:40 [vite] (client) hmr update /src/components/Guard/AdminRoute.jsx
+16:45:49 [vite] (client) hmr update /src/pages/articles/detail/ArticleDetail.jsx
+16:46:58 [vite] (client) hmr update /src/pages/articles/detail/ArticleDetail.jsx
+16:49:13 [vite] (client) hmr update /src/pages/articles/detail/ArticleDetail.jsx
+16:49:49 [vite] (client) hmr update /src/pages/articles/detail/ArticleDetail.jsx
+16:50:25 [vite] (client) hmr update /src/pages/articles/detail/ArticleDetail.jsx
+16:51:28 [vite] (client) hmr update /src/pages/articles/detail/ArticleDetail.jsx
+16:52:53 [vite] (client) hmr update /src/pages/articles/detail/ArticleDetail.jsx
+16:53:27 [vite] (client) hmr update /src/pages/articles/detail/ArticleDetail.jsx
+16:54:24 [vite] (client) hmr update /src/pages/articles/detail/ArticleDetail.jsx
